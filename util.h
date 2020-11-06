@@ -46,7 +46,9 @@ inline auto logo = R"(
                                                                                     
 )";
 inline BOOL debug = false;
+inline BOOL noInj = false;
 inline BOOL isPaused = false;
+inline std::string addDll;
 inline ULONG pid = 0;
 
 #endif // !UTIL

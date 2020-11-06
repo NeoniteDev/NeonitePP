@@ -5,13 +5,32 @@ int main(int argc, char* argv[])
 {
 	if (argc > 0)
 	{
-		for (int i = 1; i < argc; ++i) {
+		for (int i = 1; i < argc; ++i)
+		{
 			std::string arg = argv[i];
+
 			if (arg == "--debug") debug = !debug;
+
+			if (arg == "--noinjection") noInj = !noInj;
+
+			if (arg == "--dll")
+			{
+				if (i + 1 < argc)
+				{
+					i++;
+					addDll = argv[i];
+				}
+				else
+				{
+					std::cerr << "Usage: --dll DLL_NAME." << std::endl;
+					return 1;
+				}
+			}
+
 			//TODO: More
 		}
 	}
-	
+
 	char programData[MAX_PATH];
 	char datPath[] = "\\Epic\\UnrealEngineLauncher\\LauncherInstalled.dat";
 	json launcherInstalled;
@@ -65,7 +84,7 @@ int main(int argc, char* argv[])
 	char* name = new char[32];
 	printd(termcolor::yellow, "[>]Please enter your username (MAX 32): ");
 	std::cin.getline(name, 33);
-	
+
 	std::ostringstream oss;
 	oss <<
 	" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -AUTH_LOGIN="
@@ -89,17 +108,40 @@ int main(int argc, char* argv[])
 			pid = GetProcId("FortniteClient-Win64-Shipping.exe");
 		}
 
-		std::string dllPath = GetEXEPath() + "\\Platanium.dll";
-
-		if (!ManualMap(client, dllPath.c_str()))
+		if (!addDll.empty())
 		{
-			CloseHandle(client);
-			printd(termcolor::red, "[x]Something went wrong\n");
-			system("PAUSE");
-			return 0;
+			std::string addDllPath = GetEXEPath() + "\\" + addDll;
+
+
+			if (!ManualMap(client, addDllPath.c_str()))
+			{
+				CloseHandle(client);
+				printd(termcolor::red, "[x]Couldn't inject " + addDll + " \n");
+				system("PAUSE");
+				return 0;
+			}
+
+			printd(termcolor::green, "[+]Additional dll: ", addDll, " was injected.\n");
 		}
 
-		printd(termcolor::green, "[+]Injected.\n");
+		std::string dllPath = GetEXEPath() + "\\Platanium.dll";
+
+		if (!noInj)
+		{
+			if (!ManualMap(client, dllPath.c_str()))
+			{
+				CloseHandle(client);
+				printd(termcolor::red, "[x]Couldn't inject Platanium.dll\n");
+				system("PAUSE");
+				return 0;
+			}
+
+			printd(termcolor::green, "[+]Injected Platanium.dll.\n");
+		}
+		else
+		{
+			printd(termcolor::blue, "[=]Skipping Platanium.dll injection.\n");
+		}
 
 		while (true)
 		{
