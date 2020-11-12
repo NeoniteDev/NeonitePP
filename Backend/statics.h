@@ -188,7 +188,58 @@ inline void registerStatics()
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
 	res.body().clear();
 
+	//==> TO BE IMPLEMENTED <==
+	route = "/fortnite/api/storefront/v2/keychain";
+	res.set(http::field::content_type, "application/json");
+	ostream(res.body())
+		<< R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
 
+	//==> TO BE IMPLEMENTED <==
+	route = "/fortnite/api/cloudstorage/system";
+	res.result(http::status::no_content);
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
+
+	route = "/fortnite/api/cloudstorage/user/:accountId";
+	res.set(http::field::content_type, "application/json");
+	ostream(res.body())
+		<< R"([])"_json;
+	
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
+
+	route = "/fortnite/api/cloudstorage/user/:accountId/:fileName";
+	res.result(http::status::no_content);
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
+
+	route = "/account/api/oauth/sessions/kill";
+	res.result(http::status::no_content);
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
+
+	route = "/account/api/oauth/sessions/kill/:token";
+	res.result(http::status::no_content);
+	router.registerPath(route);
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
+	
 	//register dynamic routes too
 	router.registerPath("/fortnite/api/game/v2/privacy/account/:accountId");
+	router.registerPath("/account/api/public/account/:accountId/deviceAuth");
+	router.registerPath("/account/api/public/account/:accountId");
+
 }
