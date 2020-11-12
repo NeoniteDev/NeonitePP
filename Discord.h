@@ -2,9 +2,9 @@
 #include <chrono>//We will use chrono for the elapsed time.
 
 //Discord SDK Stuff.
-#include "util.h"
-#include "DiscordSDK/discord_rpc.h"
-#include "DiscordSDK/discord_register.h"
+#include "Frontend/util.h"
+#include "includes/DiscordSDK/discord_rpc.h"
+#include "includes/DiscordSDK/discord_register.h"
 
 static bool gInit, gRPC = true;
 
