@@ -1,8 +1,6 @@
 # Neonite++
 # Written by: Kemo (Backend), Sammy (Frontend).
 
-
-TODO List:
 - [x] Implement Settings
 - [x] Implement Items Locker
 - [x] Implement Backend endpoints (basic ones)
