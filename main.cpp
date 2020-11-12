@@ -1,8 +1,8 @@
-#include "Discord.h"
 #include "Frontend/GUI/gui.h"
 #include "Frontend/util.h"
 #include "Frontend/Launcher/launcher.h"
 #include "Backend/server.h"
+#include "Discord.h"
 
 static LPDIRECT3D9 g_pD3D = NULL;
 static LPDIRECT3DDEVICE9 g_pd3dDevice = NULL;
@@ -14,6 +14,12 @@ bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void ResetDevice();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+void ChangeDetail(std::string name) {
+	discordPresence.details = name.c_str();
+	Discord_UpdatePresence(&discordPresence);
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -212,20 +218,9 @@ void Init(LPDIRECT3DDEVICE9 pDevice, HWND hWnd)
 		ImGui_ImplWin32_Init(hWnd);
 		ImGui_ImplDX9_Init(pDevice);
 
-		/*std::string lockerPath = GetEXEPath() + "\\locker.json";
-		json locker;
-	
-		std::ifstream f;
-		f.open(lockerPath);
-		f >> locker;
-		f.close();*/
-
 		ImGui::StyleColorsDark();
 		console.AddLog("                        [>] Welcome to Neonite!");
 
-		/*console.AddLog("%s", locker);
-		console.AddLog("[>] Hello1: %s", locker["hello1"]);
-		console.AddLog("[>] Hello2: %s", locker["hello2"]);*/
 	}
 }
 

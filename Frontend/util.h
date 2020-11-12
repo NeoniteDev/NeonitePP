@@ -23,6 +23,8 @@
 #include "../includes/json/json.hpp"
 #include "../includes/injection/Injection.h"
 #include "../includes/termcolor/termcolor.hpp"
+#include "../includes/DiscordSDK/discord_rpc.h"
+#include "../includes/DiscordSDK/discord_register.h"
 
 #include <chrono>
 #include <stdio.h>
@@ -93,7 +95,6 @@ inline char prices_[44];
 
 inline bool bIsLockerOpen = false;
 inline auto jsonObjects = json::array();
-
 
 inline bool isDebug = false;
 inline bool noInj = false;

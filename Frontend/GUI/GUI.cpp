@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#include "../../includes/imgui/imgui.h"
+#include "../util.h"
 #include <limits.h>         // INT_MIN, INT_MAX
 #include <stdio.h>          // vsnprintf, sscanf, printf
 #include <stdlib.h>         // NULL, malloc, free, atoi
@@ -142,6 +142,7 @@ void ImGui::ShowLoader(bool *p_open) {
                                    (LPTHREAD_START_ROUTINE)&launcher, nullptr,
                                    NULL, nullptr);
           console.AddLog("[+] Starting Game...");
+
         } else {
           console.AddLog("[=] The game is already running.");
         }
