@@ -1,5 +1,5 @@
 # Neonite++
-# Written by: Kemo (Backend), Sammy (Frontend).
+# Written by: kemo#1337 and Sammy.#6969
 
 - [x] Implement Settings
 - [x] Implement Items Locker
