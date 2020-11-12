@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Routing">
+      <UniqueIdentifier>{c53bfb24-6756-498f-92cb-f939dad24933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Routing\Details">
+      <UniqueIdentifier>{f9ce735d-51bb-4903-aec9-f2ceba7e2c15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{b379232f-859b-4b92-896d-ca083a7f8187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DiscordSDK">
+      <UniqueIdentifier>{659623c5-1ebf-4910-a486-2c541dbd4e69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -23,6 +35,75 @@
     </ClCompile>
     <ClCompile Include="Injection.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="launcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\PathMatch.cpp">
+      <Filter>Header Files\Routing</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\Router.cpp">
+      <Filter>Header Files\Routing</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\Details\PathTemplate.cpp">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\Details\PathTemplateParser.cpp">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\Details\RegexConverter.cpp">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClCompile>
+    <ClCompile Include="Routing\Details\StringTokenizer.cpp">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClCompile>
+    <ClCompile Include="request.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="response.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_loader.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>Header Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\connection_win.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\discord_register_win.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\discord_rpc.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\dllmain.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\rpc_connection.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordSDK\serialization.cpp">
+      <Filter>Header Files\DiscordSDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,8 +119,109 @@
     <ClInclude Include="termcolor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="launcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Exceptions.h">
+      <Filter>Header Files\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\PathMatch.h">
+      <Filter>Header Files\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Router.h">
+      <Filter>Header Files\Routing</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Details\PathTemplate.h">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Details\PathTemplateParser.h">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Details\RegexConverter.h">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClInclude>
+    <ClInclude Include="Routing\Details\StringTokenizer.h">
+      <Filter>Header Files\Routing\Details</Filter>
+    </ClInclude>
+    <ClInclude Include="request.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="response.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx9.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\backoff.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\connection.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\discord_register.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\discord_rpc.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\msg_queue.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\rpc_connection.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordSDK\serialization.h">
+      <Filter>Header Files\DiscordSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="Discord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="statics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NeoniteC++.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

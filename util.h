@@ -1,11 +1,29 @@
 #ifndef UTIL
 #define UTIL
 
+#ifdef _WIN32
+#define _WIN32_WINNT 0x0A00
+#endif
+
+#define DIRECTINPUT_VERSION 0x0800
+
+#pragma comment(lib, "d3d9.lib")
+
 //Headers
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx9.h"
+#include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui_internal.h"
+#include "imgui/imconfig.h"
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
 #include "json.hpp"
 #include "Injection.h"
 #include "termcolor.hpp"
-#include <Windows.h>
+#include <chrono>
 #include <stdio.h>
 #include <iostream>
 #include <thread>
@@ -15,6 +33,10 @@
 #include <sstream>
 #include <shlobj.h>
 #include <fstream>
+#include <Windows.h>
+#include <d3d9.h>
+#include <dinput.h>
+#include <tchar.h>
 
 template<typename ...Args>
 void printd(Args && ...args)
@@ -23,6 +45,10 @@ void printd(Args && ...args)
 }
 
 using json = nlohmann::json;
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+using tcp = boost::asio::ip::tcp;
 
 //Functions declarations
 HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments);
@@ -31,24 +57,51 @@ void resume(HANDLE processHandle);
 DWORD GetProcId(const char* procName);
 std::string GetEXEPath();
 
+
 //Inline vars
-inline auto logo = R"(
-888b    888                            d8b 888             .d8888b.                 
-8888b   888                            Y8P 888            d88P  Y88b                
-88888b  888                                888            888    888                
-888Y88b 888  .d88b.   .d88b.  88888b.  888 888888 .d88b.  888         888     888   
-888 Y88b888 d8P  Y8b d88""88b 888 "88b 888 888   d8P  Y8b 888       8888888 8888888 
-888  Y88888 88888888 888  888 888  888 888 888   88888888 888    888  888     888   
-888   Y8888 Y8b.     Y88..88P 888  888 888 Y88b. Y8b.     Y88b  d88P                
-888    Y888  "Y8888   "Y88P"  888  888 888  "Y888 "Y8888   "Y8888P"                 
-                                                                                    
-                                                                                    
-                                                                                    
-)";
-inline BOOL debug = false;
-inline BOOL noInj = false;
-inline BOOL isPaused = false;
+inline std::vector< std::string > IDs;
+
+inline std::vector< std::string > prices;
+inline std::vector< std::string > ImportedLocker;
+inline std::vector< std::string > LockerBackup;
+
+inline char newsTitleE[33];
+inline char newsBodyE[33];
+
+inline char newsTitle[33];
+inline char newsBody[33];
+
+inline char tileURL[33];
+inline char imageURL[33];
+
+inline char DllName[33];
+
+inline bool bUseRPC = true;
+
+inline char name[33] = "NeoniteUser";
+inline bool bHasBattlepass = false;
+inline bool bIsCataba = false;
+inline int seasonLevel = 100;
+inline int vbucks = 100000;
+
+inline bool bHasImportedLocker = false;
+
+inline char ID[125];
+inline char pricesDE[44];
+inline char prices_[44];
+
+
+inline bool bIsLockerOpen = false;
+inline auto jsonObjects = json::array();
+
+
+
+inline bool isDebug = false;
+inline bool noInj = false;
+inline bool isPaused = false;
 inline std::string addDll;
+inline const char* ip = "127.0.0.1";
+inline unsigned short port = 5595;
 inline ULONG pid = 0;
 
 #endif // !UTIL

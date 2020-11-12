@@ -155,29 +155,89 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DiscordSDK\connection_win.cpp" />
+    <ClCompile Include="DiscordSDK\discord_register_win.cpp" />
+    <ClCompile Include="DiscordSDK\discord_rpc.cpp" />
+    <ClCompile Include="DiscordSDK\dllmain.cpp" />
+    <ClCompile Include="DiscordSDK\rpc_connection.cpp" />
+    <ClCompile Include="DiscordSDK\serialization.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_loader.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="request.cpp" />
     <ClCompile Include="Injection.cpp" />
+    <ClCompile Include="launcher.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="response.cpp" />
+    <ClCompile Include="Routing\Details\PathTemplate.cpp" />
+    <ClCompile Include="Routing\Details\PathTemplateParser.cpp" />
+    <ClCompile Include="Routing\Details\RegexConverter.cpp" />
+    <ClCompile Include="Routing\Details\StringTokenizer.cpp" />
+    <ClCompile Include="Routing\PathMatch.cpp" />
+    <ClCompile Include="Routing\Router.cpp" />
+    <ClCompile Include="server.cpp" />
+    <ClCompile Include="settings.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Discord.h" />
+    <ClInclude Include="DiscordSDK\backoff.h" />
+    <ClInclude Include="DiscordSDK\connection.h" />
+    <ClInclude Include="DiscordSDK\discord_register.h" />
+    <ClInclude Include="DiscordSDK\discord_rpc.h" />
+    <ClInclude Include="DiscordSDK\msg_queue.h" />
+    <ClInclude Include="DiscordSDK\rpc_connection.h" />
+    <ClInclude Include="DiscordSDK\serialization.h" />
+    <ClInclude Include="dynamics.h" />
+    <ClInclude Include="gui.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="request.h" />
     <ClInclude Include="Injection.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="launcher.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="response.h" />
+    <ClInclude Include="Routing\Details\PathTemplate.h" />
+    <ClInclude Include="Routing\Details\PathTemplateParser.h" />
+    <ClInclude Include="Routing\Details\RegexConverter.h" />
+    <ClInclude Include="Routing\Details\StringTokenizer.h" />
+    <ClInclude Include="Routing\Exceptions.h" />
+    <ClInclude Include="Routing\PathMatch.h" />
+    <ClInclude Include="Routing\Router.h" />
+    <ClInclude Include="server.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="statics.h" />
     <ClInclude Include="termcolor.hpp" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NeoniteC++.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('packages\boost.1.72.0.0\build\boost.targets')" />
-    <Import Project="packages\boost_filesystem-vc142.1.72.0.0\build\boost_filesystem-vc142.targets" Condition="Exists('packages\boost_filesystem-vc142.1.72.0.0\build\boost_filesystem-vc142.targets')" />
+    <Import Project="packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets" Condition="Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" />
+    <Import Project="packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets" Condition="Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost.1.72.0.0\build\boost.targets'))" />
-    <Error Condition="!Exists('packages\boost_filesystem-vc142.1.72.0.0\build\boost_filesystem-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_filesystem-vc142.1.72.0.0\build\boost_filesystem-vc142.targets'))" />
+    <Error Condition="!Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets'))" />
+    <Error Condition="!Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets'))" />
   </Target>
 </Project>

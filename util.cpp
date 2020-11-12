@@ -1,5 +1,6 @@
 #include "util.h"
 
+
 HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments)
 {
     STARTUPINFO si;
