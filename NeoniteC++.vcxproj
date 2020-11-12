@@ -155,8 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Backend\Request\request.cpp" />
-    <ClCompile Include="Backend\Response\response.cpp" />
     <ClCompile Include="Backend\Routing\Details\PathTemplate.cpp" />
     <ClCompile Include="Backend\Routing\Details\PathTemplateParser.cpp" />
     <ClCompile Include="Backend\Routing\Details\RegexConverter.cpp" />
@@ -183,9 +181,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Backend\Dynamics\dynamics.h" />
-    <ClInclude Include="Backend\Request\request.h" />
-    <ClInclude Include="Backend\Response\response.h" />
+    <ClInclude Include="Backend\dynamics.h" />
+    <ClInclude Include="Backend\request.h" />
+    <ClInclude Include="Backend\response.h" />
     <ClInclude Include="Backend\Routing\Details\PathTemplate.h" />
     <ClInclude Include="Backend\Routing\Details\PathTemplateParser.h" />
     <ClInclude Include="Backend\Routing\Details\RegexConverter.h" />
@@ -194,7 +192,7 @@
     <ClInclude Include="Backend\Routing\PathMatch.h" />
     <ClInclude Include="Backend\Routing\Router.h" />
     <ClInclude Include="Backend\server.h" />
-    <ClInclude Include="Backend\Statics\statics.h" />
+    <ClInclude Include="Backend\statics.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="Frontend\GUI\gui.h" />
     <ClInclude Include="Frontend\Launcher\launcher.h" />
@@ -258,13 +256,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="NeoniteC++.aps" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NeoniteC++.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\Downloads\NeoniteLogo.ico" />
+    <Image Include="NeoniteLogo.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
