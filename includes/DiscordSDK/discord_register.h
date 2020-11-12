@@ -18,10 +18,10 @@
 extern "C" {
 #endif
 
-DISCORD_EXPORT void Discord_Register(const char *applicationId,
-                                     const char *command);
-DISCORD_EXPORT void Discord_RegisterSteamGame(const char *applicationId,
-                                              const char *steamId);
+	DISCORD_EXPORT void Discord_Register(const char* applicationId,
+		const char* command);
+	DISCORD_EXPORT void Discord_RegisterSteamGame(const char* applicationId,
+		const char* steamId);
 
 #ifdef __cplusplus
 }

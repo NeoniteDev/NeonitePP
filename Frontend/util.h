@@ -43,7 +43,7 @@
 
 template <typename ...Args>
 void printd(Args && ...args) {
-  (std::cout << ... << args);
+	(std::cout << ... << args);
 }
 
 using json = nlohmann::json;
@@ -56,9 +56,8 @@ using tcp = boost::asio::ip::tcp;
 HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments);
 void suspend(HANDLE processHandle);
 void resume(HANDLE processHandle);
-DWORD GetProcId(const char *procName);
+DWORD GetProcId(const char* procName);
 std::string GetEXEPath();
-
 
 //Inline vars
 inline std::vector<std::string> IDs;
@@ -92,7 +91,6 @@ inline char ID[125];
 inline char pricesDE[44];
 inline char prices_[44];
 
-
 inline bool bIsLockerOpen = false;
 inline auto jsonObjects = json::array();
 
@@ -100,7 +98,7 @@ inline bool isDebug = false;
 inline bool noInj = false;
 inline bool isPaused = false;
 inline std::string addDll;
-inline const char *ip = "127.0.0.1";
+inline const char* ip = "127.0.0.1";
 inline unsigned short port = 5595;
 inline ULONG pid = 0;
 

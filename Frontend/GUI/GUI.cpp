@@ -2,9 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-
 #include <iostream>
-
 
 #include "gui.h"
 #include "../Launcher/launcher.h"
@@ -22,7 +20,6 @@ using namespace std;
 #else
 #include <stdint.h>         // intptr_t
 #endif
-
 
 #ifdef _MSC_VER
 #pragma warning (disable: 4996) // 'This function or variable may be unsafe': strcpy, strdup, sprintf, vsnprintf, sscanf, fopen
@@ -45,538 +42,589 @@ using namespace std;
 
 #if !defined(IMGUI_DISABLE_DEMO_WINDOWS)
 
-const char *ShopTypes[] = {" Default", " Cataba"};
-const char *Stages[] = {" Default", " Season 14", " Season 13", " Season 12",
-                        " Season 11", " Season 10 (X)", " Winterfest",
-                        " FortniteMares", " Summer", " BatMan", " Star Wars",
-                        " World Cup"};
+const char* ShopTypes[] = { " Default", " Cataba" };
+const char* Stages[] = {
+	" Default", " Season 14", " Season 13", " Season 12",
+	" Season 11", " Season 10 (X)", " Winterfest",
+	" FortniteMares", " Summer", " BatMan", " Star Wars",
+	" World Cup"
+};
 
+static int FilterNoSpace(ImGuiTextEditCallbackData* data)
+{
+	if (data->EventChar == ' ') return 1;
+	return 0;
+}
 
-
-  static int FilterNoSpace(ImGuiTextEditCallbackData * data)
-  {
-      if (data->EventChar == ' ') return 1;
-      return 0;
-  }
-
-
-
-static void HelpMarker(const char *desc) {
-  ImGui::TextDisabled("(?)");
-  if (ImGui::IsItemHovered()) {
-    ImGui::BeginTooltip();
-    ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-    ImGui::TextUnformatted(desc);
-    ImGui::PopTextWrapPos();
-    ImGui::EndTooltip();
-  }
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
 
 static bool hasAdditional = false;
 
-void ImGui::ShowLoader(bool *p_open) {
-  // IMGUI FLAGS
-
-  ImGuiWindowFlags window_flags = 0;
-
-  window_flags |= ImGuiWindowFlags_NoMove;
-  window_flags |= ImGuiWindowFlags_NoResize;
-  window_flags |= ImGuiWindowFlags_NoCollapse;
-  window_flags |= ImGuiWindowFlags_NoSavedSettings;
-  window_flags |= ImGuiWindowFlags_NoScrollbar;
-  window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
-
-  SetNextWindowPos(ImVec2(500, 100), ImGuiCond_FirstUseEver);
-  SetNextWindowSize(ImVec2(535, 320), ImGuiCond_FirstUseEver);
-
-  // FORM
-  if (!Begin("Neonite++", p_open, window_flags)) {
-    End();
-    return;
-  }
-
-  PushItemWidth(GetFontSize() * -12);
-
-  if (BeginTabBar("Neonite"), ImGuiTabBarFlags_AutoSelectNewTabs) {
-    if (BeginTabItem("Main")) {
-      /*SetCursorPosX(GetCursorPosX() + 150);
-      SetCursorPosY(GetCursorPosY() + 10);
-
-
-      //Text("Welcome to Neonite++!");*/
-
-      //ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-      if (Button("Start Server")) {
-        if (Server == INVALID_HANDLE_VALUE) {
-          Server = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server,
-                                nullptr, NULL, nullptr);
-          console.AddLog("[+] Server started...");
-        } else {
-          console.AddLog("[=] The server is already running.");
-        }
-      }
+void ImGui::ShowLoader(bool* p_open)
+{
+	// IMGUI FLAGS
+
+	ImGuiWindowFlags window_flags = 0;
+
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoSavedSettings;
+	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
+
+	SetNextWindowPos(ImVec2(500, 100), ImGuiCond_FirstUseEver);
+	SetNextWindowSize(ImVec2(535, 320), ImGuiCond_FirstUseEver);
+
+	// FORM
+	if (!Begin("Neonite++", p_open, window_flags))
+	{
+		End();
+		return;
+	}
+
+	PushItemWidth(GetFontSize() * -12);
+
+	if (BeginTabBar("Neonite"), ImGuiTabBarFlags_AutoSelectNewTabs)
+	{
+		if (BeginTabItem("Main"))
+		{
+			/*SetCursorPosX(GetCursorPosX() + 150);
+			SetCursorPosY(GetCursorPosY() + 10);
+
+			//Text("Welcome to Neonite++!");*/
+
+			//ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+			if (Button("Start Server"))
+			{
+				if (Server == INVALID_HANDLE_VALUE)
+				{
+					Server = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server,
+						nullptr, NULL, nullptr);
+					console.AddLog("[+] Server started...");
+				}
+				else
+				{
+					console.AddLog("[=] The server is already running.");
+				}
+			}
+
+			SameLine(GetWindowWidth() - 390);
+
+			InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter,
+				FilterNoSpace);
+
+			SameLine(GetWindowWidth() - 100);
+
+			if (strstr(name, " "))
+			{
+				memset(name, 0, sizeof(name));
+			}
+
+			if (Button("Start Game"))
+			{
+				if (hLauncher == INVALID_HANDLE_VALUE)
+				{
+					if constexpr (name == "")
+					{
+						console.AddLog("[x] Please input an username!");
+					}
+
+					if constexpr (sizeof(name) < 2)
+					{
+						console.AddLog("[x] Your name must be long 3 or more characters!");
+					}
+
+					hLauncher = CreateThread(nullptr, NULL,
+						(LPTHREAD_START_ROUTINE)&launcher, nullptr,
+						NULL, nullptr);
+					console.AddLog("[+] Starting Game...");
+				}
+				else
+				{
+					console.AddLog("[=] The game is already running.");
+				}
+			}
+
+			if (Button("Stop Server"))
+			{
+				if (Server != INVALID_HANDLE_VALUE)
+				{
+					TerminateThread(Server, 0);
+					Server = INVALID_HANDLE_VALUE;
+					console.AddLog("[x] The Server was stopped...");
+				}
+				else
+				{
+					console.AddLog("[=] The server isn't running..");
+				}
+			}
+
+			SameLine(GetWindowWidth() - 100);
+
+			if (Button("Close Game"))
+			{
+				if (hLauncher != INVALID_HANDLE_VALUE)
+				{
+					try
+					{
+						//this should kill your game at all :pepelaugh:
+						// kek -sammy
+						TerminateProcess(hEAC, 1);
+					}
+					catch (...)
+					{
+					}
+					TerminateThread(hLauncher, 0);
+					hLauncher = INVALID_HANDLE_VALUE;
+					console.AddLog("[x] The game was terminated...");
+				}
+				else
+				{
+					console.AddLog("[=] The game wasn't running...");
+				}
+			}
 
-      SameLine(GetWindowWidth() - 390);
+			console.Draw("Server Console", p_open);
 
-      InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter, FilterNoSpace);
+			SameLine(GetWindowWidth() - 325);
 
-      SameLine(GetWindowWidth() - 100);
+			if (Button("Save Config"))
+			{
+				config(true);
+			}
 
-      if (strstr(name, " ")) {
-          memset(name, 0, sizeof(name));
-      }
+			SameLine(GetWindowWidth() - 100);
 
-      if (Button("Start Game")) {
-        if (hLauncher == INVALID_HANDLE_VALUE) {
-          if constexpr (name == "") {
-            console.AddLog("[x] Please input an username!");
-          }
-          
-
-          if constexpr (sizeof(name) < 2) {
-            console.AddLog("[x] Your name must be long 3 or more characters!");
-          }
+			if (Button("Load Config"))
+			{
+				config(false);
+			}
 
-          hLauncher = CreateThread(nullptr, NULL,
-                                   (LPTHREAD_START_ROUTINE)&launcher, nullptr,
-                                   NULL, nullptr);
-          console.AddLog("[+] Starting Game...");
+			EndTabItem();
+		}
+	}
 
-        } else {
-          console.AddLog("[=] The game is already running.");
-        }
-      }
+	if (BeginTabItem("Launcher Settings"))
+	{
+		SetCursorPosX(GetCursorPosX() + 155);
+		SetCursorPosY(GetCursorPosY() + 5);
+		Text("Try some Launcher settings!");
 
-      if (Button("Stop Server")) {
-        if (Server != INVALID_HANDLE_VALUE) {
-          TerminateThread(Server, 0);
-          Server = INVALID_HANDLE_VALUE;
-          console.AddLog("[x] The Server was stopped...");
-        } else {
-          console.AddLog("[=] The server isn't running..");
-        }
-      }
+		Checkbox("Additional DLL to Inject", &hasAdditional);
 
-      SameLine(GetWindowWidth() - 100);
+		SameLine(GetWindowWidth() - 200);
 
-      if (Button("Close Game")) {
-        if (hLauncher != INVALID_HANDLE_VALUE) {
-          try {
-            //this should kill your game at all :pepelaugh:
-            // kek -sammy
-            TerminateProcess(hEAC, 1);
-          } catch (...) {
-          }
-          TerminateThread(hLauncher, 0);
-          hLauncher = INVALID_HANDLE_VALUE;
-          console.AddLog("[x] The game was terminated...");
-        } else {
-          console.AddLog("[=] The game wasn't running...");
-        }
-      }
+		Checkbox("Debug Mode (F6)", &isDebug);
 
-      console.Draw("Server Console", p_open);
+		Checkbox("Skip Platanium.dll", &noInj);
 
-      SameLine(GetWindowWidth() - 325);
+		/*SameLine(GetWindowWidth() - 200);
 
-      if (Button("Save Config")) {
-        config(true);
-      }
+		Checkbox("Use Discord RPC", &bUseRPC);*/
 
-      SameLine(GetWindowWidth() - 100);
+		if (hasAdditional)
+		{
+			InputText("DLL Name", DllName, sizeof(DllName));
+		}
 
-      if (Button("Load Config")) {
-        config(false);
-      }
+		EndTabItem();
+	}
 
-      EndTabItem();
-    }
-  }
+	if (BeginTabItem("Server Settings"))
+	{
+		SetCursorPosX(GetCursorPosX() + 165);
+		SetCursorPosY(GetCursorPosY() + 5);
+		Text("Customize your Server!");
 
-  if (BeginTabItem("Launcher Settings")) {
-    SetCursorPosX(GetCursorPosX() + 155);
-    SetCursorPosY(GetCursorPosY() + 5);
-    Text("Try some Launcher settings!");
+		static int SelectedStage = 0;
+		static int SelectedShopStyle = 0;
+		static bool bEmergency = false;
+		static bool bIsEmergencyHidden = false;
+		static bool bIsEmergencySpotlight = false;
+		static bool bNews = false;
+		static bool bIsHidden = false;
+		static bool bIsSpotlight = false;
 
-    Checkbox("Additional DLL to Inject", &hasAdditional);
+		/*Combo(("Background Stage"), &SelectedStage, Stages, IM_ARRAYSIZE(Stages));
 
-    SameLine(GetWindowWidth() - 200);
+		Checkbox("Emergency Notice", &bEmergency);
 
-    Checkbox("Debug Mode (F6)", &isDebug);
+		SameLine(GetWindowWidth() - 200);*/
 
-    Checkbox("Skip Platanium.dll", &noInj);
+		Checkbox("Cataba Shop Style", &bIsCataba);
 
-    /*SameLine(GetWindowWidth() - 200);
+		//SameLine(GetWindowWidth() - 200);
 
-    Checkbox("Use Discord RPC", &bUseRPC);*/
+		/*if (bEmergency)
+		{
+				if (Begin("Emergency Notice", nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+				{
+						SetNextWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
+						SetNextWindowSize(ImVec2(300, 320), ImGuiCond_FirstUseEver);
 
-    if (hasAdditional) {
-      InputText("DLL Name", DllName, sizeof(DllName));
-    }
+						InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitleE));
 
-    EndTabItem();
-  }
+						InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBodyE));
 
-   
-  if (BeginTabItem("Server Settings")) {
-    SetCursorPosX(GetCursorPosX() + 165);
-    SetCursorPosY(GetCursorPosY() + 5);
-    Text("Customize your Server!");
+						Checkbox("Hidden", &bIsEmergencyHidden);
 
-    static int SelectedStage = 0;
-    static int SelectedShopStyle = 0;
-    static bool bEmergency = false;
-    static bool bIsEmergencyHidden = false;
-    static bool bIsEmergencySpotlight = false;
-    static bool bNews = false;
-    static bool bIsHidden = false;
-    static bool bIsSpotlight = false;
+						SameLine(GetWindowWidth() - 150);
 
-    /*Combo(("Background Stage"), &SelectedStage, Stages, IM_ARRAYSIZE(Stages));
+						Checkbox("Spotlight", &bIsEmergencySpotlight);
 
-    Checkbox("Emergency Notice", &bEmergency);
+						End();
+				}
+		}*/
 
-    SameLine(GetWindowWidth() - 200);*/
+		Spacing();
 
-    Checkbox("Cataba Shop Style", &bIsCataba);
+		SetCursorPosX(GetCursorPosX() + 6);
+		SetCursorPosY(GetCursorPosY() + 3);
 
-    //SameLine(GetWindowWidth() - 200);
+		Text("*We are going to add more things soon. Stay updated.*");
 
-    /*if (bEmergency)
-    {
-            if (Begin("Emergency Notice", nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
-            {
-                    SetNextWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
-                    SetNextWindowSize(ImVec2(300, 320), ImGuiCond_FirstUseEver);
-
-                    InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitleE));
-
-                    InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBodyE));
-
-                    Checkbox("Hidden", &bIsEmergencyHidden);
-
-                    SameLine(GetWindowWidth() - 150);
-
-                    Checkbox("Spotlight", &bIsEmergencySpotlight);
-
-                    End();
-            }
-    }*/
-
-    Spacing();
-
-    SetCursorPosX(GetCursorPosX() + 6);
-    SetCursorPosY(GetCursorPosY() + 3);
-
-    ImGui::Text("*We are going to add more things soon. Stay updated.*");
-
-    /*ImGui::Checkbox("News", &bNews);
-    if (bNews) {
-            ImGui::InputTextWithHint(" Image", "Insert the image URL!", newsTitle, sizeof(imageURL));
-            ImGui::InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitle));
-            ImGui::InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBody));
-            ImGui::Checkbox("Hidden", &bIsHidden);
-
-            SameLine(GetWindowWidth() - 360);
-
-            ImGui::Checkbox("Spotlight", &bIsSpotlight);
-    }*/
-    // madboy didnt want it here kek
-
-    EndTabItem();
-  }
-
-  if (BeginTabItem("Profile Settings")) {
-    SetCursorPosX(GetCursorPosX() + 115);
-    SetCursorPosY(GetCursorPosY() + 5);
-    Text("Modify your profile as much as you want!");
-
-    InputInt("    Season Level", &seasonLevel);
-
-    InputInt("    VBucks Amount", &vbucks);
-
-    Checkbox("Has Battlepass", &bHasBattlepass);
-
-    SameLine(GetWindowWidth() - 205);
-
-    Checkbox("Skin Locker", &bIsLockerOpen);
-
-    bool didntImport = true;
-
-    if (bIsLockerOpen) {
-      if (Begin("Locker", nullptr,
-                ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse)) {
-        if (!bHasImportedLocker) {
-          loadLocker(false);
-        }
-        SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
-        SetWindowSize(ImVec2(500, 460), ImGuiCond_FirstUseEver);
-
-        std::string lowID = ID;
-
-        boost::to_lower(lowID);
-
-        InputTextWithHint("", "AthenaDefinition:ID", ID, sizeof(ID));
-        SameLine();
-        if (Button("+")) {
-          if (!strstr(lowID.c_str(), "athena")) {
-            MessageBoxA(nullptr, "The item added doesn't seem to be existing.",
-                        "Neonite++", ERROR);
-          }
-
-          IDs.push_back(ID);
-          LockerBackup.push_back(ID);
-        }
-
-        SameLine();
-        if (Button("-")) {
-          if (!strstr(lowID.c_str(), "athena")) {
-            MessageBoxA(nullptr, "This item isn't correct.", "Neonite++",
-                        ERROR);
-          } else {
-            //bool it = std::find(CIDs.begin(), CIDs.end(), "abc") != CIDs.end();
-            std::vector<std::string>::iterator it = std::find(
-                IDs.begin(), IDs.end(), ID);
-
-            int id = std::distance(IDs.begin(), it);
-
-            //printf("%d", id);
-
-            //if (bHasImportedLocker && !ImportedLocker.empty()) IDs = ImportedLocker; )
-
-            if (it != IDs.end()) {
-              IDs.erase(IDs.begin() + id);
-              //LockerBackup.erase(LockerBackup.begin() + id);
-            } else {
-              MessageBoxA(nullptr, "This item doesn't seem to exist.",
-                          "Neonite++", ERROR);
-            }
-
-            //CIDs.pop_back(ID);
-          }
-        }
-
-        SameLine();
-        if (Button(("Erase"))) {
-          if (IDs.empty()) {
-            MessageBoxA(nullptr, "The list is already empty!", "Neonite++",
-                        ERROR);
-          } else {
-            IDs.clear();
-          }
-        }
-        SameLine();
-        if (Button(("Save Locker"))) {
-          loadLocker(true);
-        }
-        /*
-                                        SetCursorPosX(GetCursorPosX() + 215);
-                                        SetCursorPosY(GetCursorPosY() + 5);
-
-                                        if (Button(("Load Locker")))
-                                        {
-
-                                        }*/
-
-        Columns(1, "");
-        Separator();
-        SetCursorPosX(GetCursorPosX() + 205);
-        SetCursorPosY(GetCursorPosY() + 5);
-        Text("ID");
-        //ImGui::NextColumn();
-        /*ImGui::Text("Item Name");
-        ImGui::NextColumn();*/
-        //ImGui::Text("Style");
-        //ImGui::NextColumn();
-        Separator();
-
-        int length = IDs.size();
-
-        static int selected = -1;
-
-        std::vector <std::string>  test;
-        std::string test2 = "patata";
-
-        test.push_back(test2);
-        int size = test.size();
-
-        for (int i = 0; i < size; i++) {
-            printf("%s", test.at(i).c_str());
-        }
-
-        if (bHasImportedLocker) {
-          for (int i = 0; i < length; i++) {
-            char label[32];
-            if (Selectable(IDs.at(i).c_str(), selected == i,
-                           ImGuiSelectableFlags_SpanAllColumns))
-              selected = i;
-
-            bool hovered = IsItemHovered();
-            //ImGui::NextColumn();
-            //ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
-
-            NextColumn();
-            Separator(); // maybe? idk - sammy
-          }
-        } else if (didntImport) {
-          for (int i = 0; i < length; i++) {
-            char label[32];
-            if (Selectable(IDs.at(i).c_str(), selected == i,
-                           ImGuiSelectableFlags_SpanAllColumns))
-              selected = i;
-
-            bool hovered = IsItemHovered();
-            //ImGui::NextColumn();
-            //ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
-
-            NextColumn();
-            Separator(); // maybe? idk - sammy
-          }
-        }
-
-        End();
-      }
-    }
-    EndTabItem();
-  }
-
-
-
-  /*if (BeginTabItem("Shop"))
-  {
-          SetCursorPosX(GetCursorPosX() + 150);
-          SetCursorPosY(GetCursorPosY() + 10);
-
-
-          Text("Customize your Item Shop!");
-
-          ImGui::InputTextWithHint("Featured", " CID of the Skin", ID, sizeof(ID));
-          ImGui::InputTextWithHint("VBucks Price", "VBucks Price", pricesDE, sizeof(pricesDE));
-
-          ImGui::InputTextWithHint("Daily", " CID of the Skin", ID, sizeof(ID));
-          ImGui::InputTextWithHint("VBucks Price", " Price", prices_, sizeof(prices_));
-
-
-          SameLine(GetWindowWidth() - 200);
-
-
-          EndTabItem();
-  }*/
-
-  if (BeginTabItem("Credits")) {
-    SetCursorPosX(GetCursorPosX() + 145);
-    SetCursorPosY(GetCursorPosY() + 5);
-
-    float cX = GetCursorPosY();
-    float cY = GetCursorPosY();
-
-    Text("Backend: Kemo (@xkem0x)");
-
-    SetCursorPosX(GetCursorPosX() + 145);
-    SetCursorPosY(GetCursorPosY() + 5);
-
-    Text("Frontend: Sammy (@sammyisntcool_)");
-
-    SetCursorPosX(GetCursorPosX() + 145);
-    SetCursorPosY(GetCursorPosY() + 5);
-
-    Text("Manager: Ayal (@Ayal01)");
-
-    SetCursorPosX(GetCursorPosX() + 145);
-    SetCursorPosY(GetCursorPosY() + 5);
-
-    Text("Rendering Engine: Dear, ImGui.");
-
-    SetCursorPosY(GetCursorPosY() + 115);
-    SetCursorPosX(GetCursorPosX() + 3.50);
-
-    if (Button("Join Server")) {
-      system("start https://discord.com/invite/qSJ9jGp");
-    }
-
-    SameLine(GetWindowWidth() - 150);
-
-    if (Button("Github Repository")) {
-      system("start https://github.com/NeoniteDev");
-    }
-
-    SameLine(GetWindowWidth() - 315);
-
-    if (Button("Website")) {
-      system("start https://neonite.dev");
-    }
-
-    EndTabItem();
-  }
-
-  EndTabBar();
-
-  if (*p_open == false) {
-    exit(1);
-  }
-
-  End();
-
-  ImGuiStyle *style = &GetStyle();
-
-  style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
-  style->WindowPadding = ImVec2(15, 8);
-  style->WindowRounding = 5.0f;
-  style->FramePadding = ImVec2(5, 5);
-  style->FrameRounding = 4.0f;
-  style->ItemSpacing = ImVec2(12, 8);
-  style->ItemInnerSpacing = ImVec2(8, 6);
-  style->IndentSpacing = 25.0f;
-  style->ScrollbarSize = 15.0f;
-  style->ScrollbarRounding = 9.0f;
-  style->GrabMinSize = 5.0f;
-  style->GrabRounding = 3.0f;
-
-  style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-  style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-  style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-  style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 0.9f);
-  style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-  style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-  style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-  style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-  style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-  style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_TitleBg] = ImColor(85, 0, 255);
-  style->Colors[ImGuiCol_TitleBgCollapsed] = ImColor(85, 0, 255);
-  style->Colors[ImGuiCol_TitleBgActive] = ImColor(85, 0, 255);
-  style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-  style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-  style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-  style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(
-      0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(
-      0.06f, 0.05f, 0.07f, 1.00f);
-  style->Colors[ImGuiCol_CheckMark] = ImColor(85, 0, 255);
-  style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-  style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-  style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-  style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-  style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-  style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-  style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-  style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-  style->Colors[ImGuiCol_ResizeGripHovered] =
-      ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-  style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-  style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-  style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-  style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-  style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(
-      0.25f, 1.00f, 0.00f, 1.00f);
-  style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
-  style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
-      1.00f, 0.98f, 0.95f, 0.73f);
+		/*ImGui::Checkbox("News", &bNews);
+		if (bNews) {
+				ImGui::InputTextWithHint(" Image", "Insert the image URL!", newsTitle, sizeof(imageURL));
+				ImGui::InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitle));
+				ImGui::InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBody));
+				ImGui::Checkbox("Hidden", &bIsHidden);
+
+				SameLine(GetWindowWidth() - 360);
+
+				ImGui::Checkbox("Spotlight", &bIsSpotlight);
+		}*/
+		// madboy didnt want it here kek
+
+		EndTabItem();
+	}
+
+	if (BeginTabItem("Profile Settings"))
+	{
+		SetCursorPosX(GetCursorPosX() + 115);
+		SetCursorPosY(GetCursorPosY() + 5);
+		Text("Modify your profile as much as you want!");
+
+		InputInt("    Season Level", &seasonLevel);
+
+		InputInt("    VBucks Amount", &vbucks);
+
+		Checkbox("Has Battlepass", &bHasBattlepass);
+
+		SameLine(GetWindowWidth() - 205);
+
+		Checkbox("Skin Locker", &bIsLockerOpen);
+
+		bool didntImport = true;
+
+		if (bIsLockerOpen)
+		{
+			if (Begin("Locker", nullptr,
+				ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
+			{
+				if (!bHasImportedLocker)
+				{
+					loadLocker(false);
+				}
+				SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
+				SetWindowSize(ImVec2(500, 460), ImGuiCond_FirstUseEver);
+
+				std::string lowID = ID;
+
+				boost::to_lower(lowID);
+
+				InputTextWithHint("", "AthenaDefinition:ID", ID, sizeof(ID));
+				SameLine();
+				if (Button("+"))
+				{
+					if (!strstr(lowID.c_str(), "athena"))
+					{
+						MessageBoxA(nullptr, "The item added doesn't seem to be existing.",
+							"Neonite++", ERROR);
+					}
+
+					IDs.push_back(ID);
+					LockerBackup.push_back(ID);
+				}
+
+				SameLine();
+				if (Button("-"))
+				{
+					if (!strstr(lowID.c_str(), "athena"))
+					{
+						MessageBoxA(nullptr, "This item isn't correct.", "Neonite++",
+							ERROR);
+					}
+					else
+					{
+						//bool it = std::find(CIDs.begin(), CIDs.end(), "abc") != CIDs.end();
+						std::vector<std::string>::iterator it = std::find(
+							IDs.begin(), IDs.end(), ID);
+
+						int id = std::distance(IDs.begin(), it);
+
+						//printf("%d", id);
+
+						//if (bHasImportedLocker && !ImportedLocker.empty()) IDs = ImportedLocker; )
+
+						if (it != IDs.end())
+						{
+							IDs.erase(IDs.begin() + id);
+							//LockerBackup.erase(LockerBackup.begin() + id);
+						}
+						else
+						{
+							MessageBoxA(nullptr, "This item doesn't seem to exist.",
+								"Neonite++", ERROR);
+						}
+
+						//CIDs.pop_back(ID);
+					}
+				}
+
+				SameLine();
+				if (Button(("Erase")))
+				{
+					if (IDs.empty())
+					{
+						MessageBoxA(nullptr, "The list is already empty!", "Neonite++",
+							ERROR);
+					}
+					else
+					{
+						IDs.clear();
+					}
+				}
+				SameLine();
+				if (Button(("Save Locker")))
+				{
+					loadLocker(true);
+				}
+				/*
+												SetCursorPosX(GetCursorPosX() + 215);
+												SetCursorPosY(GetCursorPosY() + 5);
+
+												if (Button(("Load Locker")))
+												{
+												}*/
+
+				Columns(1, "");
+				Separator();
+				SetCursorPosX(GetCursorPosX() + 205);
+				SetCursorPosY(GetCursorPosY() + 5);
+				Text("ID");
+				//ImGui::NextColumn();
+				/*ImGui::Text("Item Name");
+				ImGui::NextColumn();*/
+				//ImGui::Text("Style");
+				//ImGui::NextColumn();
+				Separator();
+
+				int length = IDs.size();
+
+				static int selected = -1;
+
+				std::vector<std::string> test;
+				std::string test2 = "patata";
+
+				test.push_back(test2);
+				int size = test.size();
+
+				for (int i = 0; i < size; i++)
+				{
+					printf("%s", test.at(i).c_str());
+				}
+
+				if (bHasImportedLocker)
+				{
+					for (int i = 0; i < length; i++)
+					{
+						char label[32];
+						if (Selectable(IDs.at(i).c_str(), selected == i,
+							ImGuiSelectableFlags_SpanAllColumns))
+							selected = i;
+
+						bool hovered = IsItemHovered();
+						//ImGui::NextColumn();
+						//ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
+
+						NextColumn();
+						Separator(); // maybe? idk - sammy
+					}
+				}
+				else if (didntImport)
+				{
+					for (int i = 0; i < length; i++)
+					{
+						char label[32];
+						if (Selectable(IDs.at(i).c_str(), selected == i,
+							ImGuiSelectableFlags_SpanAllColumns))
+							selected = i;
+
+						bool hovered = IsItemHovered();
+						//ImGui::NextColumn();
+						//ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
+
+						NextColumn();
+						Separator(); // maybe? idk - sammy
+					}
+				}
+
+				End();
+			}
+		}
+		EndTabItem();
+	}
+
+	/*if (BeginTabItem("Shop"))
+	{
+			SetCursorPosX(GetCursorPosX() + 150);
+			SetCursorPosY(GetCursorPosY() + 10);
+
+			Text("Customize your Item Shop!");
+
+			ImGui::InputTextWithHint("Featured", " CID of the Skin", ID, sizeof(ID));
+			ImGui::InputTextWithHint("VBucks Price", "VBucks Price", pricesDE, sizeof(pricesDE));
+
+			ImGui::InputTextWithHint("Daily", " CID of the Skin", ID, sizeof(ID));
+			ImGui::InputTextWithHint("VBucks Price", " Price", prices_, sizeof(prices_));
+
+			SameLine(GetWindowWidth() - 200);
+
+			EndTabItem();
+	}*/
+
+	if (BeginTabItem("Credits"))
+	{
+		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		float cX = GetCursorPosY();
+		float cY = GetCursorPosY();
+
+		Text("Backend: Kemo (@xkem0x)");
+
+		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("Frontend: Sammy (@sammyisntcool_)");
+
+		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("Manager: Ayal (@Ayal01)");
+
+		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("Rendering Engine: Dear, ImGui.");
+
+		SetCursorPosY(GetCursorPosY() + 115);
+		SetCursorPosX(GetCursorPosX() + 3.50);
+
+		if (Button("Join Server"))
+		{
+			system("start https://discord.com/invite/qSJ9jGp");
+		}
+
+		SameLine(GetWindowWidth() - 150);
+
+		if (Button("Github Repository"))
+		{
+			system("start https://github.com/NeoniteDev");
+		}
+
+		SameLine(GetWindowWidth() - 315);
+
+		if (Button("Website"))
+		{
+			system("start https://neonite.dev");
+		}
+
+		EndTabItem();
+	}
+
+	EndTabBar();
+
+	if (*p_open == false)
+	{
+		exit(1);
+	}
+
+	End();
+
+	ImGuiStyle* style = &GetStyle();
+
+	style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
+	style->WindowPadding = ImVec2(15, 8);
+	style->WindowRounding = 5.0f;
+	style->FramePadding = ImVec2(5, 5);
+	style->FrameRounding = 4.0f;
+	style->ItemSpacing = ImVec2(12, 8);
+	style->ItemInnerSpacing = ImVec2(8, 6);
+	style->IndentSpacing = 25.0f;
+	style->ScrollbarSize = 15.0f;
+	style->ScrollbarRounding = 9.0f;
+	style->GrabMinSize = 5.0f;
+	style->GrabRounding = 3.0f;
+
+	style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 0.9f);
+	style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+	style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_TitleBg] = ImColor(85, 0, 255);
+	style->Colors[ImGuiCol_TitleBgCollapsed] = ImColor(85, 0, 255);
+	style->Colors[ImGuiCol_TitleBgActive] = ImColor(85, 0, 255);
+	style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+	style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(
+		0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(
+		0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_CheckMark] = ImColor(85, 0, 255);
+	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+	style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	style->Colors[ImGuiCol_ResizeGripHovered] =
+		ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+	style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+	style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+	style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(
+		0.25f, 1.00f, 0.00f, 1.00f);
+	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+	style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
+		1.00f, 0.98f, 0.95f, 0.73f);
 }
 
 #endif

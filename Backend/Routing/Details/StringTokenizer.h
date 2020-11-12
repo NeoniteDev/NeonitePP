@@ -4,36 +4,33 @@
 #include <string>
 
 namespace Routing {
-namespace Details {
+	namespace Details {
+		/**
+		 * @brief Simple string tokenizer. Works only with single character delimeter.
+		 */
+		class StringTokenizer {
+		public:
+			struct TokenPos {
+				int first;
+				int len;
+			};
 
+			StringTokenizer(std::string const& str, char delim);
 
-/**
- * @brief Simple string tokenizer. Works only with single character delimeter.
- */
-class StringTokenizer {
-public:
-  struct TokenPos {
-    int first;
-    int len;
-  };
+			int numTokens() const;
 
-  StringTokenizer(std::string const &str, char delim);
+			std::vector<std::string> getAllTokens() const;
 
-  int numTokens() const;
+			std::string getToken(int index) const;
+			TokenPos getTokenPos(int index) const;
 
-  std::vector<std::string> getAllTokens() const;
+		private:
+			std::string _origin;
+			std::vector<TokenPos> _tokens;
+			char _delimeter;
 
-  std::string getToken(int index) const;
-  TokenPos getTokenPos(int index) const;
-
-private:
-  std::string _origin;
-  std::vector<TokenPos> _tokens;
-  char _delimeter;
-
-  void tokenize();
-  int nextDelim(std::string const &str, int startPos);
-};
-
-}
+			void tokenize();
+			int nextDelim(std::string const& str, int startPos);
+		};
+	}
 }

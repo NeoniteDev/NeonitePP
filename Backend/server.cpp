@@ -15,7 +15,7 @@ public:
 
 	// Initiate the asynchronous operations associated with the connection.
 	void
-	start()
+		start()
 	{
 		read_request();
 		check_deadline();
@@ -26,7 +26,7 @@ private:
 	tcp::socket socket_;
 
 	// The buffer for performing reads.
-	beast::flat_buffer buffer_{8192};
+	beast::flat_buffer buffer_{ 8192 };
 
 	// The request message.
 	http::request<http::string_body> req;
@@ -41,7 +41,7 @@ private:
 
 	// Asynchronously receive a complete request message.
 	void
-	read_request()
+		read_request()
 	{
 		auto self = shared_from_this();
 
@@ -50,7 +50,7 @@ private:
 			buffer_,
 			req,
 			[self](beast::error_code ec,
-			       std::size_t bytes_transferred)
+				std::size_t bytes_transferred)
 			{
 				boost::ignore_unused(bytes_transferred);
 				if (!ec) self->process_request();
@@ -59,7 +59,7 @@ private:
 
 	// Determine what needs to be done with the request message.
 	void
-	process_request()
+		process_request()
 	{
 		res.version(req.version());
 		res.keep_alive(false);
@@ -71,7 +71,7 @@ private:
 
 	// Asynchronously transmit the response message.
 	void
-	write_response()
+		write_response()
 	{
 		auto self = shared_from_this();
 
@@ -89,7 +89,7 @@ private:
 
 	// Check whether we have spent enough time on this connection.
 	void
-	check_deadline()
+		check_deadline()
 	{
 		auto self = shared_from_this();
 
@@ -109,15 +109,14 @@ private:
 void http_server(tcp::acceptor& acceptor, tcp::socket& socket)
 {
 	acceptor.async_accept(socket,
-	                      [&](beast::error_code ec)
-	                      {
-		                      if (!ec)
-			                      std::make_shared<http_connection>(std::move(socket))
-			                      ->start();
-		                      http_server(acceptor, socket);
-	                      });
+		[&](beast::error_code ec)
+		{
+			if (!ec)
+				std::make_shared<http_connection>(std::move(socket))
+				->start();
+			http_server(acceptor, socket);
+		});
 }
-
 
 void server()
 {
@@ -125,13 +124,13 @@ void server()
 	{
 		auto const address = net::ip::make_address(ip);
 
-		net::io_context ioc{1};
-		tcp::acceptor acceptor{ioc, {address, port}};
-		tcp::socket socket{ioc};
+		net::io_context ioc{ 1 };
+		tcp::acceptor acceptor{ ioc, {address, port} };
+		tcp::socket socket{ ioc };
 
 		http_server(acceptor, socket);
 		CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&registerStatics,
-		             nullptr, NULL, nullptr);
+			nullptr, NULL, nullptr);
 
 		console.AddLog("[=]Neonite server is listening on port %i", port);
 		ioc.run();

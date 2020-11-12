@@ -8,24 +8,22 @@
 #include "RegexConverter.h"
 
 namespace Routing {
-namespace Details {
+	namespace Details {
+		class PathTemplate {
+		public:
+			PathTemplate(std::string const& templ);
 
-class PathTemplate {
-public:
-  PathTemplate(std::string const &templ);
+			std::string const& templ() const { return _templ; }
 
-  std::string const &templ() const { return _templ; }
+			std::regex const& regex() const { return _regex; }
 
-  std::regex const &regex() const { return _regex; }
+			PathTemplateParser& parser() { return _parser; }
+			PathTemplateParser const& parser() const { return _parser; }
 
-  PathTemplateParser &parser() { return _parser; }
-  PathTemplateParser const &parser() const { return _parser; }
-
-private:
-  std::regex _regex;
-  PathTemplateParser _parser;
-  std::string _templ;
-};
-
-}
+		private:
+			std::regex _regex;
+			PathTemplateParser _parser;
+			std::string _templ;
+		};
+	}
 }

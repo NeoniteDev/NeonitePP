@@ -25,7 +25,7 @@ inline http::response<http::dynamic_body> handleDynamic(
 		return res;
 	}
 
-		//oauth	
+	//oauth
 	case str2int("/account/api/public/account/:accountId/deviceAuth"):
 	{
 		if (req.method() == http::verb::get)
@@ -46,7 +46,7 @@ inline http::response<http::dynamic_body> handleDynamic(
 			return res;
 		}
 	}
-		
+
 	case str2int("/account/api/public/account/:accountId"):
 	{
 		auto accountId = match["accountId"];
@@ -59,7 +59,6 @@ inline http::response<http::dynamic_body> handleDynamic(
 		ostream(res.body()) << j;
 		return res;
 	}
-
 
 	case str2int("/account/api/oauth/verify"):
 	{

@@ -18,7 +18,6 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void ChangeDetail(std::string name) {
 	discordPresence.details = name.c_str();
 	Discord_UpdatePresence(&discordPresence);
-
 }
 
 int main(int argc, char* argv[])
@@ -34,7 +33,7 @@ int main(int argc, char* argv[])
 	};
 	::RegisterClassEx(&wc);
 	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Neonite++"), WS_POPUP, 500,
-	                           100, 535, 320, NULL, NULL, wc.hInstance, NULL);
+		100, 535, 320, NULL, NULL, wc.hInstance, NULL);
 
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
@@ -114,11 +113,11 @@ int main(int argc, char* argv[])
 		g_pd3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 		g_pd3dDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, false);
 		D3DCOLOR clear_col_dx = D3DCOLOR_RGBA((int)(clear_color.x * 255.0f),
-		                                      (int)(clear_color.y * 255.0f),
-		                                      (int)(clear_color.z * 255.0f),
-		                                      (int)(clear_color.w * 255.0f));
+			(int)(clear_color.y * 255.0f),
+			(int)(clear_color.z * 255.0f),
+			(int)(clear_color.w * 255.0f));
 		g_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-		                    clear_col_dx, 1.0f, 0);
+			clear_col_dx, 1.0f, 0);
 		if (g_pd3dDevice->BeginScene() >= 0)
 		{
 			ImGui::Render();
@@ -154,7 +153,6 @@ int main(int argc, char* argv[])
 
 // Helper functions
 
-
 bool CreateDeviceD3D(HWND hWnd)
 {
 	if ((g_pD3D = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) return false;
@@ -169,8 +167,8 @@ bool CreateDeviceD3D(HWND hWnd)
 	g_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE; // Present with vsync
 	//g_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;   // Present without vsync, maximum unthrottled framerate
 	if (g_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-	                         D3DCREATE_HARDWARE_VERTEXPROCESSING, &g_d3dpp,
-	                         &g_pd3dDevice) < 0)
+		D3DCREATE_HARDWARE_VERTEXPROCESSING, &g_d3dpp,
+		&g_pd3dDevice) < 0)
 		return false;
 
 	return true;
@@ -220,14 +218,12 @@ void Init(LPDIRECT3DDEVICE9 pDevice, HWND hWnd)
 
 		ImGui::StyleColorsDark();
 		console.AddLog("                        [>] Welcome to Neonite!");
-
 	}
 }
 
-
 // Win32 message handler
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg,
-                                              WPARAM wParam, LPARAM lParam);
+	WPARAM wParam, LPARAM lParam);
 
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -254,7 +250,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		int pos = GetMessagePos();
 		POINTS ps = MAKEPOINTS(pos);
-		POINT p = {ps.x, ps.y};
+		POINT p = { ps.x, ps.y };
 
 		ScreenToClient(hWnd, &p);
 

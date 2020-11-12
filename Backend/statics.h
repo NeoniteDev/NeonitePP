@@ -8,8 +8,8 @@ inline void registerStatics()
 	route = "/lightswitch/api/service/bulk/status";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-	<<
-	R"(
+		<<
+		R"(
         {
             "serviceInstanceId": "fortnite",
             "status": "UP",
@@ -118,7 +118,7 @@ inline void registerStatics()
 	res.body().clear();
 
 	route =
-	"/party/api/v1/Fortnite/user/:accountId/notifications/undelivered/count";
+		"/party/api/v1/Fortnite/user/:accountId/notifications/undelivered/count";
 	res.result(http::status::no_content);
 	router.registerPath(route);
 	responses.insert(
@@ -150,8 +150,8 @@ inline void registerStatics()
 	route = "/affiliate/api/public/affiliates/slug/:affiliateName";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-	<<
-	R"(
+		<<
+		R"(
         {
             "id": "aabbccddeeff11223344556677889900",
             "slug": "neonite++",
@@ -168,7 +168,7 @@ inline void registerStatics()
 	route = "/party/api/v1/Fortnite/user/:accountId";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-	<< R"({
+		<< R"({
 	"current": [],
 	"pending": [],
 	"invites": [],
@@ -176,13 +176,13 @@ inline void registerStatics()
     })"_json;
 	router.registerPath(route);
 	responses.insert(
-	std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
 	res.body().clear();
 
 	route = "/fortnite/api/matchmaking/session/findPlayer/:id";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-	<< R"([])"_json;
+		<< R"([])"_json;
 	router.registerPath(route);
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
@@ -210,7 +210,7 @@ inline void registerStatics()
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
 		<< R"([])"_json;
-	
+
 	router.registerPath(route);
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
@@ -236,10 +236,9 @@ inline void registerStatics()
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
 	res.body().clear();
-	
+
 	//register dynamic routes too
 	router.registerPath("/fortnite/api/game/v2/privacy/account/:accountId");
 	router.registerPath("/account/api/public/account/:accountId/deviceAuth");
 	router.registerPath("/account/api/public/account/:accountId");
-
 }
