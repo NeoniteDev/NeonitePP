@@ -52,25 +52,13 @@ const char *Stages[] = {" Default", " Season 14", " Season 13", " Season 12",
                         " World Cup"};
 
 
-void Center(std::string text, bool isText, bool isButton) {
-  float font_size = ImGui::GetFontSize() * text.size() / 2;
-  ImGui::SameLine(
-      ImGui::GetWindowSize().x / 2 -
-      font_size + (font_size / 2)
-      );
 
-  if (isText) {
-    ImGui::Text("%s", text);
+  static int FilterNoSpace(ImGuiTextEditCallbackData * data)
+  {
+      if (data->EventChar == ' ') return 1;
+      return 0;
   }
 
-  const char *text2 = text.c_str();
-
-  if (isButton) {
-    ImGui::Button(text2);
-  }
-
-  ImGui::NewLine();
-}
 
 
 static void HelpMarker(const char *desc) {
@@ -131,15 +119,21 @@ void ImGui::ShowLoader(bool *p_open) {
 
       SameLine(GetWindowWidth() - 390);
 
-      InputTextWithHint(" ", "Input your Username", name, sizeof(name));
+      InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter, FilterNoSpace);
 
       SameLine(GetWindowWidth() - 100);
+
+      if (strstr(name, " ")) {
+          memset(name, 0, sizeof(name));
+      }
 
       if (Button("Start Game")) {
         if (hLauncher == INVALID_HANDLE_VALUE) {
           if constexpr (name == "") {
             console.AddLog("[x] Please input an username!");
           }
+          
+
           if constexpr (sizeof(name) < 2) {
             console.AddLog("[x] Your name must be long 3 or more characters!");
           }
