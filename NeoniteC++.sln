@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30621.155
+VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeoniteC++", "NeoniteC++.vcxproj", "{DFF93ADF-5360-45BA-B864-970B7D9C8FD6}"
 EndProject
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A1ED28A6-4566-48FC-9704-FF3F1342C938}
+		SolutionGuid = {F24CB1A3-E0B6-4953-96B4-2BAB2675628B}
 	EndGlobalSection
 EndGlobal

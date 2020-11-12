@@ -28,8 +28,8 @@ static void UpdateDiscord()
 
 		DiscordRichPresence discordPresence;
 		memset(&discordPresence, 0, sizeof(discordPresence));
-		discordPresence.state = "FOLLOW @SAMMYISNTCOOL_ ON TWITTER THANKS";
-		discordPresence.details = "FOLLOW @SAMMYISNTCOOL_ ON TWITTER THANKS";
+		discordPresence.state = "Using Neonite";
+		discordPresence.details = "In Launcher";
 		discordPresence.startTimestamp = StartTime;
 		discordPresence.endTimestamp = NULL;
 		discordPresence.largeImageKey = "big-image";
