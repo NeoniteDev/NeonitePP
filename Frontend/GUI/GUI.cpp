@@ -234,22 +234,12 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosY(GetCursorPosY() + 5);
 		Text("Customize your Server!");
 
-		static int SelectedStage = 0;
-		static int SelectedShopStyle = 0;
-		static bool bEmergency = false;
-		static bool bIsEmergencyHidden = false;
-		static bool bIsEmergencySpotlight = false;
-		static bool bNews = false;
-		static bool bIsHidden = false;
-		static bool bIsSpotlight = false;
-
-
 		Checkbox("Cataba Shop Style", &bIsCataba);
 
 		Spacing();
 
-		SetCursorPosX(GetCursorPosX() + 6);
-		SetCursorPosY(GetCursorPosY() + 3);
+		SetCursorPosX(GetCursorPosX() + 55);
+		SetCursorPosY(GetCursorPosY() + 5);
 
 		Text("*We are going to add more things soon. Stay updated.*");
 
@@ -460,7 +450,7 @@ void ImGui::ShowLoader(bool* p_open)
 
 	style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
 	style->WindowPadding = ImVec2(15, 8);
-	style->WindowRounding = 5.0f;
+	style->WindowRounding = 3.0f;
 	style->FramePadding = ImVec2(5, 5);
 	style->FrameRounding = 4.0f;
 	style->ItemSpacing = ImVec2(12, 8);

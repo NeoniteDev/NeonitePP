@@ -3,6 +3,7 @@
 #include "Frontend/Launcher/launcher.h"
 #include "Backend/server.h"
 #include "Discord.h"
+#include "resource.h"
 
 static LPDIRECT3D9 g_pD3D = NULL;
 static LPDIRECT3DDEVICE9 g_pd3dDevice = NULL;
@@ -81,8 +82,7 @@ int main(int argc, char* argv[])
 	ImGui_ImplDX9_Init(g_pd3dDevice);
 
 	// Our state
-	bool VLoader = true;
-	bool show_another_window = false;
+	bool show = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	// Main loop
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 		ImGui::NewFrame();
 
 		{
-			ImGui::ShowLoader(&VLoader);
+			ImGui::ShowLoader(&show);
 			StartRPC();
 		}
 
@@ -217,7 +217,7 @@ void Init(LPDIRECT3DDEVICE9 pDevice, HWND hWnd)
 		ImGui_ImplDX9_Init(pDevice);
 
 		ImGui::StyleColorsDark();
-		console.AddLog("                        [>] Welcome to Neonite!");
+		console.AddLog("                        [>] Welcome to Neonite! \n");
 	}
 }
 
@@ -231,6 +231,13 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	switch (msg)
 	{
+	case WM_CREATE:
+	{
+		HINSTANCE hInstance = ((LPCREATESTRUCT)lParam)->hInstance;
+		HICON hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+		SendMessage(hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+		return 0;
+	}
 	case WM_SIZE:
 		if (g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
 		{
