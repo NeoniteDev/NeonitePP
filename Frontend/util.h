@@ -61,7 +61,7 @@ std::string GetEXEPath();
 
 //Inline vars
 inline std::vector<std::string> IDs;
-
+inline HWND window;
 inline std::vector<std::string> prices;
 inline std::vector<std::string> ImportedLocker;
 inline std::vector<std::string> LockerBackup;

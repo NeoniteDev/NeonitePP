@@ -42,39 +42,16 @@ using namespace std;
 
 #if !defined(IMGUI_DISABLE_DEMO_WINDOWS)
 
-const char* ShopTypes[] = { " Default", " Cataba" };
-const char* Stages[] = {
-	" Default", " Season 14", " Season 13", " Season 12",
-	" Season 11", " Season 10 (X)", " Winterfest",
-	" FortniteMares", " Summer", " BatMan", " Star Wars",
-	" World Cup"
-};
-
 static int FilterNoSpace(ImGuiTextEditCallbackData* data)
 {
 	if (data->EventChar == ' ') return 1;
 	return 0;
 }
 
-static void HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-}
-
 static bool hasAdditional = false;
 
 void ImGui::ShowLoader(bool* p_open)
 {
-	// IMGUI FLAGS
-
 	ImGuiWindowFlags window_flags = 0;
 
 	window_flags |= ImGuiWindowFlags_NoMove;
@@ -87,7 +64,7 @@ void ImGui::ShowLoader(bool* p_open)
 	SetNextWindowPos(ImVec2(500, 100), ImGuiCond_FirstUseEver);
 	SetNextWindowSize(ImVec2(535, 320), ImGuiCond_FirstUseEver);
 
-	// FORM
+
 	if (!Begin("Neonite++", p_open, window_flags))
 	{
 		End();
@@ -100,13 +77,6 @@ void ImGui::ShowLoader(bool* p_open)
 	{
 		if (BeginTabItem("Main"))
 		{
-			/*SetCursorPosX(GetCursorPosX() + 150);
-			SetCursorPosY(GetCursorPosY() + 10);
-
-			//Text("Welcome to Neonite++!");*/
-
-			//ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
 			if (Button("Start Server"))
 			{
 				if (Server == INVALID_HANDLE_VALUE)
@@ -180,8 +150,6 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					try
 					{
-						//this should kill your game at all :pepelaugh:
-						// kek -sammy
 						TerminateProcess(hEAC, 1);
 					}
 					catch (...)
@@ -231,10 +199,6 @@ void ImGui::ShowLoader(bool* p_open)
 
 		Checkbox("Skip Platanium.dll", &noInj);
 
-		/*SameLine(GetWindowWidth() - 200);
-
-		Checkbox("Use Discord RPC", &bUseRPC);*/
-
 		if (hasAdditional)
 		{
 			InputText("DLL Name", DllName, sizeof(DllName));
@@ -249,65 +213,14 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosY(GetCursorPosY() + 5);
 		Text("Customize your Server!");
 
-		static int SelectedStage = 0;
-		static int SelectedShopStyle = 0;
-		static bool bEmergency = false;
-		static bool bIsEmergencyHidden = false;
-		static bool bIsEmergencySpotlight = false;
-		static bool bNews = false;
-		static bool bIsHidden = false;
-		static bool bIsSpotlight = false;
-
-		/*Combo(("Background Stage"), &SelectedStage, Stages, IM_ARRAYSIZE(Stages));
-
-		Checkbox("Emergency Notice", &bEmergency);
-
-		SameLine(GetWindowWidth() - 200);*/
-
 		Checkbox("Cataba Shop Style", &bIsCataba);
-
-		//SameLine(GetWindowWidth() - 200);
-
-		/*if (bEmergency)
-		{
-				if (Begin("Emergency Notice", nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
-				{
-						SetNextWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
-						SetNextWindowSize(ImVec2(300, 320), ImGuiCond_FirstUseEver);
-
-						InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitleE));
-
-						InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBodyE));
-
-						Checkbox("Hidden", &bIsEmergencyHidden);
-
-						SameLine(GetWindowWidth() - 150);
-
-						Checkbox("Spotlight", &bIsEmergencySpotlight);
-
-						End();
-				}
-		}*/
 
 		Spacing();
 
-		SetCursorPosX(GetCursorPosX() + 6);
-		SetCursorPosY(GetCursorPosY() + 3);
+		SetCursorPosX(GetCursorPosX() + 55);
+		SetCursorPosY(GetCursorPosY() + 5);
 
 		Text("*We are going to add more things soon. Stay updated.*");
-
-		/*ImGui::Checkbox("News", &bNews);
-		if (bNews) {
-				ImGui::InputTextWithHint(" Image", "Insert the image URL!", newsTitle, sizeof(imageURL));
-				ImGui::InputTextWithHint(" Title", "Insert the title!", newsTitle, sizeof(newsTitle));
-				ImGui::InputTextWithHint(" Body", "Insert the body!", newsBody, sizeof(newsBody));
-				ImGui::Checkbox("Hidden", &bIsHidden);
-
-				SameLine(GetWindowWidth() - 360);
-
-				ImGui::Checkbox("Spotlight", &bIsSpotlight);
-		}*/
-		// madboy didnt want it here kek
 
 		EndTabItem();
 	}
@@ -352,12 +265,12 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (!strstr(lowID.c_str(), "athena"))
 					{
-						MessageBoxA(nullptr, "The item added doesn't seem to be existing.",
+						MessageBoxA(window, "The item added doesn't seem to be existing.",
 							"Neonite++", ERROR);
+					} else {
+						IDs.push_back(ID);
+						LockerBackup.push_back(ID);
 					}
-
-					IDs.push_back(ID);
-					LockerBackup.push_back(ID);
 				}
 
 				SameLine();
@@ -365,20 +278,16 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (!strstr(lowID.c_str(), "athena"))
 					{
-						MessageBoxA(nullptr, "This item isn't correct.", "Neonite++",
+						MessageBoxA(window, "This item isn't correct.", "Neonite++",
 							ERROR);
 					}
 					else
 					{
-						//bool it = std::find(CIDs.begin(), CIDs.end(), "abc") != CIDs.end();
 						std::vector<std::string>::iterator it = std::find(
 							IDs.begin(), IDs.end(), ID);
 
 						int id = std::distance(IDs.begin(), it);
 
-						//printf("%d", id);
-
-						//if (bHasImportedLocker && !ImportedLocker.empty()) IDs = ImportedLocker; )
 
 						if (it != IDs.end())
 						{
@@ -387,11 +296,10 @@ void ImGui::ShowLoader(bool* p_open)
 						}
 						else
 						{
-							MessageBoxA(nullptr, "This item doesn't seem to exist.",
+							MessageBoxA(window, "This item doesn't seem to exist.",
 								"Neonite++", ERROR);
 						}
 
-						//CIDs.pop_back(ID);
 					}
 				}
 
@@ -400,7 +308,7 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (IDs.empty())
 					{
-						MessageBoxA(nullptr, "The list is already empty!", "Neonite++",
+						MessageBoxA(window, "The list is already empty!", "Neonite++",
 							ERROR);
 					}
 					else
@@ -413,40 +321,17 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					loadLocker(true);
 				}
-				/*
-												SetCursorPosX(GetCursorPosX() + 215);
-												SetCursorPosY(GetCursorPosY() + 5);
-
-												if (Button(("Load Locker")))
-												{
-												}*/
 
 				Columns(1, "");
 				Separator();
 				SetCursorPosX(GetCursorPosX() + 205);
 				SetCursorPosY(GetCursorPosY() + 5);
 				Text("ID");
-				//ImGui::NextColumn();
-				/*ImGui::Text("Item Name");
-				ImGui::NextColumn();*/
-				//ImGui::Text("Style");
-				//ImGui::NextColumn();
 				Separator();
 
 				int length = IDs.size();
 
 				static int selected = -1;
-
-				std::vector<std::string> test;
-				std::string test2 = "patata";
-
-				test.push_back(test2);
-				int size = test.size();
-
-				for (int i = 0; i < size; i++)
-				{
-					printf("%s", test.at(i).c_str());
-				}
 
 				if (bHasImportedLocker)
 				{
@@ -457,12 +342,8 @@ void ImGui::ShowLoader(bool* p_open)
 							ImGuiSelectableFlags_SpanAllColumns))
 							selected = i;
 
-						bool hovered = IsItemHovered();
-						//ImGui::NextColumn();
-						//ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
-
 						NextColumn();
-						Separator(); // maybe? idk - sammy
+						Separator();
 					}
 				}
 				else if (didntImport)
@@ -474,12 +355,8 @@ void ImGui::ShowLoader(bool* p_open)
 							ImGuiSelectableFlags_SpanAllColumns))
 							selected = i;
 
-						bool hovered = IsItemHovered();
-						//ImGui::NextColumn();
-						//ImGui::Text( "%s", CIDs.at(i).c_str()); // in case of removal of selectable tabs, uncomment, the selection is useless but idk. - sammy
-
 						NextColumn();
-						Separator(); // maybe? idk - sammy
+						Separator();
 					}
 				}
 
@@ -488,24 +365,6 @@ void ImGui::ShowLoader(bool* p_open)
 		}
 		EndTabItem();
 	}
-
-	/*if (BeginTabItem("Shop"))
-	{
-			SetCursorPosX(GetCursorPosX() + 150);
-			SetCursorPosY(GetCursorPosY() + 10);
-
-			Text("Customize your Item Shop!");
-
-			ImGui::InputTextWithHint("Featured", " CID of the Skin", ID, sizeof(ID));
-			ImGui::InputTextWithHint("VBucks Price", "VBucks Price", pricesDE, sizeof(pricesDE));
-
-			ImGui::InputTextWithHint("Daily", " CID of the Skin", ID, sizeof(ID));
-			ImGui::InputTextWithHint("VBucks Price", " Price", prices_, sizeof(prices_));
-
-			SameLine(GetWindowWidth() - 200);
-
-			EndTabItem();
-	}*/
 
 	if (BeginTabItem("Credits"))
 	{
@@ -570,7 +429,7 @@ void ImGui::ShowLoader(bool* p_open)
 
 	style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
 	style->WindowPadding = ImVec2(15, 8);
-	style->WindowRounding = 5.0f;
+	style->WindowRounding = 3.0f;
 	style->FramePadding = ImVec2(5, 5);
 	style->FrameRounding = 4.0f;
 	style->ItemSpacing = ImVec2(12, 8);
