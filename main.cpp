@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
 	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Neonite++"), WS_POPUP, 500,
 		100, 535, 320, NULL, NULL, wc.hInstance, NULL);
 
+	window = hwnd;
+
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
 	{

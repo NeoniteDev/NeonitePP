@@ -132,13 +132,13 @@ void server()
 		CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&registerStatics,
 			nullptr, NULL, nullptr);
 
-		console.AddLog("[=]Neonite server is listening on port %i", port);
+		console.AddLog("[=] The Server is now listening on port %i!", port);
 		ioc.run();
 	}
 	catch (std::exception const& e)
 	{
 		std::string error = e.what();
-		error += "\nPlease screenshot this and send it in the server for support.";
+		error += "\n[x] FATAL ERROR: Please screenshot this and send it in the server for support.";
 		MessageBoxA(nullptr, error.c_str(), "Neonite++", ERROR);
 	}
 }

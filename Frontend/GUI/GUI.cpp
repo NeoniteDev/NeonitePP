@@ -42,31 +42,10 @@ using namespace std;
 
 #if !defined(IMGUI_DISABLE_DEMO_WINDOWS)
 
-const char* ShopTypes[] = { " Default", " Cataba" };
-const char* Stages[] = {
-	" Default", " Season 14", " Season 13", " Season 12",
-	" Season 11", " Season 10 (X)", " Winterfest",
-	" FortniteMares", " Summer", " BatMan", " Star Wars",
-	" World Cup"
-};
-
 static int FilterNoSpace(ImGuiTextEditCallbackData* data)
 {
 	if (data->EventChar == ' ') return 1;
 	return 0;
-}
-
-static void HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
 }
 
 static bool hasAdditional = false;
@@ -286,12 +265,12 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (!strstr(lowID.c_str(), "athena"))
 					{
-						MessageBoxA(nullptr, "The item added doesn't seem to be existing.",
+						MessageBoxA(window, "The item added doesn't seem to be existing.",
 							"Neonite++", ERROR);
+					} else {
+						IDs.push_back(ID);
+						LockerBackup.push_back(ID);
 					}
-
-					IDs.push_back(ID);
-					LockerBackup.push_back(ID);
 				}
 
 				SameLine();
@@ -299,7 +278,7 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (!strstr(lowID.c_str(), "athena"))
 					{
-						MessageBoxA(nullptr, "This item isn't correct.", "Neonite++",
+						MessageBoxA(window, "This item isn't correct.", "Neonite++",
 							ERROR);
 					}
 					else
@@ -317,7 +296,7 @@ void ImGui::ShowLoader(bool* p_open)
 						}
 						else
 						{
-							MessageBoxA(nullptr, "This item doesn't seem to exist.",
+							MessageBoxA(window, "This item doesn't seem to exist.",
 								"Neonite++", ERROR);
 						}
 
@@ -329,7 +308,7 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					if (IDs.empty())
 					{
-						MessageBoxA(nullptr, "The list is already empty!", "Neonite++",
+						MessageBoxA(window, "The list is already empty!", "Neonite++",
 							ERROR);
 					}
 					else
