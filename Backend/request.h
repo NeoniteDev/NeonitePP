@@ -9,8 +9,8 @@ inline http::response<http::dynamic_body> handle_request(
 	http::response<http::dynamic_body> res) {
 	std::string route = (std::string)req.target();
 
-	//Headers: req["Authorization"]
-
+	/*Headers: req["Authorization"]
+	*
 	json body;
 	if (req.method() != http::verb::get) {
 		try {
@@ -21,6 +21,7 @@ inline http::response<http::dynamic_body> handle_request(
 		}
 	}
 
+	*/
 	//TODO: maybe move this some where.
 	if (strstr(route.c_str(), "/datarouter/api/v1/public/")) {
 		res.result(http::status::no_content);

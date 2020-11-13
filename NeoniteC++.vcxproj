@@ -182,6 +182,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backend\dynamics.h" />
+    <ClInclude Include="Backend\oauth.h" />
+    <ClInclude Include="Backend\profile.h" />
     <ClInclude Include="Backend\request.h" />
     <ClInclude Include="Backend\response.h" />
     <ClInclude Include="Backend\Routing\Details\PathTemplate.h" />

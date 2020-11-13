@@ -1,5 +1,6 @@
+#include "oauth.h"
 #include "response.h"
-#include "../../includes/http/HTTPRequest.hpp"
+#include "profile.h"
 
 constexpr unsigned int str2int(const char* str, int h = 0)
 {
@@ -60,6 +61,11 @@ inline http::response<http::dynamic_body> handleDynamic(
 		return res;
 	}
 
+	case str2int("/account/api/oauth/token"):
+	{
+		return handleToken(req, res);
+	}
+
 	case str2int("/account/api/oauth/verify"):
 	{
 		const char* authorization = req["Authorization"].data();
@@ -67,8 +73,8 @@ inline http::response<http::dynamic_body> handleDynamic(
 		token.erase(token.begin(), token.begin() + 7);
 		json j = {
 			{"access_token", token},
-			{"expires_in", 28800},
-			{"expires_at","9999 - 12 - 31T23:59 : 59.999Z"},
+			{"expires_in", 9999999},
+			{"expires_at","9999-12-31T23:59:59.999Z"},
 			{"token_type", "bearer"},
 			{"refresh_token", "neonitepprefreshtokenplaceholder"},
 			{"refresh_expires", 115200},
@@ -79,12 +85,16 @@ inline http::response<http::dynamic_body> handleDynamic(
 			{"client_service", "fortnite"},
 			{"displayName", "neoniteppplayer"},
 			{"app", "fortnite"},
-			{"in_app_id", "neoniteppidplaceholder"},
+			{"in_app_id", "neonitepp"},
 			{"device_id", "neoniteppdeviceidplaceholder"}
 		};
 		res.set(http::field::content_type, "application/json");
 		ostream(res.body()) << j;
 		return res;
+	}
+	case str2int("/fortnite/api/game/v2/profile/:accountId/client/:command"):
+	{
+		return handleProfile(match, req, res);
 	}
 	}
 	throw;

@@ -8,8 +8,8 @@ inline void registerStatics()
 	route = "/lightswitch/api/service/bulk/status";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<<
-		R"(
+	<<
+	R"(
         {
             "serviceInstanceId": "fortnite",
             "status": "UP",
@@ -118,7 +118,7 @@ inline void registerStatics()
 	res.body().clear();
 
 	route =
-		"/party/api/v1/Fortnite/user/:accountId/notifications/undelivered/count";
+	"/party/api/v1/Fortnite/user/:accountId/notifications/undelivered/count";
 	res.result(http::status::no_content);
 	router.registerPath(route);
 	responses.insert(
@@ -150,8 +150,8 @@ inline void registerStatics()
 	route = "/affiliate/api/public/affiliates/slug/:affiliateName";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<<
-		R"(
+	<<
+	R"(
         {
             "id": "aabbccddeeff11223344556677889900",
             "slug": "neonite++",
@@ -159,7 +159,8 @@ inline void registerStatics()
 	        "status": "ACTIVE",
 	        "verified": true
         }
-        )"_json; // sorry ytrs :pepelaugh: -kemo
+        )"_json;
+	// sorry ytrs :pepelaugh: -kemo
 	router.registerPath(route);
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
@@ -168,7 +169,7 @@ inline void registerStatics()
 	route = "/party/api/v1/Fortnite/user/:accountId";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<< R"({
+	<< R"({
 	"current": [],
 	"pending": [],
 	"invites": [],
@@ -182,7 +183,7 @@ inline void registerStatics()
 	route = "/fortnite/api/matchmaking/session/findPlayer/:id";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<< R"([])"_json;
+	<< R"([])"_json;
 	router.registerPath(route);
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
@@ -192,7 +193,7 @@ inline void registerStatics()
 	route = "/fortnite/api/storefront/v2/keychain";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<< R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
+	<< R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
 	router.registerPath(route);
 	responses.insert(
 		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
@@ -209,7 +210,7 @@ inline void registerStatics()
 	route = "/fortnite/api/cloudstorage/user/:accountId";
 	res.set(http::field::content_type, "application/json");
 	ostream(res.body())
-		<< R"([])"_json;
+	<< R"([])"_json;
 
 	router.registerPath(route);
 	responses.insert(
@@ -241,4 +242,7 @@ inline void registerStatics()
 	router.registerPath("/fortnite/api/game/v2/privacy/account/:accountId");
 	router.registerPath("/account/api/public/account/:accountId/deviceAuth");
 	router.registerPath("/account/api/public/account/:accountId");
+	router.registerPath("/account/api/oauth/verify");
+	router.registerPath("/account/api/oauth/token");
+	router.registerPath("/fortnite/api/game/v2/profile/:accountId/client/:command");
 }
