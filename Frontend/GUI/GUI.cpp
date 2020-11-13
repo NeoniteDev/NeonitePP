@@ -420,6 +420,8 @@ void ImGui::ShowLoader(bool* p_open)
 
 	if (*p_open == false)
 	{
+		TerminateThread(hLauncher, 0);
+		TerminateThread(Server, 0);
 		exit(1);
 	}
 

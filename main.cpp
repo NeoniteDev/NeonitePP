@@ -23,7 +23,7 @@ void ChangeDetail(std::string name) {
 
 int main(int argc, char* argv[])
 {
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	//ShowWindow(GetConsoleWindow(), SW_HIDE);
 	ImGui_ImplWin32_EnableDpiAwareness();
 
 	// Create application window

@@ -200,12 +200,12 @@ inline void registerStatics()
 	res.body().clear();
 
 	//==> TO BE IMPLEMENTED <==
-	route = "/fortnite/api/cloudstorage/system"; //==> TO BE IMPLEMENTED <==
-	res.result(http::status::no_content); //==> TO BE IMPLEMENTED <==
-	router.registerPath(route); //==> TO BE IMPLEMENTED <==
-	responses.insert( //==> TO BE IMPLEMENTED <==
-		std::pair<std::string, http::response<http::dynamic_body>>(route, res)); //==> TO BE IMPLEMENTED <==
-	res.body().clear();//==> TO BE IMPLEMENTED <==
+	route = "/fortnite/api/cloudstorage/system";
+	res.result(http::status::no_content);
+	router.registerPath(route); 
+	responses.insert(
+		std::pair<std::string, http::response<http::dynamic_body>>(route, res));
+	res.body().clear();
 
 	route = "/fortnite/api/cloudstorage/user/:accountId";
 	res.set(http::field::content_type, "application/json");

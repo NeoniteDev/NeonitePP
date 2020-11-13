@@ -1,17 +1,28 @@
+#include "common_core.h"
 #include "response.h"
 
-string querySplit(string s, string delimiter)
+std::string querySplit(std::string s, std::string query)
 {
 	size_t pos = 0;
-	string token;
-	if ((pos = s.find(delimiter)) != string::npos)
+	std::string token;
+	if ((pos = s.find(query)) != std::string::npos)
 	{
-		size_t end = s.find("&");
-		token = s.substr(pos, end);
-		token.erase(0, delimiter.length());
-		cout << token << endl;
+		token = s.substr(pos);
+		token.erase(0, query.length() + 1);
+		size_t end;
+		try
+		{
+			end = token.find("&");
+			token.erase(end);
+			return token;
+		}
+		catch (...)
+		{
+			return token;
+		}
 	}
 }
+
 
 inline http::response<http::dynamic_body> handleProfile(
 	Routing::PathMatch match,
@@ -19,36 +30,84 @@ inline http::response<http::dynamic_body> handleProfile(
 	http::response<http::dynamic_body> res)
 {
 	json body = json::parse(req.body());
-	
-	std::string rawDisplayName;
+	json profileData;
+	std::string profileId;
+	int rvn;
+	int profileCommandRvn;
+	int profileRvn;
+	std::string accountId = match["accountId"];
+	std::string command = match["command"];
+
+	boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
+	auto date = to_iso_extended_string(t);
+
+	//TONS OF TRY STATMENT :PEPE_KMS:
 	try
 	{
-		rawDisplayName = body["email"].get<std::string>();
+		profileId = querySplit(match.path(), "profileId");
 	}
 	catch (...)
 	{
-		//:bigbrain: -kemo
-		rawDisplayName = body["username"].get<std::string>();
+		profileId = "common_core";
 	}
 
+	try
+	{
+		rvn = stoi(querySplit(match.path(), "rvn"));
+	}
+	catch (...)
+	{
+		rvn = -1;
+	}
 
-	auto displayName = split(rawDisplayName, "@");
+	//TODO: handle commands.
+
+	if (profileId == "common_core")
+	{
+		profileData = common_core();
+	}
+
+	try
+	{
+		profileRvn = profileData["rvn"];
+	}
+	catch (...)
+	{
+		profileRvn = 1;
+	}
+
+	try
+	{
+		profileCommandRvn = profileData["commandRevision"];
+	}
+	catch (...)
+	{
+		profileCommandRvn = 1;
+	}
 
 	res.set(http::field::content_type, "application/json");
-	json j = {
-		{"access_token", gen_random(32)},
-		{"expires_in", 9999999},
-		{"expires_at", "9999-12-31T23:59:59.999Z"},
-		{"token_type", "bearer"},
-		{"account_id", displayName},
-		{"client_id", "neoniteppclientidplaceholder"},
-		{"internal_client", "true"},
-		{"client_service", "fortnite"},
-		{"displayName", displayName},
-		{"app", "fortnite"},
-		{"in_app_id", displayName},
-		{"device_id", "neoniteppdeviceidplaceholder"}
+	json response = {
+		{"profileRevision", profileRvn},
+		{"profileId", profileId},
+		{"profileChangesBaseRevision", profileRvn},
+		{"profileChanges", json::array()},
+		{"serverTime", date},
+		{"profileCommandRevision", profileCommandRvn},
+		{"responseVersion", 1}
 	};
-	ostream(res.body()) << j;
+	
+	profileData["rvn"] = rvn + 1;
+	profileData["updated"] = date;
+	profileData["commandRevision"] = profileCommandRvn + 1;
+
+	response["profileRevision"] = profileData["rvn"];
+	response["profileCommandRevision"] = profileData["commandRevision"];
+
+	if (rvn != profileRvn)
+	{
+		response["profileChanges"] = json::array({{"changeType", "fullProfileUpdate"}, {"profile", profileData}});
+	}
+
+	ostream(res.body()) << response;
 	return res;
 }

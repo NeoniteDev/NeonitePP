@@ -181,6 +181,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Backend\common_core.h" />
     <ClInclude Include="Backend\dynamics.h" />
     <ClInclude Include="Backend\oauth.h" />
     <ClInclude Include="Backend\profile.h" />
