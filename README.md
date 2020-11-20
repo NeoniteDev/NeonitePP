@@ -18,6 +18,7 @@ Latest version of [Fortnite](https://fortnite.com/) Installed
 ### Used Resources
 
 • JSON for Modern C++ (https://github.com/nlohmann/json)
+
 • Boost Library (https://boost.org/)
 
 ### Features
