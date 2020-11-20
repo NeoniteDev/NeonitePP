@@ -17,7 +17,8 @@ Latest version of [Fortnite](https://fortnite.com/) Installed
 
 ### Used Resources
 
-•
+• JSON for Modern C++ (https://github.com/nlohmann/json)
+• Boost Library (https://boost.org/)
 
 ### Features
 - [x] Implement Settings
@@ -25,9 +26,9 @@ Latest version of [Fortnite](https://fortnite.com/) Installed
 - [x] Implement Backend endpoints (basic ones)
 - [x] GUI Finished
 - [x] Added Discord RPC
-- [ ] OAuth, cloudstorage, shop, timeline, news. 
 - [x] Press to start Game/Server.
 - [x] Console to output Server errors/news.
+- [ ] OAuth, cloudstorage, shop, timeline, news. 
 - [ ] Profile System
 
 ### Contributors
