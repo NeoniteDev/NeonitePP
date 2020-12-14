@@ -79,9 +79,9 @@ void ImGui::ShowLoader(bool* p_open)
 		{
 			if (Button("Start Server"))
 			{
-				if (Server == INVALID_HANDLE_VALUE)
+				if (hServer == INVALID_HANDLE_VALUE)
 				{
-					Server = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server,
+					hServer = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server::init,
 						nullptr, NULL, nullptr);
 					console.AddLog("[+] Server started...");
 				}
@@ -118,7 +118,7 @@ void ImGui::ShowLoader(bool* p_open)
 					}
 
 					hLauncher = CreateThread(nullptr, NULL,
-						(LPTHREAD_START_ROUTINE)&launcher, nullptr,
+						(LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
 						NULL, nullptr);
 					console.AddLog("[+] Starting Game...");
 				}
@@ -130,10 +130,11 @@ void ImGui::ShowLoader(bool* p_open)
 
 			if (Button("Stop Server"))
 			{
-				if (Server != INVALID_HANDLE_VALUE)
+				if (hServer != INVALID_HANDLE_VALUE)
 				{
-					TerminateThread(Server, 0);
-					Server = INVALID_HANDLE_VALUE;
+					app.stop();
+					TerminateThread(hServer, 0);
+					hServer = INVALID_HANDLE_VALUE;
 					console.AddLog("[x] The Server was stopped...");
 				}
 				else
@@ -421,7 +422,7 @@ void ImGui::ShowLoader(bool* p_open)
 	if (*p_open == false)
 	{
 		TerminateThread(hLauncher, 0);
-		TerminateThread(Server, 0);
+		TerminateThread(hServer, 0);
 		exit(1);
 	}
 

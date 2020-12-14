@@ -1,5 +1,4 @@
-#include "response.h"
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include "../Frontend/util.h"
 
 json profile =
 R"(
@@ -59,12 +58,12 @@ R"(
 
 inline json common_core()
 {
-	boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
-	auto date = to_iso_extended_string(t);
-	profile["created"] = date;
-	profile["updated"] = date;
-	profile["_id"] = name;
-	profile["accountId"] = name;
-	profile["items"]["Currency:MtxPurchased"]["quantity"] = vbucks;
-	return profile;
+    boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
+    auto date = to_iso_extended_string(t);
+    profile["created"] = date;
+    profile["updated"] = date;
+    profile["_id"] = name;
+    profile["accountId"] = name;
+    profile["items"]["Currency:MtxPurchased"]["quantity"] = vbucks;
+    return profile;
 }

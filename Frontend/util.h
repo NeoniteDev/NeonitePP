@@ -1,6 +1,8 @@
 #ifndef UTIL
 #define UTIL
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0A00
 #endif
@@ -15,12 +17,10 @@
 #include "../includes/imgui/imgui_impl_win32.h"
 #include "../includes/imgui/imgui_internal.h"
 #include "../includes/imgui/imconfig.h"
-#include <boost/beast/core.hpp>
-#include <boost/beast/http.hpp>
-#include <boost/beast/version.hpp>
-#include <boost/asio.hpp>
-#include <boost/algorithm/string.hpp>
 #include "../includes/json/json.hpp"
+#include "../includes/httplib.h"
+#include <boost/algorithm/string.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "../includes/injection/Injection.h"
 #include "../includes/termcolor/termcolor.hpp"
 #include "../includes/DiscordSDK/discord_rpc.h"
@@ -47,10 +47,6 @@ void printd(Args && ...args) {
 }
 
 using json = nlohmann::json;
-namespace beast = boost::beast;
-namespace http = beast::http;
-namespace net = boost::asio;
-using tcp = boost::asio::ip::tcp;
 
 //Functions declarations
 HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments);

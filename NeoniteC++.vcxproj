@@ -155,15 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Backend\Routing\Details\PathTemplate.cpp" />
-    <ClCompile Include="Backend\Routing\Details\PathTemplateParser.cpp" />
-    <ClCompile Include="Backend\Routing\Details\RegexConverter.cpp" />
-    <ClCompile Include="Backend\Routing\Details\StringTokenizer.cpp" />
-    <ClCompile Include="Backend\Routing\PathMatch.cpp" />
-    <ClCompile Include="Backend\Routing\Router.cpp" />
-    <ClCompile Include="Backend\server.cpp" />
     <ClCompile Include="Frontend\GUI\GUI.cpp" />
-    <ClCompile Include="Frontend\Launcher\launcher.cpp" />
     <ClCompile Include="Frontend\Settings\settings.cpp" />
     <ClCompile Include="Frontend\util.cpp" />
     <ClCompile Include="includes\DiscordSDK\connection_win.cpp" />
@@ -182,20 +174,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backend\common_core.h" />
-    <ClInclude Include="Backend\dynamics.h" />
-    <ClInclude Include="Backend\oauth.h" />
-    <ClInclude Include="Backend\profile.h" />
-    <ClInclude Include="Backend\request.h" />
-    <ClInclude Include="Backend\response.h" />
-    <ClInclude Include="Backend\Routing\Details\PathTemplate.h" />
-    <ClInclude Include="Backend\Routing\Details\PathTemplateParser.h" />
-    <ClInclude Include="Backend\Routing\Details\RegexConverter.h" />
-    <ClInclude Include="Backend\Routing\Details\StringTokenizer.h" />
-    <ClInclude Include="Backend\Routing\Exceptions.h" />
-    <ClInclude Include="Backend\Routing\PathMatch.h" />
-    <ClInclude Include="Backend\Routing\Router.h" />
+    <ClInclude Include="includes\httplib.h" />
     <ClInclude Include="Backend\server.h" />
-    <ClInclude Include="Backend\statics.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="Frontend\GUI\gui.h" />
     <ClInclude Include="Frontend\Launcher\launcher.h" />

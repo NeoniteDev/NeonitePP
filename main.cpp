@@ -1,7 +1,6 @@
 #include "Frontend/GUI/gui.h"
 #include "Frontend/util.h"
 #include "Frontend/Launcher/launcher.h"
-#include "Backend/server.h"
 #include "Discord.h"
 #include "resource.h"
 
@@ -23,7 +22,7 @@ void ChangeDetail(std::string name) {
 
 int main(int argc, char* argv[])
 {
-	//ShowWindow(GetConsoleWindow(), SW_HIDE);
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
 	ImGui_ImplWin32_EnableDpiAwareness();
 
 	// Create application window
