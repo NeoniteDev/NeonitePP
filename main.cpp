@@ -1,6 +1,6 @@
 #include "Frontend/GUI/gui.h"
 #include "Frontend/util.h"
-#include "Frontend/Launcher/launcher.h"
+#include "Frontend/launcher.h"
 #include "Discord.h"
 #include "resource.h"
 
@@ -20,11 +20,11 @@ void ChangeDetail(std::string name) {
 	Discord_UpdatePresence(&discordPresence);
 }
 
-int main(int argc, char* argv[])
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	//ShowWindow(GetConsoleWindow(), SW_HIDE);
 	ImGui_ImplWin32_EnableDpiAwareness();
-
+	
 	// Create application window
 	WNDCLASSEX wc = {
 		sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 		NULL
 	};
 	::RegisterClassEx(&wc);
-	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Neonite++"), WS_POPUP, 500,
+	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("FortniteLauncher"), WS_POPUP, 500,
 		100, 535, 320, NULL, NULL, wc.hInstance, NULL);
 
 	window = hwnd;

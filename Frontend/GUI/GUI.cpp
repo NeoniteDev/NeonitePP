@@ -2,12 +2,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#pragma warning( disable : 4267 4244 )
+
 #include <iostream>
 
 #include "gui.h"
-#include "../Launcher/launcher.h"
+#include "../launcher.h"
 #include "../../Backend/server.h"
-#include "../Settings/settings.h"
+#include "..//settings.h"
 
 using namespace std;
 
@@ -82,7 +84,7 @@ void ImGui::ShowLoader(bool* p_open)
 				if (hServer == INVALID_HANDLE_VALUE)
 				{
 					hServer = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server::init,
-						nullptr, NULL, nullptr);
+					                       nullptr, NULL, nullptr);
 					console.AddLog("[+] Server started...");
 				}
 				else
@@ -94,7 +96,7 @@ void ImGui::ShowLoader(bool* p_open)
 			SameLine(GetWindowWidth() - 390);
 
 			InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter,
-				FilterNoSpace);
+			                  FilterNoSpace);
 
 			SameLine(GetWindowWidth() - 100);
 
@@ -118,8 +120,8 @@ void ImGui::ShowLoader(bool* p_open)
 					}
 
 					hLauncher = CreateThread(nullptr, NULL,
-						(LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
-						NULL, nullptr);
+					                         (LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
+					                         NULL, nullptr);
 					console.AddLog("[+] Starting Game...");
 				}
 				else
@@ -172,14 +174,14 @@ void ImGui::ShowLoader(bool* p_open)
 
 			if (Button("Save Config"))
 			{
-				config(true);
+				settings::config(true);
 			}
 
 			SameLine(GetWindowWidth() - 100);
 
 			if (Button("Load Config"))
 			{
-				config(false);
+				settings::config(false);
 			}
 
 			EndTabItem();
@@ -236,6 +238,14 @@ void ImGui::ShowLoader(bool* p_open)
 
 		InputInt("    VBucks Amount", &vbucks);
 
+		if (vbucks > 2147483647) {
+			vbucks = 0;
+		}
+		
+		if (seasonLevel > 1000) {
+			seasonLevel = 100;
+		}
+		
 		Checkbox("Has Battlepass", &bHasBattlepass);
 
 		SameLine(GetWindowWidth() - 205);
@@ -247,11 +257,11 @@ void ImGui::ShowLoader(bool* p_open)
 		if (bIsLockerOpen)
 		{
 			if (Begin("Locker", nullptr,
-				ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
+			          ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
 			{
 				if (!bHasImportedLocker)
 				{
-					loadLocker(false);
+					settings::loadLocker(false);
 				}
 				SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
 				SetWindowSize(ImVec2(500, 460), ImGuiCond_FirstUseEver);
@@ -264,13 +274,24 @@ void ImGui::ShowLoader(bool* p_open)
 				SameLine();
 				if (Button("+"))
 				{
-					if (!strstr(lowID.c_str(), "athena"))
+					//if (lowID.size() > 0) 
+					if (std::find(IDs.begin(), IDs.end(), lowID) != IDs.end())
 					{
-						MessageBoxA(window, "The item added doesn't seem to be existing.",
-							"Neonite++", ERROR);
-					} else {
-						IDs.push_back(ID);
-						LockerBackup.push_back(ID);
+						if (!strstr(lowID.c_str(), "athena"))
+						{
+							MessageBoxA(window, "The item added doesn't seem to be existing.",
+							            "Neonite++", ERROR);
+						}
+						else
+						{
+							IDs.push_back(ID);
+							LockerBackup.push_back(ID);
+						}
+					}
+					else
+					{
+						MessageBoxA(window, "The item is already in the list.",
+						            "Neonite++", ERROR);
 					}
 				}
 
@@ -280,7 +301,7 @@ void ImGui::ShowLoader(bool* p_open)
 					if (!strstr(lowID.c_str(), "athena"))
 					{
 						MessageBoxA(window, "This item isn't correct.", "Neonite++",
-							ERROR);
+						            ERROR);
 					}
 					else
 					{
@@ -298,9 +319,8 @@ void ImGui::ShowLoader(bool* p_open)
 						else
 						{
 							MessageBoxA(window, "This item doesn't seem to exist.",
-								"Neonite++", ERROR);
+							            "Neonite++", ERROR);
 						}
-
 					}
 				}
 
@@ -310,7 +330,7 @@ void ImGui::ShowLoader(bool* p_open)
 					if (IDs.empty())
 					{
 						MessageBoxA(window, "The list is already empty!", "Neonite++",
-							ERROR);
+						            ERROR);
 					}
 					else
 					{
@@ -320,7 +340,7 @@ void ImGui::ShowLoader(bool* p_open)
 				SameLine();
 				if (Button(("Save Locker")))
 				{
-					loadLocker(true);
+					settings::loadLocker(true);
 				}
 
 				Columns(1, "");
@@ -338,9 +358,8 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					for (int i = 0; i < length; i++)
 					{
-						char label[32];
 						if (Selectable(IDs.at(i).c_str(), selected == i,
-							ImGuiSelectableFlags_SpanAllColumns))
+						               ImGuiSelectableFlags_SpanAllColumns))
 							selected = i;
 
 						NextColumn();
@@ -351,9 +370,8 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					for (int i = 0; i < length; i++)
 					{
-						char label[32];
 						if (Selectable(IDs.at(i).c_str(), selected == i,
-							ImGuiSelectableFlags_SpanAllColumns))
+						               ImGuiSelectableFlags_SpanAllColumns))
 							selected = i;
 
 						NextColumn();
@@ -477,7 +495,7 @@ void ImGui::ShowLoader(bool* p_open)
 	style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	style->Colors[ImGuiCol_ResizeGripHovered] =
-		ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+	ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 	style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
 	style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);

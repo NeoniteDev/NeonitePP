@@ -1,5 +1,6 @@
-#include "../util.h"
-#include "../GUI/gui.h"
+#pragma once
+#include "util.h"
+#include "GUI/gui.h"
 
 
 inline HANDLE hLauncher = INVALID_HANDLE_VALUE;
@@ -61,10 +62,10 @@ namespace launcher
 		char* args = new char[s.length() + 1];
 		std::copy(s.c_str(), s.c_str() + s.length() + 1, args);
 
-		hEAC = startup(szEACFile.c_str(), args);
-		suspend(hEAC);
+		hEAC = util::startup(szEACFile.c_str(), args);
+		util::suspend(hEAC);
 
-		hClient = startup(szClientFile.c_str(), args);
+		hClient = util::startup(szClientFile.c_str(), args);
 
 		if (hClient && hClient != INVALID_HANDLE_VALUE)
 		{
@@ -73,12 +74,12 @@ namespace launcher
 			//prevent mapping the dll too fast
 			while (pid == 0)
 			{
-				pid = GetProcId("FortniteClient-Win64-Shipping.exe");
+				pid = util::GetProcId("FortniteClient-Win64-Shipping.exe");
 			}
 
 			if (!addDll.empty())
 			{
-				std::string addDllPath = GetEXEPath() + "\\" + addDll;
+				std::string addDllPath = util::GetEXEPath() + "\\" + addDll;
 
 				if (!ManualMap(hClient, addDllPath.c_str()))
 				{
@@ -91,7 +92,7 @@ namespace launcher
 				console.AddLog("[+] The additional DLL was injected due to user choice.");
 			}
 
-			std::string dllPath = GetEXEPath() + "\\Platanium.dll";
+			std::string dllPath = util::GetEXEPath() + "\\Platanium.dll";
 
 			if (!noInj)
 			{
@@ -119,13 +120,13 @@ namespace launcher
 					if (!isPaused)
 					{
 						console.AddLog("[=] Paused the process.");
-						suspend(hClient);
+						util::suspend(hClient);
 						isPaused = !isPaused;
 					}
 					else
 					{
 						console.AddLog("[=] Resumed the process.");
-						resume(hClient);
+						util::resume(hClient);
 						isPaused = !isPaused;
 					}
 				}

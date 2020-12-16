@@ -72,17 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>Neonite++</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>FortniteLauncher</TargetName>
+    <TargetName>Neonite++</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>Neonite++</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>FortniteLauncher</TargetName>
+    <TargetName>Neonite++</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,7 +97,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -111,7 +113,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -128,7 +130,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -148,7 +150,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -156,8 +158,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Frontend\GUI\GUI.cpp" />
-    <ClCompile Include="Frontend\Settings\settings.cpp" />
-    <ClCompile Include="Frontend\util.cpp" />
     <ClCompile Include="includes\DiscordSDK\connection_win.cpp" />
     <ClCompile Include="includes\DiscordSDK\discord_register_win.cpp" />
     <ClCompile Include="includes\DiscordSDK\discord_rpc.cpp" />
@@ -173,13 +173,21 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Backend\calendar.h" />
+    <ClInclude Include="Backend\collections.h" />
     <ClInclude Include="Backend\common_core.h" />
+    <ClInclude Include="Backend\athena.h" />
+    <ClInclude Include="Backend\common_public.h" />
+    <ClInclude Include="Backend\creative.h" />
+    <ClInclude Include="Backend\fortnite-game.h" />
+    <ClInclude Include="Backend\profile.h" />
+    <ClInclude Include="includes\framework.h" />
     <ClInclude Include="includes\httplib.h" />
     <ClInclude Include="Backend\server.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="Frontend\GUI\gui.h" />
-    <ClInclude Include="Frontend\Launcher\launcher.h" />
-    <ClInclude Include="Frontend\Settings\settings.h" />
+    <ClInclude Include="Frontend\launcher.h" />
+    <ClInclude Include="Frontend\settings.h" />
     <ClInclude Include="Frontend\util.h" />
     <ClInclude Include="includes\DiscordSDK\backoff.h" />
     <ClInclude Include="includes\DiscordSDK\connection.h" />

@@ -1,59 +1,16 @@
-#ifndef UTIL
-#define UTIL
+#pragma once
+#include "../includes/framework.h"
 
-#define _CRT_SECURE_NO_WARNINGS
+typedef LONG(NTAPI* NtSuspendProcess)(IN HANDLE ProcessHandle);
+typedef LONG(NTAPI* NtResumeProcess)(IN HANDLE ProcessHandle);
 
-#ifdef _WIN32
-#define _WIN32_WINNT 0x0A00
-#endif
+inline NtSuspendProcess pfnNtSuspendProcess = (NtSuspendProcess)GetProcAddress(
+	GetModuleHandle("ntdll"), "NtSuspendProcess");
 
-#define DIRECTINPUT_VERSION 0x0800
-
-#pragma comment(lib, "d3d9.lib")
-
-//Headers
-#include "../includes/imgui/imgui.h"
-#include "../includes/imgui/imgui_impl_dx9.h"
-#include "../includes/imgui/imgui_impl_win32.h"
-#include "../includes/imgui/imgui_internal.h"
-#include "../includes/imgui/imconfig.h"
-#include "../includes/json/json.hpp"
-#include "../includes/httplib.h"
-#include <boost/algorithm/string.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include "../includes/injection/Injection.h"
-#include "../includes/termcolor/termcolor.hpp"
-#include "../includes/DiscordSDK/discord_rpc.h"
-#include "../includes/DiscordSDK/discord_register.h"
-
-#include <chrono>
-#include <stdio.h>
-#include <iostream>
-#include <thread>
-#include <filesystem>
-#include <TlHelp32.h>
-#include <string>
-#include <sstream>
-#include <shlobj.h>
-#include <fstream>
-#include <Windows.h>
-#include <d3d9.h>
-#include <dinput.h>
-#include <tchar.h>
-
-template <typename ...Args>
-void printd(Args && ...args) {
-	(std::cout << ... << args);
-}
+inline NtResumeProcess pfnNtResumeProcess = (NtResumeProcess)GetProcAddress(
+	GetModuleHandle("ntdll"), "NtResumeProcess");
 
 using json = nlohmann::json;
-
-//Functions declarations
-HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments);
-void suspend(HANDLE processHandle);
-void resume(HANDLE processHandle);
-DWORD GetProcId(const char* procName);
-std::string GetEXEPath();
 
 //Inline vars
 inline std::vector<std::string> IDs;
@@ -98,4 +55,144 @@ inline const char* ip = "127.0.0.1";
 inline unsigned short port = 5595;
 inline ULONG pid = 0;
 
-#endif // !UTIL
+namespace util
+{
+	inline std::string GetEXEPath() {
+		char result[MAX_PATH];
+		std::string path(result, GetModuleFileName(NULL, result, MAX_PATH));
+		size_t pos = path.find_last_of("\\/");
+		return (std::string::npos == pos)
+			? ""
+			: path.substr(0, pos);
+	}
+
+	inline DWORD GetProcId(const char* procName) {
+		DWORD procId = 0;
+		HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+
+		if (hSnap != INVALID_HANDLE_VALUE) {
+			PROCESSENTRY32 procEntry;
+			procEntry.dwSize = sizeof(procEntry);
+
+			if (Process32First(hSnap, &procEntry)) {
+				do {
+					if (!_stricmp(procEntry.szExeFile, procName)) {
+						procId = procEntry.th32ProcessID;
+						break;
+					}
+				} while (Process32Next(hSnap, &procEntry));
+			}
+		}
+		CloseHandle(hSnap);
+		return procId;
+	}
+
+	inline void suspend(HANDLE processHandle) {
+		pfnNtSuspendProcess(processHandle);
+	}
+
+	inline void resume(HANDLE processHandle) {
+		pfnNtResumeProcess(processHandle);
+	}
+
+	inline HANDLE startup(LPCSTR lpApplicationName, LPSTR lpArguments) {
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		ZeroMemory(&pi, sizeof(pi));
+
+		if (CreateProcessA(lpApplicationName,
+			lpArguments,
+			NULL,
+			NULL,
+			FALSE,
+			0,
+			NULL,
+			NULL,
+			&si,
+			&pi
+		)) {
+			CloseHandle(pi.hThread);
+			return pi.hProcess;
+		}
+		return NULL;
+	}
+
+	inline std::string genRandom(const int len)
+	{
+		std::string tmp_s;
+		static const char alphanum[] =
+			"0123456789"
+			"abcdefghijklmnopqrstuvwxyz";
+
+		srand((unsigned)time(NULL) * _getpid());
+
+		for (int i = 0; i < len; ++i) tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+
+
+		return tmp_s;
+	}
+
+	inline std::string sSplit(std::string s, std::string delimiter)
+	{
+		size_t pos = 0;
+		std::string token;
+		while ((pos = s.find(delimiter)) != std::string::npos)
+		{
+			token = s.substr(0, pos);
+			return token;
+		}
+	}
+
+	inline std::string getQuery(std::string s, std::string query)
+	{
+		size_t pos = 0;
+		std::string token;
+		if ((pos = s.find(query)) != std::string::npos)
+		{
+			token = s.substr(pos);
+			token.erase(0, query.length() + 1);
+			size_t end;
+			try
+			{
+				end = token.find("&");
+				token.erase(end);
+				return token;
+			}
+			catch (...)
+			{
+				return token;
+			}
+		}
+		return "failed";
+	}
+
+	inline std::string urlDecode(std::string SRC)
+	{
+		std::string ret;
+		char ch;
+		int i, ii;
+		for (i = 0; i < SRC.length(); i++)
+		{
+			if (int(SRC[i]) == 37)
+			{
+				sscanf(SRC.substr(i + 1, 2).c_str(), "%x", &ii);
+				ch = static_cast<char>(ii);
+				ret += ch;
+				i = i + 2;
+			}
+			else
+			{
+				ret += SRC[i];
+			}
+		}
+		return (ret);
+	}
+
+	constexpr unsigned int str2int(const char* str, int h = 0)
+	{
+		return !str[h] ? 5381 : (str2int(str, h + 1) * 33) ^ str[h];
+	}
+}

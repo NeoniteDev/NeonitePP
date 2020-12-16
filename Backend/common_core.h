@@ -1,6 +1,6 @@
 #include "../Frontend/util.h"
 
-json profile =
+json profile_core =
 R"(
 {
   "_id": "",
@@ -56,14 +56,14 @@ R"(
 }
 )"_json;
 
-inline json common_core()
+inline json pCommonCore()
 {
     boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
     auto date = to_iso_extended_string(t);
-    profile["created"] = date;
-    profile["updated"] = date;
-    profile["_id"] = name;
-    profile["accountId"] = name;
-    profile["items"]["Currency:MtxPurchased"]["quantity"] = vbucks;
-    return profile;
+    profile_core["created"] = date;
+    profile_core["updated"] = date;
+    profile_core["_id"] = name;
+    profile_core["accountId"] = name;
+    profile_core["items"]["Currency:MtxPurchased"]["quantity"] = vbucks;
+    return profile_core;
 }
