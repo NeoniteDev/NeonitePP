@@ -42,7 +42,7 @@ namespace launcher
 
 		if (fnPath.empty())
 		{
-			console.AddLog("[x] Can't find the Fortnite directory.");
+			console.AddLog("[x] Couldn't find Fortnite directory.");
 			return;
 		}
 
@@ -69,7 +69,7 @@ namespace launcher
 
 		if (hClient && hClient != INVALID_HANDLE_VALUE)
 		{
-			console.AddLog("[+] Launched Fortnite.");
+			console.AddLog("[+] Fortnite was launched.");
 
 			//prevent mapping the dll too fast
 			while (pid == 0)
@@ -77,66 +77,28 @@ namespace launcher
 				pid = util::GetProcId("FortniteClient-Win64-Shipping.exe");
 			}
 
-			if (!addDll.empty())
-			{
-				std::string addDllPath = util::GetEXEPath() + "\\" + addDll;
-
-				if (!ManualMap(hClient, addDllPath.c_str()))
-				{
-					CloseHandle(hClient);
-					console.AddLog(
-						"[x] The additional DLL couldn't be injected, an error was encountered.");
-					return;
-				}
-
-				console.AddLog("[+] The additional DLL was injected due to user choice.");
-			}
-
 			std::string dllPath = util::GetEXEPath() + "\\Platanium.dll";
 
-			if (!noInj)
-			{
-				if (!ManualMap(hClient, dllPath.c_str()))
-				{
-					CloseHandle(hClient);
-					console.AddLog("[x] Couldn't inject Platanium.dll!");
-					system("PAUSE");
-					return;
-				}
 
-				//console.AddLog("[+] Injected Platanium.dll!");
-			}
-			else
+			if (!ManualMap(hClient, dllPath.c_str()))
 			{
-				console.
-				AddLog("[=] Skipping Platanium.dll injection due to user choice.");
+				CloseHandle(hClient);
+				console.AddLog("[x] Injection failed!.");
+				system("PAUSE");
+				return;
 			}
+
 
 			while (true)
 			{
-				if (WaitForSingleObject(hClient, 10) != WAIT_TIMEOUT) break;
-				if (GetAsyncKeyState(VK_F6) && isDebug)
-				{
-					if (!isPaused)
-					{
-						console.AddLog("[=] Paused the process.");
-						util::suspend(hClient);
-						isPaused = !isPaused;
-					}
-					else
-					{
-						console.AddLog("[=] Resumed the process.");
-						util::resume(hClient);
-						isPaused = !isPaused;
-					}
-				}
+				if (WaitForSingleObject(hClient, 200) != WAIT_TIMEOUT) break;
 			}
 			util::resume(hEAC);
 			TerminateProcess(hEAC, 1);
 			TerminateProcess(hLauncher, 1);
 			hEAC = INVALID_HANDLE_VALUE;
-			console.AddLog("[=] Fortnite was closed.");
-
+			hLauncher = INVALID_HANDLE_VALUE;
+			hClient = INVALID_HANDLE_VALUE;
 		}
 	}
 }

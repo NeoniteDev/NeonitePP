@@ -81,6 +81,16 @@ namespace server
 			res.status = 204;
 		});
 
+		app.Get(R"(/party/api/v1/Fortnite/parties/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
+		app.Delete(R"(/party/api/v1/Fortnite/parties/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
 		//================================ Empty Arrays =================================
 
 		app.Get(R"(/account/api/public/account/(.*)/externalAuths)", [](const Request& req, Response& res)
@@ -318,6 +328,7 @@ namespace server
 			         int rvn = -1;
 			         boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
 			         auto date = to_iso_extended_string(t);
+			         date = date.substr(0, date.size() - 3) + "Z";
 			         json profileData;
 
 			         if (req.has_param("rvn")) rvn = std::stoi(req.get_param_value("rvn"));
@@ -350,12 +361,71 @@ namespace server
 			         {
 				         break;
 			         }
-			         case util::str2int("RefreshExpeditions"):
+			         case util::str2int("SetCosmeticLockerSlot"):
 			         {
-				         break;
-			         }
-			         case util::str2int("PopulatePrerolledOffers"):
-			         {
+				         auto body = json::parse(req.body);
+				         auto lockerItem = body["lockerItem"].get<std::string>();
+				         auto items = profileData["items"];
+				         auto item = items[lockerItem];
+				         if (item.is_null())
+				         {
+					         //TODO: add mpc error handling.
+				         }
+				         auto category = body["category"].get<std::string>();
+				         auto locker_slot_data = item["attributes"]["locker_slots_data"];
+				         auto lockerSlot = locker_slot_data["slots"][category];
+				         if (lockerSlot.is_null())
+				         {
+					         //Emotes and wraps
+				         }
+				         auto itemsArray = lockerSlot["items"];
+				         bool bChanged = false;
+
+				         auto slotIndex = body["slotIndex"].get<int>();
+				         if (!slotIndex) slotIndex = 0;
+
+				         if (slotIndex == -1)
+				         {
+					         //Apply to all
+				         }
+				         else
+				         {
+					         if (slotIndex >= 0 && itemsArray.size())
+					         {
+						         if (itemsArray[slotIndex] != body["itemToSlot"])
+						         {
+							         itemsArray[slotIndex] = body["itemToSlot"];
+							         bChanged = true;
+						         }
+					         }
+				         }
+
+				         if (body["variantUpdates"].size() != 0)
+				         {
+					         //variants update
+				         }
+
+				         if (bChanged)
+				         {
+					         //TODO: make this a function.
+				         	
+					         auto itemId = body["lockerItem"].get<std::string>();
+					         auto item = profileData["items"][itemId];
+					         //if (item.is_null()) return false;
+					         if (item["attributes"].is_null())
+					         {
+						         item["attributes"] = json::object();
+					         }
+					         item["attributes"]["locker_slots_data"] = locker_slot_data;
+					         json changes = {
+						         {"changeType", "itemAttrChanged"},
+						         {"itemId", itemId},
+						         {"attributeName", "locker_slots_data"},
+						         {"attributeValue", locker_slot_data}
+					         };
+							 response["profileChanges"].push_back(changes);
+				         }
+
 				         break;
 			         }
 			         case util::str2int("MarkItemSeen"):
@@ -376,7 +446,7 @@ namespace server
 			         }
 			         }
 
-			         if (response.size() > 0)
+			         if (response["profileChanges"].size() > 0)
 			         {
 				         profileData["rvn"] = profileData["rvn"].get<int>() + 1;
 				         profileData["commandRevision"] = profileData["commandRevision"].get<int>() + 1;

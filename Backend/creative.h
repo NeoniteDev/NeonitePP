@@ -31,6 +31,7 @@ inline json pCreative()
 {
     boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
     auto date = to_iso_extended_string(t);
+    date = date.substr(0, date.size() - 3) + "Z";
     profile_creative["created"] = date;
     profile_creative["updated"] = date;
     profile_creative["accountId"] = name;

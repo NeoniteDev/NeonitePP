@@ -1,6 +1,8 @@
 #pragma once
 #include "../includes/framework.h"
 
+using json = nlohmann::json;
+
 typedef LONG(NTAPI* NtSuspendProcess)(IN HANDLE ProcessHandle);
 typedef LONG(NTAPI* NtResumeProcess)(IN HANDLE ProcessHandle);
 
@@ -10,49 +12,24 @@ inline NtSuspendProcess pfnNtSuspendProcess = (NtSuspendProcess)GetProcAddress(
 inline NtResumeProcess pfnNtResumeProcess = (NtResumeProcess)GetProcAddress(
 	GetModuleHandle("ntdll"), "NtResumeProcess");
 
-using json = nlohmann::json;
-
 //Inline vars
-inline std::vector<std::string> IDs;
-inline HWND window;
-inline std::vector<std::string> prices;
-inline std::vector<std::string> ImportedLocker;
-inline std::vector<std::string> LockerBackup;
-
-inline char newsTitleE[33];
-inline char newsBodyE[33];
-
-inline char newsTitle[33];
-inline char newsBody[33];
-
-inline char tileURL[33];
-inline char imageURL[33];
-
-inline char DllName[33];
-
 inline bool bUseRPC = true;
+inline HWND window;
 
+//config
 inline char name[33] = "NeoniteUser";
 inline bool bHasBattlepass = false;
 inline bool bIsCataba = false;
 inline int seasonLevel = 100;
 inline int vbucks = 100000;
 
-inline bool bHasImportedLocker = false;
-
-inline char ID[125];
-inline char pricesDE[44];
-inline char prices_[44];
-
+//locker
 inline bool bIsLockerOpen = false;
-inline auto jsonObjects = json::array();
+inline bool bHasImportedLocker = false;
+inline char ID[125];
+inline std::vector<std::string> IDs;
+inline std::vector<std::string> LockerBackup;
 
-inline bool isDebug = false;
-inline bool noInj = false;
-inline bool isPaused = false;
-inline std::string addDll;
-inline const char* ip = "127.0.0.1";
-inline unsigned short port = 5595;
 inline ULONG pid = 0;
 
 namespace util

@@ -188,28 +188,6 @@ void ImGui::ShowLoader(bool* p_open)
 		}
 	}
 
-	if (BeginTabItem("Launcher Settings"))
-	{
-		SetCursorPosX(GetCursorPosX() + 155);
-		SetCursorPosY(GetCursorPosY() + 5);
-		Text("Try some Launcher settings!");
-
-		Checkbox("Additional DLL to Inject", &hasAdditional);
-
-		SameLine(GetWindowWidth() - 200);
-
-		Checkbox("Debug Mode (F6)", &isDebug);
-
-		Checkbox("Skip Platanium.dll", &noInj);
-
-		if (hasAdditional)
-		{
-			InputText("DLL Name", DllName, sizeof(DllName));
-		}
-
-		EndTabItem();
-	}
-
 	if (BeginTabItem("Server Settings"))
 	{
 		SetCursorPosX(GetCursorPosX() + 165);

@@ -664,8 +664,9 @@ R"(
 inline json pAthena()
 {
 	boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
-	auto date = to_iso_extended_string(t);
-	profile_athena["created"] = date;
+    auto date = to_iso_extended_string(t);
+    date = date.substr(0, date.size() - 3) + "Z";
+    profile_athena["created"] = date;
 	profile_athena["updated"] = date;
 	profile_athena["_id"] = name;
 	profile_athena["accountId"] = name;
