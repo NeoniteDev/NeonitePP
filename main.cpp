@@ -32,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		NULL
 	};
 	::RegisterClassEx(&wc);
-	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("FortniteLauncher"), WS_POPUP, 500,
+	HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Neonite++"), WS_POPUP, 500,
 		100, 535, 320, NULL, NULL, wc.hInstance, NULL);
 
 	window = hwnd;

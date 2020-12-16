@@ -71,8 +71,8 @@ R"(
                 "news": {
                     "motds": [{
                         "entryType": "Website",
-                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/715300713995042877/Fornite1920x1080.jpg",
-                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/715300717837156362/FortniteMidLogo.jpg",
+                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
+                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
                         "videoMute": false,
                         "hidden": false,
                         "tabTitleOverride": "Neonite++",
@@ -107,7 +107,7 @@ R"(
                 "itemsList": {
                     "_type": "ShopCarouselItemList",
                     "items": [{
-                        "tileImage": "https://media.discordapp.net/attachments/703974059121049720/774007298786983985/NeoniteWallpaper1920x1080.png",
+                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
                         "fullTitle": "Neonite",
                         "hidden": false,
                         "_type": "ShopCarouselItem",

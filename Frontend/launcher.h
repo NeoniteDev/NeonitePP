@@ -131,7 +131,12 @@ namespace launcher
 					}
 				}
 			}
+			util::resume(hEAC);
+			TerminateProcess(hEAC, 1);
 			TerminateProcess(hLauncher, 1);
+			hEAC = INVALID_HANDLE_VALUE;
+			console.AddLog("[=] Fortnite was closed.");
+
 		}
 	}
 }

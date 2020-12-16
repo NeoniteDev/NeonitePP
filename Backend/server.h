@@ -378,8 +378,8 @@ namespace server
 
 			         if (response.size() > 0)
 			         {
-				         profileData["rvn"] = (int)profileData["rvn"] + 1;
-				         profileData["commandRevision"] = (int)profileData["commandRevision"] + 1;
+				         profileData["rvn"] = profileData["rvn"].get<int>() + 1;
+				         profileData["commandRevision"] = profileData["commandRevision"].get<int>() + 1;
 				         response["profileRevision"] = profileData["rvn"];
 				         response["profileCommandRevision"] = profileData["commandRevision"];
 			         }
