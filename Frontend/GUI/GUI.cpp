@@ -398,7 +398,7 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 145);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Frontend: Sammy (@sammyisntcool_)");
+		Text("Frontend: Sammy (@madSammy)");
 
 		SetCursorPosX(GetCursorPosX() + 145);
 		SetCursorPosY(GetCursorPosY() + 5);
