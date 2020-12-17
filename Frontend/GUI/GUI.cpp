@@ -188,6 +188,25 @@ void ImGui::ShowLoader(bool* p_open)
 		}
 	}
 
+	if (BeginTabItem("Enhanced Replays"))
+	{
+		SetCursorPosX(GetCursorPosX() + 140);
+		SetCursorPosY(GetCursorPosY() + 5);
+		Text("The replay mode we all hoped for!");
+		
+		Spacing();
+
+		//This should have inline int packetLength in future
+		SliderInt("Packets", &packetIndex, 0, 99999);
+
+		Spacing();
+
+		SetCursorPosX(GetCursorPosX() + 55);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		EndTabItem();
+	}
+
 	if (BeginTabItem("Server Settings"))
 	{
 		SetCursorPosX(GetCursorPosX() + 165);

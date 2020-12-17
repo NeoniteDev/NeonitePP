@@ -334,56 +334,6 @@ R"(
                      "activeSince":"2019-11-19T00:00:00.000Z"
                   },
                   {
-                     "eventType":"WL0",
-                     "activeUntil":"2022-09-14T07:00:00.000Z",
-                     "activeSince":"2020-08-01T07:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Season11.Frostnite",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.LobbyStW.Winterfest",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.ActiveIceStorms",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.PassiveFireStorms",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.PassiveLightningStorms",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.PassiveMiniBosses",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.MissionAlert.MegaAlert",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Phoenix.Winterfest",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.ElderGroupMissions",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
                      "eventType":"EventFlag.Phoenix.Winterfest.Quests",
                      "activeUntil":"2021-01-25T00:00:00.000Z",
                      "activeSince":"2020-11-21T00:00:00.000Z"

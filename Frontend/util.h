@@ -15,6 +15,7 @@ inline NtResumeProcess pfnNtResumeProcess = (NtResumeProcess)GetProcAddress(
 //Inline vars
 inline bool bUseRPC = true;
 inline HWND window;
+inline ULONG pid = 0;
 
 //config
 inline char name[33] = "NeoniteUser";
@@ -30,7 +31,10 @@ inline char ID[125];
 inline std::vector<std::string> IDs;
 inline std::vector<std::string> LockerBackup;
 
-inline ULONG pid = 0;
+//udp server
+
+inline int packetIndex = 0;
+
 
 namespace util
 {
