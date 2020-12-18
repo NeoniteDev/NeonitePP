@@ -36,7 +36,7 @@ namespace server
 			res.status = 204;
 		});
 
-		app.Get(R"(/presence/api/v1/_/(.*)/settings/subscriptions)", [](const Request& req, Response& res)
+		app.Get(R"(/presence/(.*))", [](const Request& req, Response& res)
 		{
 			res.status = 204;
 		});
@@ -52,6 +52,11 @@ namespace server
 		});
 
 		app.Get(R"(/socialban/api/public/v1/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
+		app.Get(R"(/api/v1/events/(.*))", [](const Request& req, Response& res)
 		{
 			res.status = 204;
 		});
@@ -91,6 +96,21 @@ namespace server
 			res.status = 204;
 		});
 
+		app.Get(R"(/fortnite/api/game/v2/br-inventory/account/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
+		app.Post(R"(/presence/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
+		app.Get(R"(/statsproxy/api/(.*))", [](const Request& req, Response& res)
+		{
+			res.status = 204;
+		});
+
 		//================================ Empty Arrays =================================
 
 		app.Get(R"(/account/api/public/account/(.*)/externalAuths)", [](const Request& req, Response& res)
@@ -108,12 +128,7 @@ namespace server
 			res.set_content("[]", "application/json");
 		});
 
-		app.Get(R"(/friends/api/public/list/fortnite/(.*)/recentPlayers)", [](const Request& req, Response& res)
-		{
-			res.set_content("[]", "application/json");
-		});
-
-		app.Get(R"(/friends/api/public/friends/(.*))", [](const Request& req, Response& res)
+		app.Get(R"(/friends/(.*))", [](const Request& req, Response& res)
 		{
 			res.set_content("[]", "application/json");
 		});
@@ -251,7 +266,7 @@ namespace server
 			token.erase(token.begin(), token.begin() + 7);
 			json j = {
 				{"access_token", token},
-				{"expires_in", 999999999},
+				{"expires_in", 28800},
 				{"expires_at", "9999-12-31T23:59:59.999Z"},
 				{"token_type", "bearer"},
 				{"refresh_token", "neonitepprefreshtokenplaceholder"},
@@ -276,7 +291,7 @@ namespace server
 			{
 				j = {
 					{"access_token", util::genRandom(32)},
-					{"expires_in", 9999999},
+					{"expires_in", 28800},
 					{"expires_at", "9999-12-31T23:59:59.999Z"},
 					{"token_type", "bearer"},
 					{"client_id", "neoniteppclientidplaceholder"},
@@ -301,17 +316,17 @@ namespace server
 
 				j = {
 					{"access_token", util::genRandom(32)},
-					{"expires_in", 9999999},
+					{"expires_in", 28800},
 					{"expires_at", "9999-12-31T23:59:59.999Z"},
 					{"token_type", "bearer"},
 					{"account_id", displayName},
-					{"client_id", "neoniteppclientidplaceholder"},
-					{"internal_client", "true"},
+					{"client_id", "ec684b8c687f479fadea3cb2ad83f5c6"},
+					{"internal_client", true},
 					{"client_service", "fortnite"},
 					{"displayName", displayName},
 					{"app", "fortnite"},
 					{"in_app_id", displayName},
-					{"device_id", "neoniteppdeviceidplaceholder"}
+					{"device_id", "5dcab5dbe86a7344b061ba57cdb33c4f"}
 				};
 			}
 
@@ -398,6 +413,7 @@ namespace server
 							         bChanged = true;
 						         }
 					         }
+							 profileData["items"][lockerItem]["attributes"]["locker_slots_data"]["slots"][category]["items"] = itemsArray;
 				         }
 
 				         if (body["variantUpdates"].size() != 0)
@@ -408,7 +424,7 @@ namespace server
 				         if (bChanged)
 				         {
 					         //TODO: make this a function.
-				         	
+
 					         auto itemId = body["lockerItem"].get<std::string>();
 					         auto item = profileData["items"][itemId];
 					         //if (item.is_null()) return false;
@@ -423,7 +439,7 @@ namespace server
 						         {"attributeName", "locker_slots_data"},
 						         {"attributeValue", locker_slot_data}
 					         };
-							 response["profileChanges"].push_back(changes);
+					         response["profileChanges"].push_back(changes);
 				         }
 
 				         break;
@@ -450,11 +466,18 @@ namespace server
 			         {
 				         profileData["rvn"] = profileData["rvn"].get<int>() + 1;
 				         profileData["commandRevision"] = profileData["commandRevision"].get<int>() + 1;
+						 profileData["updated"] = date;
 				         response["profileRevision"] = profileData["rvn"];
 				         response["profileCommandRevision"] = profileData["commandRevision"];
+			         	
+						 if (profile_id == "athena") profile_athena = profileData;
+						 else if (profile_id == "common_public") profile_public = profileData;
+						 else if (profile_id == "creative") profile_creative = profileData;
+						 else if (profile_id == "collections") profile_collections = profileData;
+						 else profileData = profile_core = profileData;
 			         }
 
-			         if (rvn != (int)response["profileChangesBaseRevision"])
+			         if (rvn != response["profileChangesBaseRevision"].get<int>())
 			         {
 				         response["profileChanges"][0] = {
 					         {"changeType", "fullProfileUpdate"},
@@ -462,22 +485,16 @@ namespace server
 				         };
 			         };
 
-			         if (profile_id == "athena") profile_athena = profileData;
-			         else if (profile_id == "common_public") profile_public = profileData;
-			         else if (profile_id == "creative") profile_creative = profileData;
-			         else if (profile_id == "collections") profile_collections = profileData;
-			         else profileData = profile_core = profileData;
-
 			         res.set_content(response.dump(), "application/json");
 		         }
 		);
 
 		app.set_error_handler([](const auto& req, auto& res)
 		{
-			auto fmt = "<p>Error Status: <span style='color:red;'>%d</span></p>";
+			auto fmt = "{}";
 			char buf[BUFSIZ];
 			snprintf(buf, sizeof(buf), fmt, res.status);
-			res.set_content(buf, "text/html");
+			res.set_content(buf, "application/json");
 		});
 
 		app.listen("127.0.0.1", 5595);

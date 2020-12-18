@@ -1,6 +1,6 @@
 #include "../Frontend/util.h"
 
-json profile_core =
+inline json profile_core =
 R"(
 {
   "_id": "",

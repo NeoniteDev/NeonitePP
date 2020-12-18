@@ -1,6 +1,6 @@
 #include "../Frontend/util.h"
 
-json profile_public =
+inline json profile_public =
 R"(
 {
   "created": "",

@@ -1,7 +1,7 @@
 #pragma once
 #include "../Frontend/util.h"
 
-json rCalendar =
+inline json rCalendar =
 R"(
 {
    "channels":{

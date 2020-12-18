@@ -1,14 +1,14 @@
 #include "../Frontend/util.h"
 
-json profile_athena =
+inline json profile_athena =
 R"(
 {
-  "_id": "",
-  "created": "",
-  "updated": "",
-  "rvn": 1,
+  "_id": "kemo",
+  "created": "2020-12-18T01:21:55.607Z",
+  "updated": "2020-12-18T01:26:55.741Z",
+  "rvn": 2,
   "wipeNumber": 1,
-  "accountId": "",
+  "accountId": "kemo",
   "profileId": "athena",
   "version": "neonite++",
   "items": {
@@ -61,7 +61,7 @@ R"(
             },
             "Backpack": {
               "items": [
-                "AthenaBackpack:bid_208_cupiddarkmale"
+                "AthenaBackpack:bid_373_hauntlensflare"
               ],
               "activeVariants": []
             },
@@ -657,7 +657,8 @@ R"(
       "season_friend_match_boost": 0,
       "active_loadout_index": 0
     }
-  }
+  },
+  "commandRevision": null
 }
 )"_json;
 

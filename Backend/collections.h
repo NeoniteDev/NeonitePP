@@ -1,6 +1,6 @@
 #include "../Frontend/util.h"
 
-json profile_collections =
+inline json profile_collections =
 R"(
 {
     "created": "",

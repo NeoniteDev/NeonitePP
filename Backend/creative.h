@@ -1,6 +1,6 @@
 #include "../Frontend/util.h"
 
-json profile_creative =
+inline json profile_creative =
 R"(
 {
     "created": "",

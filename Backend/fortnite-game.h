@@ -1,7 +1,7 @@
 #pragma once
 #include "../Frontend/util.h"
 
-json rFortniteGame =
+inline json rFortniteGame =
 R"(
 {
             "jcr:isCheckedOut": true,
