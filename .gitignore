@@ -18,12 +18,13 @@
 *.out
 *.app
 x64/
+bin/
 packages/
 OLDBACKEND/
 *.filters
 *.user
-.vs/NeoniteC++/v16/Browse.VC.db
-.vs/NeoniteC++/v16/.suo
+.vs/Chronite/v16/Browse.VC.db
+.vs/Chronite/v16/.suo
 *.ipch
 *.db-wal
 *.db-shm

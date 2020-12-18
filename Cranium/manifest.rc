@@ -1,0 +1,32 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    1, 0, 0, 0
+PRODUCTVERSION 1, 0, 0, 0
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904b0"
+        {
+            VALUE "Comments", "Cranium"
+                VALUE "CompanyName", "WorkingRobot"
+
+                VALUE "FileDescription", "Cranium"
+                VALUE "FileVersion", "1.0.0.0"
+                VALUE "InternalName", "Cranium"
+                VALUE "LegalCopyright", "Cranium (c) by Aleks Margarian (WorkingRobot)"
+
+                VALUE "OriginalFilename", "Cranium.dll"
+                VALUE "ProductName", "Cranium"
+                VALUE "ProductVersion", "1.0.0.0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x409, 1200
+    }
+}

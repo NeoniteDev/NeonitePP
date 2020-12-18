@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{DFF93ADF-5360-45BA-B864-970B7D9C8FD6}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NeoniteC</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>FortniteLauncher</TargetName>
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>FortniteLauncher</TargetName>
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>FortniteLauncher</TargetName>
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>FortniteLauncher</TargetName>
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Frontend\GUI\GUI.cpp" />
+    <ClCompile Include="includes\DiscordSDK\connection_win.cpp" />
+    <ClCompile Include="includes\DiscordSDK\discord_register_win.cpp" />
+    <ClCompile Include="includes\DiscordSDK\discord_rpc.cpp" />
+    <ClCompile Include="includes\DiscordSDK\dllmain.cpp" />
+    <ClCompile Include="includes\DiscordSDK\rpc_connection.cpp" />
+    <ClCompile Include="includes\DiscordSDK\serialization.cpp" />
+    <ClCompile Include="includes\imgui\imgui.cpp" />
+    <ClCompile Include="includes\imgui\imgui_draw.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="includes\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="includes\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="includes\injection\Injection.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Backend\calendar.h" />
+    <ClInclude Include="Backend\collections.h" />
+    <ClInclude Include="Backend\common_core.h" />
+    <ClInclude Include="Backend\athena.h" />
+    <ClInclude Include="Backend\common_public.h" />
+    <ClInclude Include="Backend\creative.h" />
+    <ClInclude Include="Backend\fortnite-game.h" />
+    <ClInclude Include="Backend\profile.h" />
+    <ClInclude Include="includes\framework.h" />
+    <ClInclude Include="includes\httplib.h" />
+    <ClInclude Include="Backend\server.h" />
+    <ClInclude Include="Discord.h" />
+    <ClInclude Include="Frontend\GUI\gui.h" />
+    <ClInclude Include="Frontend\launcher.h" />
+    <ClInclude Include="Frontend\settings.h" />
+    <ClInclude Include="Frontend\util.h" />
+    <ClInclude Include="includes\DiscordSDK\backoff.h" />
+    <ClInclude Include="includes\DiscordSDK\connection.h" />
+    <ClInclude Include="includes\DiscordSDK\discord_register.h" />
+    <ClInclude Include="includes\DiscordSDK\discord_rpc.h" />
+    <ClInclude Include="includes\DiscordSDK\msg_queue.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\allocators.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\cursorstreamwrapper.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\document.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\encodedstream.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\encodings.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\error\en.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\error\error.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\filereadstream.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\filewritestream.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\fwd.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\biginteger.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\diyfp.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\dtoa.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\ieee754.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\itoa.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\meta.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\pow10.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\regex.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\stack.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\strfunc.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\strtod.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\internal\swap.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\memorybuffer.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\memorystream.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\msinttypes\inttypes.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\msinttypes\stdint.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\pointer.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\prettywriter.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\rapidjson.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\reader.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\schema.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\stream.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\stringbuffer.h" />
+    <ClInclude Include="includes\DiscordSDK\rapidjson\writer.h" />
+    <ClInclude Include="includes\DiscordSDK\rpc_connection.h" />
+    <ClInclude Include="includes\DiscordSDK\serialization.h" />
+    <ClInclude Include="includes\imgui\imconfig.h" />
+    <ClInclude Include="includes\imgui\imgui.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="includes\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="includes\imgui\imgui_internal.h" />
+    <ClInclude Include="includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="includes\injection\Injection.h" />
+    <ClInclude Include="includes\json\json.hpp" />
+    <ClInclude Include="includes\termcolor\termcolor.hpp" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="Chronite.aps" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Chronite.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="NeoniteLogo.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('packages\boost.1.72.0.0\build\boost.targets')" />
+    <Import Project="packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets" Condition="Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" />
+    <Import Project="packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets" Condition="Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost.1.72.0.0\build\boost.targets'))" />
+    <Error Condition="!Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets'))" />
+    <Error Condition="!Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets'))" />
+  </Target>
+</Project>
