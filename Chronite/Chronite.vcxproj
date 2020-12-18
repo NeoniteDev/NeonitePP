@@ -177,13 +177,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Backend\calendar.h" />
-    <ClInclude Include="Backend\collections.h" />
-    <ClInclude Include="Backend\common_core.h" />
-    <ClInclude Include="Backend\athena.h" />
-    <ClInclude Include="Backend\common_public.h" />
-    <ClInclude Include="Backend\creative.h" />
-    <ClInclude Include="Backend\fortnite-game.h" />
+    <ClInclude Include="Backend\responses\api.h" />
+    <ClInclude Include="Backend\responses\dynamics.h" />
+    <ClInclude Include="Backend\responses\statics.h" />
+    <ClInclude Include="Backend\responses\calendar.h" />
+    <ClInclude Include="Backend\responses\collections.h" />
+    <ClInclude Include="Backend\responses\common_core.h" />
+    <ClInclude Include="Backend\responses\athena.h" />
+    <ClInclude Include="Backend\responses\common_public.h" />
+    <ClInclude Include="Backend\responses\creative.h" />
+    <ClInclude Include="Backend\responses\fortnite-game.h" />
     <ClInclude Include="Backend\profile.h" />
     <ClInclude Include="includes\framework.h" />
     <ClInclude Include="includes\httplib.h" />

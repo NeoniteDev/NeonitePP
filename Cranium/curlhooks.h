@@ -2,7 +2,7 @@
 #include "curl.h"
 #include "url.h"
 
-#define URL_HOST "localhost:5595"
+#define URL_HOST "127.0.0.1:6969"
 
 CURLcode (*curl_setopt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*curl_easy_setopt)(struct Curl_easy*, CURLoption, ...) = nullptr;
