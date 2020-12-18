@@ -2,7 +2,8 @@
 #include "curl.h"
 #include "url.h"
 
-#define URL_HOST "localhost:5595"
+#define URL_HOST "localhost"
+#define URL_PORT "5595"
 
 CURLcode (*curl_setopt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*curl_easy_setopt)(struct Curl_easy*, CURLoption, ...) = nullptr;
@@ -41,7 +42,7 @@ CURLcode curl_easy_setopt_detour(struct Curl_easy* data, CURLoption tag, ...)
 		Uri uri = Uri::Parse(url);
 		if (uri.Host.ends_with(".ol.epicgames.com"))
 		{
-			url = Uri::CreateUri("http", URL_HOST, uri.Port, uri.Path, uri.QueryString);
+			url = Uri::CreateUri("http", URL_HOST, URL_PORT, uri.Path, uri.QueryString);
 		}
 		if (url.length() < length)
 		{
