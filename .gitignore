@@ -19,6 +19,7 @@
 *.app
 x64/
 bin/
+.vs/
 packages/
 OLDBACKEND/
 *.filters
