@@ -22,8 +22,7 @@ packages/
 OLDBACKEND/
 *.filters
 *.user
-.vs/Chronite/v16/Browse.VC.db
-.vs/Chronite/v16/.suo
+.vs/
 *.ipch
 *.db-wal
 *.db-shm
