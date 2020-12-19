@@ -21,6 +21,7 @@ x64/
 bin/
 .vs/
 packages/
+*.filters
 OLDBACKEND/
 *.user
 .vs/Chronite/v16/Browse.VC.db
