@@ -18,7 +18,7 @@ void dllMain()
 
 	MH_STATUS initMH = MH_Initialize();
 
-	if (initMH = MH_OK) {
+	if (initMH == MH_OK) {
 		Hooks::init();
 
 		//CURL Detour
