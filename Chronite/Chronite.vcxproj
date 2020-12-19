@@ -179,6 +179,7 @@
   <ItemGroup>
     <ClInclude Include="Backend\server\api.h" />
     <ClInclude Include="Backend\server\dynamics.h" />
+    <ClInclude Include="Backend\server\profile.h" />
     <ClInclude Include="Backend\server\statics.h" />
     <ClInclude Include="Backend\server\calendar.h" />
     <ClInclude Include="Backend\server\collections.h" />

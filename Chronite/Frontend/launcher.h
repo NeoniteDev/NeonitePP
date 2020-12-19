@@ -92,7 +92,7 @@ namespace launcher
 
 			while (true)
 			{
-				if (WaitForSingleObject(hClient, 200) != WAIT_TIMEOUT) break;
+				if (WaitForSingleObject(hClient, 10) != WAIT_TIMEOUT) break;
 			}
 			util::resume(hEAC);
 			TerminateProcess(hEAC, 1);
