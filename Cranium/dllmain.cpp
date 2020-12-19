@@ -1,45 +1,59 @@
 #include "pch.h"
 #include "curlhooks.h"
 #include "enums.h"
+#include "hooks.h"
 #include "veh.h"
 #include "util.h"
 #include "structs.h"
 
-//#define USE_CONSOLE
-
-void Main()
+void dllMain()
 {
-#ifdef USE_CONSOLE
+#ifdef CONSOLE
+	FILE* fDummy;
 	AllocConsole();
-	FILE* pFile;
-	freopen_s(&pFile, "CONOUT$", "w", stdout);
+	freopen_s(&fDummy, "CONIN$", "r", stdin);
+	freopen_s(&fDummy, "CONOUT$", "w", stderr);
+	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 #endif
 
+	Hooks::init();
+
 	//CURL Detour
-	const auto CurlEasyAdd = Util::FindPattern(Patterns::CurlEasySetOpt, Masks::CurlEasySetOpt);
-	VALIDATE_ADDRESS(CurlEasyAdd, "Failed to find Curl Easy Address.");
+#ifdef SSL_BYPASS
 
-	const auto CurlSetAdd = Util::FindPattern(Patterns::CurlSetOpt, Masks::CurlSetOpt);
-	VALIDATE_ADDRESS(CurlSetAdd, "Failed to find Curl SetOpt Address.");
+	CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
+	CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
 
-	curl_easy_setopt = decltype(curl_easy_setopt)(CurlEasyAdd);
-	curl_setopt = decltype(curl_setopt)(CurlSetAdd);
+	VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
 
-	VEH::EnableHook(curl_easy_setopt, curl_easy_setopt_detour);
+#endif
 
-	//Console Spawner
-	bool cIsSpawned = false;
+	bool isUnlocked = false;
+	bool isHooked = false;
 	while (true)
 	{
-		if (GetAsyncKeyState(VK_OEM_3) && !cIsSpawned)
+		//Process Event Hooking
+#ifdef PROCESS_EVENT
+		if (GetAsyncKeyState(VK_F10) && !isHooked)
 		{
-			const auto GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
-			VALIDATE_ADDRESS(GEngineAdd, "Failed to find GEngine Address.");
+			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
+			//VEH::EnableHook(ProcessEvent, ProcessEventDetour);
+			/*
+			 * just import minhook
+			 *  MH_CreateHook(ProcessEventAdd, ProcessEventDetour, ProcessEvent);
+             *  MH_EnableHook(ProcessEventAdd);
+			 */
+			isHooked = true;
+			printf("\n[+]Process event was hooked!\n");
+		}
+#endif
+
+#ifdef UNLOCK_CONSOLE
+		//Console Spawner
+		if (GetAsyncKeyState(VK_OEM_3) && !isUnlocked)
+		{
 			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
-
-			const auto SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
-			VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
 
 			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
 
@@ -56,9 +70,15 @@ void Main()
 			));
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
-			cIsSpawned = true;
-			break;
+			isUnlocked = true;
+			printf("\n[+]Console was unlocked!\n");
 		}
+#endif
+
+#if(defined UNLOCK_CONSOLE && defined PROCESS_EVENT)
+		if (isUnlocked && isHooked) break;
+#endif
+
 		Sleep(300);
 	}
 }
@@ -68,7 +88,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Main();
+		dllMain();
 		break;
 	case DLL_PROCESS_DETACH:
 	case DLL_THREAD_ATTACH:

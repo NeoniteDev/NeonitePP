@@ -1,4 +1,7 @@
 #pragma once
+
+//#define LOGGING
+
 #include "../includes/framework.h"
 #include "server/athena.h"
 #include "server/collections.h"
@@ -12,8 +15,6 @@ using namespace httplib;
 
 inline HANDLE hServer = INVALID_HANDLE_VALUE;
 inline Server app;
-
-//#define LOGGING
 
 #include "server/statics.h"
 #include "server/api.h"
