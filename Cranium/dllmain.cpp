@@ -19,6 +19,7 @@ void dllMain()
 	MH_STATUS initMH = MH_Initialize();
 
 	if (initMH == MH_OK) {
+		printf("\n[+] Minhook initialized!\n");
 		Hooks::init();
 
 		//CURL Detour
@@ -43,7 +44,7 @@ void dllMain()
 
 				//VEH::EnableHook(ProcessEvent, ProcessEventDetour);
 
-				MH_CreateHook((LPVOID)ProcessEventAdd, ProcessEventDetour, (LPVOID*)ProcessEvent); //lpvoid should work
+				MH_CreateHook((LPVOID)ProcessEventAdd, ProcessEventDetour, (LPVOID*)&ProcessEvent); //lpvoid should work
 				MH_EnableHook((LPVOID)ProcessEventAdd); //LPVoid should work
 				isHooked = true;
 				printf("\n[+] ProcessEvent was hooked!\n");
