@@ -74,7 +74,6 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams, void* pRe
 		if (!wcsstr(nFunc.c_str(), L"Tick"))
 		{
 			printf("\nObject: %ws\nFunction: %ws\n", nObj.c_str(), nFunc.c_str());
-
 		}
 	}
 

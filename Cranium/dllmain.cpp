@@ -16,75 +16,71 @@ void dllMain()
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 #endif
 
-	MH_STATUS initMH = MH_Initialize();
+	if (MH_Initialize() != MH_OK)
+	{
+		MessageBoxA(0, "Failed to initialize min-hook, terminating the thread.", "Cranium", MB_OK);
+		FreeLibraryAndExitThread(GetModuleHandle(NULL), 0);
+	}
+	
+	Hooks::init();
 
-	if (initMH == MH_OK) {
-		printf("\n[+] Minhook initialized!\n");
-		Hooks::init();
-
-		//CURL Detour
+	//CURL Detour
 #ifdef SSL_BYPASS
 
-		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
-		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
+	CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
+	CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
 
-		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
+	VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
 
 #endif
 
-		bool isUnlocked = false;
-		bool isHooked = false;
-		while (true)
-		{
-			//Process Event Hooking
+	bool isUnlocked = false;
+	bool isHooked = false;
+	while (true)
+	{
+		//Process Event Hooking
 #ifdef PROCESS_EVENT
-			if (GetAsyncKeyState(VK_F10) && !isHooked)
-			{
-				ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-
-				//VEH::EnableHook(ProcessEvent, ProcessEventDetour);
-
-				MH_CreateHook((LPVOID)ProcessEventAdd, ProcessEventDetour, (LPVOID*)&ProcessEvent); //lpvoid should work
-				MH_EnableHook((LPVOID)ProcessEventAdd); //LPVoid should work
-				isHooked = true;
-				printf("\n[+] ProcessEvent was hooked!\n");
-			}
+		if (GetAsyncKeyState(VK_F10) && !isHooked)
+		{
+			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+			
+			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
+			MH_EnableHook((void*)ProcessEventAdd);
+			
+			isHooked = true;
+		}
 #endif
 
 #ifdef UNLOCK_CONSOLE
-			//Console Spawner
-			if (GetAsyncKeyState(VK_OEM_3) && !isUnlocked)
-			{
-				GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
+		//Console Spawner
+		if (GetAsyncKeyState(VK_OEM_3) && !isUnlocked)
+		{
+			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
 
-				StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
+			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
 
-				UConsole* Console = reinterpret_cast<UConsole*>(StaticConstructObject_Internal(
-					GEngine->ConsoleClass,
-					reinterpret_cast<UObject*>(GEngine->GameViewportClient),
-					nullptr,
-					RF_NoFlags,
-					None,
-					nullptr,
-					false,
-					nullptr,
-					false
-				));
+			UConsole* Console = reinterpret_cast<UConsole*>(StaticConstructObject_Internal(
+				GEngine->ConsoleClass,
+				reinterpret_cast<UObject*>(GEngine->GameViewportClient),
+				nullptr,
+				RF_NoFlags,
+				None,
+				nullptr,
+				false,
+				nullptr,
+				false
+			));
 
-				GEngine->GameViewportClient->ViewportConsole = Console;
-				isUnlocked = true;
-				printf("\n[+]Console was unlocked!\n");
-			}
+			GEngine->GameViewportClient->ViewportConsole = Console;
+			isUnlocked = true;
+		}
 #endif
 
 #if(defined UNLOCK_CONSOLE && defined PROCESS_EVENT)
-			if (isUnlocked && isHooked) break;
+		if (isUnlocked && isHooked) break;
 #endif
 
-			Sleep(300);
-		}
-	} else {
-		printf("\n[+] Failure initializing Minhook!");
+		Sleep(300);
 	}
 }
 
