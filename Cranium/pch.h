@@ -3,7 +3,7 @@
 
 #define CONSOLE
 #define SSL_BYPASS
-#define PROCESS_EVENT
+#define HOOKS
 #define UNLOCK_CONSOLE
 
 #include "framework.h"

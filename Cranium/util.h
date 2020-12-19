@@ -6,7 +6,7 @@
     if (!address) { \
         MessageBoxA(0, error, "Cranium", MB_OK); \
         FreeLibraryAndExitThread(GetModuleHandle(NULL), 0); \
-        return false; \
+        return 0; \
     }
 
 class Util

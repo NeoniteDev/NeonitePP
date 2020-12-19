@@ -5,6 +5,8 @@
 #define URL_HOST "localhost"
 #define URL_PORT "5595"
 
+inline bool isReady = false;
+
 CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
 
@@ -34,11 +36,12 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	}
 
 	//URL redirection
-#ifdef URL_HOST
-
+#ifdef URL_HOST	
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
+
+		if (url.find("ClientQuestLogin") != std::string::npos) isReady = true;
 
 		Uri uri = Uri::Parse(url);
 		if (uri.Host.ends_with(".ol.epicgames.com"))

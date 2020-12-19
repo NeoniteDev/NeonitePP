@@ -8,6 +8,7 @@
 
 void dllMain()
 {
+	
 #ifdef CONSOLE
 	FILE* fDummy;
 	AllocConsole();
@@ -15,17 +16,10 @@ void dllMain()
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 #endif
-
-	if (MH_Initialize() != MH_OK)
-	{
-		MessageBoxA(0, "Failed to initialize min-hook, terminating the thread.", "Cranium", MB_OK);
-		FreeLibraryAndExitThread(GetModuleHandle(NULL), 0);
-	}
 	
-	Hooks::init();
-
 	//CURL Detour
 #ifdef SSL_BYPASS
+	Hooks::curl();
 
 	CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
 	CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
@@ -34,27 +28,24 @@ void dllMain()
 
 #endif
 
-	bool isUnlocked = false;
-	bool isHooked = false;
 	while (true)
 	{
-		//Process Event Hooking
-#ifdef PROCESS_EVENT
-		if (GetAsyncKeyState(VK_F10) && !isHooked)
+
+		if (isReady)
 		{
-			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+			Hooks::init();
 			
+#ifdef HOOKS
+
+			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+
 			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
 			MH_EnableHook((void*)ProcessEventAdd);
-			
-			isHooked = true;
-		}
-#endif
 
+#endif
+			
 #ifdef UNLOCK_CONSOLE
-		//Console Spawner
-		if (GetAsyncKeyState(VK_OEM_3) && !isUnlocked)
-		{
+			
 			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
 
 			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
@@ -72,15 +63,12 @@ void dllMain()
 			));
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
-			isUnlocked = true;
+			
+#endif
+	
+			break;
 		}
-#endif
-
-#if(defined UNLOCK_CONSOLE && defined PROCESS_EVENT)
-		if (isUnlocked && isHooked) break;
-#endif
-
-		Sleep(300);
+		Sleep(1000 / 30); //30 fps 
 	}
 }
 

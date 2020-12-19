@@ -16,9 +16,10 @@ FString(*GetObjectNameInternal)(PVOID) = nullptr;
 
 namespace Hooks
 {
-	bool init()
-	{
 #ifdef SSL_BYPASS
+	
+	bool curl()
+	{
 
 		CurlEasyAdd = Util::FindPattern(Patterns::CurlEasySetOpt, Masks::CurlEasySetOpt);
 		VALIDATE_ADDRESS(CurlEasyAdd, "Failed to find Curl Easy Address.");
@@ -26,9 +27,30 @@ namespace Hooks
 		CurlSetAdd = Util::FindPattern(Patterns::CurlSetOpt, Masks::CurlSetOpt);
 		VALIDATE_ADDRESS(CurlSetAdd, "Failed to find Curl SetOpt Address.");
 
+	}
+	
+#endif
+	
+	bool init()
+	{
+
+#ifdef UNLOCK_CONSOLE
+		
+		GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
+		VALIDATE_ADDRESS(GEngineAdd, "Failed to find GEngine Address.");
+
+		SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
+		VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
+
 #endif
 
-#ifdef PROCESS_EVENT
+#ifdef HOOKS
+
+		if (MH_Initialize() != MH_OK)
+		{
+			MessageBoxA(0, "Failed to initialize min-hook, terminating the thread.", "Cranium", MB_OK);
+			FreeLibraryAndExitThread(GetModuleHandle(NULL), 0);
+		}
 
 		ProcessEventAdd = Util::FindPattern(Patterns::ProcessEvent, Masks::ProcessEvent);
 		VALIDATE_ADDRESS(ProcessEventAdd, "Failed to find ProcessEvent Address.");
@@ -40,20 +62,11 @@ namespace Hooks
 
 #endif
 
-#ifdef UNLOCK_CONSOLE
-
-		GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
-		VALIDATE_ADDRESS(GEngineAdd, "Failed to find GEngine Address.");
-
-		SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
-		VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
-
-#endif
 		return true;
 	}
 }
 
-#ifdef PROCESS_EVENT
+#ifdef HOOKS
 
 std::wstring GetObjectName(UObject* object) {
 	
@@ -71,10 +84,20 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams, void* pRe
 	{
 		auto nObj = GetObjectName(pObj);
 	    auto nFunc = GetObjectName(pFunc);
-		if (!wcsstr(nFunc.c_str(), L"Tick"))
+		if(wcsstr(nFunc.c_str(), L"BP_OnClicked") && wcsstr(nObj.c_str(), L"Button_Play"))
+		{
+			printf("\n\nBRO WHY DID YOU JUST CLICK PLAY BUTTON ON NEONITE++? LMAO :PES_LAUGH:\n\n");
+		}
+		/*
+		if (!wcsstr(nFunc.c_str(), L"Tick") &&
+			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
+			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
+			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch")
+			)
 		{
 			printf("\nObject: %ws\nFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
+		*/
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams, pRes);
