@@ -39,13 +39,11 @@ void dllMain()
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
 			//VEH::EnableHook(ProcessEvent, ProcessEventDetour);
-			/*
-			 * just import minhook
-			 *  MH_CreateHook(ProcessEventAdd, ProcessEventDetour, ProcessEvent);
-             *  MH_EnableHook(ProcessEventAdd);
-			 */
+
+			MH_CreateHook((LPVOID)ProcessEventAdd, ProcessEventDetour, (LPVOID*)ProcessEvent); //lpvoid should work
+            MH_EnableHook((LPVOID)ProcessEventAdd); //LPVoid should work
 			isHooked = true;
-			printf("\n[+]Process event was hooked!\n");
+			printf("\n[+] ProcessEvent was hooked!\n");
 		}
 #endif
 

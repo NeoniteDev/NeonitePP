@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="curl.h">
+      <Filter>cURL</Filter>
+    </ClInclude>
+    <ClInclude Include="curlver.h">
+      <Filter>cURL</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="curlhooks.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="veh.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Hooking Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Hooking Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>cURL</Filter>
+    </ClInclude>
+    <ClInclude Include="minhook\MinHook.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Hooking Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="url.h">
+      <Filter>Hooking Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="cURL">
+      <UniqueIdentifier>{43170d84-eec9-43dd-ae4f-a2922d735ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hooks">
+      <UniqueIdentifier>{f008a523-44c7-4bd7-8cf9-3ed78a567a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hooking Utilities">
+      <UniqueIdentifier>{7d836e09-c893-463e-aac3-7ad4e0b6bacb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8c068a28-37ee-417d-8ec3-19c6bce1a944}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Common</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

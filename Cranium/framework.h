@@ -4,3 +4,5 @@
 #include <Windows.h>
 #include <Psapi.h>
 #include <iostream>
+#pragma comment(lib, "minhook.lib")
+#include "minhook/MinHook.h"
