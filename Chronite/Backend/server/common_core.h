@@ -1,4 +1,4 @@
-#include "../Frontend/util.h"
+#pragma once
 
 inline json profile_core =
 R"(

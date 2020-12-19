@@ -5,7 +5,7 @@
 #include "util.h"
 #include "structs.h"
 
-#define USE_CONSOLE
+//#define USE_CONSOLE
 
 void Main()
 {

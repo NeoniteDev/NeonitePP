@@ -1,6 +1,4 @@
 #pragma once
-#include "fortnite-game.h"
-#include "calendar.h"
 
 inline void initApi()
 {
@@ -50,6 +48,7 @@ inline void initApi()
 
 	app.Post("/account/api/oauth/token", [](const Request& req, Response& res)
 	{
+			console.AddLog("PEPEGA");
 		json j;
 		if (util::getQuery(req.body, "grant_type") == "client_credentials")
 		{

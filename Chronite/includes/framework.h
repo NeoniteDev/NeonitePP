@@ -1,4 +1,10 @@
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
+
+#ifdef _DEBUG
+#error "Manual mapping dll on debug mode will cause the game to crash,"
+#error "please switch to debug mode or comment out this error on framework.h"
+#endif
 
 #ifdef _WIN32
 #define _WIN32_WINNT 0x0A00

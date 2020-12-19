@@ -109,7 +109,7 @@ void ImGui::ShowLoader(bool* p_open)
 			{
 				if (hLauncher == INVALID_HANDLE_VALUE)
 				{
-					if constexpr (name == "")
+					if constexpr (&name[0] == "")
 					{
 						console.AddLog("[x] Please input an username!");
 					}

@@ -3,6 +3,11 @@
 inline void initStatics()
 {
 	//================================ 204s =================================
+	app.Get("/", [](const Request& req, Response& res)
+	{
+		res.status = 204;
+	});
+
 	app.Get("/waitingroom/api/waitingroom", [](const Request& req, Response& res)
 	{
 		res.status = 204;

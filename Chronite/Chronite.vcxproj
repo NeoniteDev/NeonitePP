@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>FortniteLauncher</TargetName>
-    <OutDir>..\bin</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>FortniteLauncher</TargetName>
-    <OutDir>..\bin</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>FortniteLauncher</TargetName>
-    <OutDir>..\bin</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>FortniteLauncher</TargetName>
-    <OutDir>..\bin</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -177,17 +177,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Backend\responses\api.h" />
-    <ClInclude Include="Backend\responses\dynamics.h" />
-    <ClInclude Include="Backend\responses\statics.h" />
-    <ClInclude Include="Backend\responses\calendar.h" />
-    <ClInclude Include="Backend\responses\collections.h" />
-    <ClInclude Include="Backend\responses\common_core.h" />
-    <ClInclude Include="Backend\responses\athena.h" />
-    <ClInclude Include="Backend\responses\common_public.h" />
-    <ClInclude Include="Backend\responses\creative.h" />
-    <ClInclude Include="Backend\responses\fortnite-game.h" />
-    <ClInclude Include="Backend\profile.h" />
+    <ClInclude Include="Backend\server\api.h" />
+    <ClInclude Include="Backend\server\dynamics.h" />
+    <ClInclude Include="Backend\server\statics.h" />
+    <ClInclude Include="Backend\server\calendar.h" />
+    <ClInclude Include="Backend\server\collections.h" />
+    <ClInclude Include="Backend\server\common_core.h" />
+    <ClInclude Include="Backend\server\athena.h" />
+    <ClInclude Include="Backend\server\common_public.h" />
+    <ClInclude Include="Backend\server\creative.h" />
+    <ClInclude Include="Backend\server\fortnite-game.h" />
     <ClInclude Include="includes\framework.h" />
     <ClInclude Include="includes\httplib.h" />
     <ClInclude Include="Backend\server.h" />

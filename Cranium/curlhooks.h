@@ -44,11 +44,15 @@ CURLcode curl_easy_setopt_detour(struct Curl_easy* data, CURLoption tag, ...)
 		{
 			url = Uri::CreateUri("http", URL_HOST, URL_PORT, uri.Path, uri.QueryString);
 		}
+		
+		//this cases errors :pepeAngery:
+		/*
 		if (url.length() < length)
 		{
 			url.append(length - url.length(), ' '); // buffer size checking can occur
 		}
-
+        */
+		
 		result = curl_setopt_(data, tag, url.c_str());
 	}
 
