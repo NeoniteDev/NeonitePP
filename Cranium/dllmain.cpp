@@ -19,7 +19,7 @@ void dllMain()
 	ShowWindow(GetConsoleWindow(), SW_HIDE);
 	freopen_s(&fDummy, "cranium.log", "w", stdout);
 #endif
-	
+
 	//CURL Detour
 #ifdef SSL_BYPASS
 	Hooks::curl();
@@ -31,9 +31,8 @@ void dllMain()
 
 #endif
 
-	while(true)
+	while (true)
 	{
-
 		if (isReady)
 		{
 			Hooks::init();
@@ -42,7 +41,7 @@ void dllMain()
 
 			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
 			MH_EnableHook((void*)ProcessEventAdd);
-			
+
 			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
 
 			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
@@ -63,6 +62,18 @@ void dllMain()
 			break;
 		}
 		Sleep(1000 / 30); //30 fps 
+	}
+	while (true)
+	{
+		if(GetAsyncKeyState(VK_F10))
+		{
+			//auto controller = FindObject(L"/Script/Engine.PlayerState.GetPlayerName");
+			auto controller = reinterpret_cast<APlayerController*>(FindObject(L"/Game/Maps/Frontend.Frontend.PersistentLevel.Athena_PlayerController_C"));
+			if (controller)
+			{
+				printf("\n\n\n\n\n\n\n\nPEPEGA\n\n\n\n\n\n\n");
+			}
+		}
 	}
 }
 

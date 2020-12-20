@@ -15,6 +15,21 @@ inline uintptr_t GONIAdd;
 void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
+UEngine* GEngine;
+
+typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
+	UClass* Class,
+	UObject* InOuter,
+	void* Name,
+	EObjectFlags SetFlags,
+	EInternalObjectFlags InternalSetFlags,
+	UObject* Template,
+	bool bCopyTransientsFromClassDefaults,
+	void* InstanceGraph,
+	bool bAssumeTemplateIsArchetype
+	);
+
+static f_StaticConstructObject_Internal StaticConstructObject_Internal;
 
 
 namespace Hooks
@@ -81,7 +96,6 @@ std::wstring GetObjectName(UObject* object)
 	{
 		FString internalName = GetObjectNameInternal(object);
 		if (!internalName.c_str()) break;
-
 		name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
 	}
 
@@ -98,6 +112,7 @@ void* FindObject(wchar_t const* name)
 			auto object = fuObject->Object;
 			if (object->ObjectFlags != 0x41)
 			{
+				printf("\n\n%ls\n\n", GetObjectName(object).c_str());
 				continue;
 			}
 
