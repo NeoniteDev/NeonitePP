@@ -43,6 +43,9 @@
     <ClInclude Include="url.h">
       <Filter>Hooking Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="detours.h">
+      <Filter>Hooks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

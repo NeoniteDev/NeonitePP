@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "curlhooks.h"
+#include "detours.h"
 #include "enums.h"
 #include "hooks.h"
 #include "veh.h"
@@ -36,17 +37,11 @@ void dllMain()
 		if (isReady)
 		{
 			Hooks::init();
-			
-#ifdef HOOKS
 
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
 			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
 			MH_EnableHook((void*)ProcessEventAdd);
-
-#endif
-			
-#ifdef UNLOCK_CONSOLE
 			
 			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
 
@@ -65,9 +60,6 @@ void dllMain()
 			));
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
-			
-#endif
-	
 			break;
 		}
 		Sleep(1000 / 30); //30 fps 

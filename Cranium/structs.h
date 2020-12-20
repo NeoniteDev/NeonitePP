@@ -1,54 +1,82 @@
 #pragma once
 
-struct UClass {
-	BYTE _padding_0[0x40];
+struct UClass
+{
+	BYTE unknown1[0x40];
 	UClass* SuperClass;
 };
 
-struct UObject {
+struct UObject
+{
 	PVOID VTableObject;
 	DWORD ObjectFlags;
 	DWORD InternalIndex;
 	UClass* Class;
-	BYTE _padding_0[0x8];
+	BYTE unknown1[0x8];
 	UObject* Outer;
+};
+
+struct FUObjectItem
+{
+	UObject* Object;
+	DWORD Flags;
+	DWORD ClusterIndex;
+	DWORD SerialNumber;
+	DWORD SerialNumber2;
+};
+
+struct TUObjectArray
+{
+	FUObjectItem* Objects[9];
+};
+
+struct GObjects
+{
+	TUObjectArray* ObjectArray;
+	BYTE unknown1[0xC];
+	DWORD ObjectCount;
 };
 
 struct UConsole;
 
 struct UGameViewportClient
 {
-	char unknown1[0x40];
+	CHAR unknown1[0x40];
 	UConsole* ViewportConsole;
 };
 
 struct UEngine
 {
-	char unknown1[0xF8];
+	CHAR unknown1[0xF8];
 	UClass* ConsoleClass;
-	char unknown2[0x688];
+	CHAR unknown2[0x688];
 	UGameViewportClient* GameViewportClient;
 };
 
-template<class T>
-struct TArray {
+template <class T>
+struct TArray
+{
 	friend struct FString;
 
 public:
-	inline TArray() {
+	TArray()
+	{
 		Data = nullptr;
 		Count = Max = 0;
 	};
 
-	inline INT Num() const {
+	INT Num() const
+	{
 		return Count;
 	};
 
-	inline T& operator[](INT i) {
+	T& operator[](INT i)
+	{
 		return Data[i];
 	};
 
-	inline BOOLEAN IsValidIndex(INT i) {
+	BOOLEAN IsValidIndex(INT i)
+	{
 		return i < Num();
 	}
 
@@ -59,25 +87,31 @@ private:
 };
 
 
-struct FString : private TArray<WCHAR> {
-	FString() {
+struct FString : private TArray<WCHAR>
+{
+	FString()
+	{
 		Data = nullptr;
 		Max = Count = 0;
 	}
 
-	FString(LPCWSTR other) {
+	FString(LPCWSTR other)
+	{
 		Max = Count = static_cast<INT>(wcslen(other));
 
-		if (Count) {
+		if (Count)
+		{
 			Data = const_cast<PWCHAR>(other);
 		}
 	};
 
-	inline BOOLEAN IsValid() {
+	BOOLEAN IsValid()
+	{
 		return Data != nullptr;
 	}
 
-	inline PWCHAR c_str() {
+	PWCHAR c_str()
+	{
 		return Data;
 	}
 };

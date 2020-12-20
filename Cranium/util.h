@@ -9,6 +9,8 @@
         return 0; \
     }
 
+#define RELATIVE_ADDRESS(address, size) ((PBYTE)((UINT_PTR)(address) + *(PINT)((UINT_PTR)(address) + ((size) - sizeof(INT))) + (size)))
+
 class Util
 {
 private:
