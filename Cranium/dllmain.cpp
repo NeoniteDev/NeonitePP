@@ -65,14 +65,37 @@ void dllMain()
 	}
 	while (true)
 	{
-		if(GetAsyncKeyState(VK_F10))
+		if (GetAsyncKeyState(VK_F10))
 		{
-			//auto controller = FindObject(L"/Script/Engine.PlayerState.GetPlayerName");
-			auto controller = reinterpret_cast<APlayerController*>(FindObject(L"/Game/Maps/Frontend.Frontend.PersistentLevel.Athena_PlayerController_C"));
-			if (controller)
+			void* world = *UWorld;
+
+			void* GameInstance = READ_POINTER(world, Offsets::GameInstance);
+
+			void* LocalPlayers = READ_POINTER(GameInstance, Offsets::LocalPlayers);
+
+			void* LocalPlayer = READ_POINTER(LocalPlayers, 0);
+
+			auto PlayerController = reinterpret_cast<APlayerController*>(READ_POINTER(LocalPlayer, Offsets::PlayerController));
+
+			void* cCheatManager = FindObject(L"/Script/Engine.CheatManager");
+
+			if (PlayerController)
 			{
-				printf("\n\n\n\n\n\n\n\nPEPEGA\n\n\n\n\n\n\n");
+				UCheatManager* CheatManager = reinterpret_cast<UCheatManager*>(StaticConstructObject_Internal(
+					reinterpret_cast<UClass*>(cCheatManager),
+					reinterpret_cast<UObject*>(PlayerController),
+					nullptr,
+					RF_NoFlags,
+					None,
+					nullptr,
+					false,
+					nullptr,
+					false
+				));
+
+				PlayerController->CheatManager = CheatManager;
 			}
+			break;
 		}
 	}
 }

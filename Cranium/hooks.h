@@ -9,6 +9,7 @@ inline uintptr_t CurlSetAdd;
 inline uintptr_t ProcessEventAdd;
 inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
+inline uintptr_t UWorldAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
 
@@ -16,6 +17,7 @@ void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
 UEngine* GEngine;
+void** UWorld;
 
 typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
 	UClass* Class,
@@ -71,6 +73,11 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+		UWorldAdd = Util::FindPattern(Patterns::UWorld, Masks::UWorld);
+		VALIDATE_ADDRESS(UWorldAdd, "Failed to find UWorld Address.");
+
+		UWorld = decltype(UWorld)(RELATIVE_ADDRESS(UWorldAdd, 7));
+
 		SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
 
@@ -110,12 +117,15 @@ void* FindObject(wchar_t const* name)
 		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
-			if (object->ObjectFlags != 0x41)
+			if (object->ObjectFlags == 0x41)
+			{
+				break;
+			}
+			else
 			{
 				printf("\n\n%ls\n\n", GetObjectName(object).c_str());
-				continue;
 			}
-
+			
 			if (GetObjectName(object) == name)
 			{
 				return object;

@@ -40,6 +40,11 @@ struct GObjects
 
 struct UConsole;
 
+struct UCheatManager
+{
+	CHAR unknown1[0x50];
+};
+
 struct UGameViewportClient
 {
 	CHAR unknown1[0x40];
@@ -134,7 +139,7 @@ public:
 };
 
 
-template<class T, class TWeakObjectPtrBase = FWeakObjectPtr>
+template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>
 struct TWeakObjectPtr : private TWeakObjectPtrBase
 {
 public:
@@ -160,7 +165,7 @@ public:
 };
 
 
-template<class TEnum>
+template <class TEnum>
 class TEnumAsByte
 {
 public:
@@ -199,19 +204,21 @@ private:
 
 struct FVector
 {
-	float                                              X;
-	float                                              Y;
-	float                                              Z;
+	float X;
+	float Y;
+	float Z;
 
 	inline FVector()
 		: X(0), Y(0), Z(0)
-	{ }
+	{
+	}
 
 	inline FVector(float x, float y, float z)
 		: X(x),
-		Y(y),
-		Z(z)
-	{ }
+		  Y(y),
+		  Z(z)
+	{
+	}
 
 	FVector operator-(FVector v)
 	{
@@ -229,14 +236,13 @@ struct FVector
 			(Y - v.Y) * (Y - v.Y) +
 			(Z - v.Z) * (Z - v.Z));
 	}
-
 };
 
 struct FRotator
 {
-	float                                              Pitch;
-	float                                              Yaw;
-	float                                              Roll;
+	float Pitch;
+	float Yaw;
+	float Roll;
 };
 
 struct APlayerController
@@ -247,66 +253,63 @@ struct APlayerController
 	class AHUD* MyHUD;
 	class APlayerCameraManager* PlayerCameraManager;
 	class APlayerCameraManager* PlayerCameraManagerClass;
-	bool                                               bAutoManageActiveCameraTarget;
-	unsigned char                                      UnknownData00[0x3];
-	struct FRotator                                    TargetViewRotation;
-	unsigned char                                      UnknownData01[0xC];
-	float                                              SmoothTargetViewRotationSpeed;
-	unsigned char                                      UnknownData02[0x8];
-	TArray<class AActor*>                              HiddenActors;
-	TArray<TWeakObjectPtr<class UPrimitiveComponent>>  HiddenPrimitiveComponents;
-	unsigned char                                      UnknownData03[0x4];
-	float                                              LastSpectatorStateSynchTime;
-	struct FVector                                     LastSpectatorSyncLocation;
-	struct FRotator                                    LastSpectatorSyncRotation;
-	int                                                ClientCap;
-	unsigned char                                      UnknownData04[0x4];
+	bool bAutoManageActiveCameraTarget;
+	unsigned char UnknownData00[0x3];
+	struct FRotator TargetViewRotation;
+	unsigned char UnknownData01[0xC];
+	float SmoothTargetViewRotationSpeed;
+	unsigned char UnknownData02[0x8];
+	TArray<class AActor*> HiddenActors;
+	TArray<TWeakObjectPtr<class UPrimitiveComponent>> HiddenPrimitiveComponents;
+	unsigned char UnknownData03[0x4];
+	float LastSpectatorStateSynchTime;
+	struct FVector LastSpectatorSyncLocation;
+	struct FRotator LastSpectatorSyncRotation;
+	int ClientCap;
+	unsigned char UnknownData04[0x4];
 	class UCheatManager* CheatManager;
 	class UCheatManager* CheatClass;
 	class UPlayerInput* PlayerInput;
-	TArray<struct FActiveForceFeedbackEffect>          ActiveForceFeedbackEffects;
-	unsigned char                                      UnknownData05[0x70];
-	unsigned char                                      UnknownData06 : 4;
-	unsigned char                                      bPlayerIsWaiting : 1;
-	unsigned char                                      UnknownData07[0x3];
-	unsigned char                                      NetPlayerIndex;
-	unsigned char                                      UnknownData08[0x3B];
+	TArray<struct FActiveForceFeedbackEffect> ActiveForceFeedbackEffects;
+	unsigned char UnknownData05[0x70];
+	unsigned char UnknownData06 : 4;
+	unsigned char bPlayerIsWaiting : 1;
+	unsigned char UnknownData07[0x3];
+	unsigned char NetPlayerIndex;
+	unsigned char UnknownData08[0x3B];
 	class UNetConnection* PendingSwapConnection;
 	class UNetConnection* NetConnection;
-	unsigned char                                      UnknownData09[0xC];
-	float                                              InputYawScale;
-	float                                              InputPitchScale;
-	float                                              InputRollScale;
-	unsigned char                                      bShowMouseCursor : 1;
-	unsigned char                                      bEnableClickEvents : 1;
-	unsigned char                                      bEnableTouchEvents : 1;
-	unsigned char                                      bEnableMouseOverEvents : 1;
-	unsigned char                                      bEnableTouchOverEvents : 1;
-	unsigned char                                      bForceFeedbackEnabled : 1;
-	unsigned char                                      UnknownData10[0x3];
-	float                                              ForceFeedbackScale;
-	TArray<struct FKey>                                ClickEventKeys;
-	TEnumAsByte<EMouseCursor>                          DefaultMouseCursor;
-	TEnumAsByte<EMouseCursor>                          CurrentMouseCursor;
-	TEnumAsByte<ECollisionChannel>                     DefaultClickTraceChannel;
-	TEnumAsByte<ECollisionChannel>                     CurrentClickTraceChannel;
-	float                                              HitResultTraceDistance;
-	uint16_t                                           SeamlessTravelCount;
-	uint16_t                                           LastCompletedSeamlessTravelCount;
-	unsigned char                                      UnknownData11[0x74];
+	unsigned char UnknownData09[0xC];
+	float InputYawScale;
+	float InputPitchScale;
+	float InputRollScale;
+	unsigned char bShowMouseCursor : 1;
+	unsigned char bEnableClickEvents : 1;
+	unsigned char bEnableTouchEvents : 1;
+	unsigned char bEnableMouseOverEvents : 1;
+	unsigned char bEnableTouchOverEvents : 1;
+	unsigned char bForceFeedbackEnabled : 1;
+	unsigned char UnknownData10[0x3];
+	float ForceFeedbackScale;
+	TArray<struct FKey> ClickEventKeys;
+	TEnumAsByte<EMouseCursor> DefaultMouseCursor;
+	TEnumAsByte<EMouseCursor> CurrentMouseCursor;
+	TEnumAsByte<ECollisionChannel> DefaultClickTraceChannel;
+	TEnumAsByte<ECollisionChannel> CurrentClickTraceChannel;
+	float HitResultTraceDistance;
+	uint16_t SeamlessTravelCount;
+	uint16_t LastCompletedSeamlessTravelCount;
+	unsigned char UnknownData11[0x74];
 	class UInputComponent* InactiveStateInputComponent;
-	unsigned char                                      UnknownData12 : 2;
-	unsigned char                                      bShouldPerformFullTickWhenPaused : 1;
-	unsigned char                                      UnknownData13[0x17];
+	unsigned char UnknownData12 : 2;
+	unsigned char bShouldPerformFullTickWhenPaused : 1;
+	unsigned char UnknownData13[0x17];
 	class UTouchInterface* CurrentTouchInterface;
-	unsigned char                                      UnknownData14[0x50];
+	unsigned char UnknownData14[0x50];
 	class ASpectatorPawn* SpectatorPawn;
-	unsigned char                                      UnknownData15[0x4];
-	bool                                               bIsLocalPlayerController;
-	unsigned char                                      UnknownData16[0x3];
-	struct FVector                                     SpawnLocation;
-	unsigned char                                      UnknownData17[0xC];
-
-
+	unsigned char UnknownData15[0x4];
+	bool bIsLocalPlayerController;
+	unsigned char UnknownData16[0x3];
+	struct FVector SpawnLocation;
+	unsigned char UnknownData17[0xC];
 };
-

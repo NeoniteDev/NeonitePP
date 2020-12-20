@@ -9,6 +9,7 @@ namespace Patterns
 	constexpr const char* CurlSetOpt = "\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x10\x48\x89\x74\x24\x18\x57\x48\x83\xEC\x30\x33\xED\x49\x8B\xF0\x48\x8B\xD9";
 	constexpr const char* GEngine = "\x48\x89\x74\x24\x20\xE8\x00\x00\x00\x00\x48\x8B\x4C\x24\x40\x48\x89\x05";
 	constexpr const char* GObjects = "\x48\x8B\x05\x7E\x38\x79\x05\x4C\x8D\x34\xCD";
+	constexpr const char* UWorld = "\x48\x8B\x1D\x00\x00\x00\x00\x48\x85\xDB\x74\x3B\x41";
 	constexpr const char* SCOI =
 	"\x4C\x89\x44\x24\x18\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\xAC\x24\x00\x00\x00\x00\x48\x81\xEC\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC4";
 	constexpr const char* ProcessEvent = "\x40\x55\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x81\xEC\x00\x00\x00\x00\x48\x8D\x6C\x24\x00\x48\x89\x9D\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC5\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x0C\x45\x33\xF6\x3B\x05\x00\x00\x00\x00\x4D\x8B\xF8\x48\x8B\xF2\x4C\x8B\xE1\x41\xB8\x00\x00\x00\x00\x7D\x2A";
@@ -22,11 +23,19 @@ namespace Masks
 	constexpr const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 	constexpr const char* GEngine = "xxxxxx????xxxxxxxx";
 	constexpr const char* GObjects = "xxx????xxxx";
+	constexpr const char* UWorld = "xxx????xxxxxx";
 	constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
 	constexpr const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
 	constexpr const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
 	constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
 };
+
+namespace Offsets
+{
+	constexpr DWORD GameInstance = 0x180;
+	constexpr DWORD LocalPlayers = 0x38;
+	constexpr DWORD PlayerController = 0x30;
+}
 
 //UE4
 enum EObjectFlags
@@ -133,4 +142,3 @@ enum class ECollisionChannel : uint8_t
 	ECC_OverlapAll_Deprecated = 32,
 	ECC_MAX = 33
 };
-

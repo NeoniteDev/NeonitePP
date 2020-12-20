@@ -11,6 +11,8 @@
 
 #define RELATIVE_ADDRESS(address, size) ((PBYTE)((UINT_PTR)(address) + *(PINT)((UINT_PTR)(address) + ((size) - sizeof(INT))) + (size)))
 
+#define READ_POINTER(base, offset) (*(PVOID *)(((PBYTE)base + offset)))
+
 class Util
 {
 private:
