@@ -59,6 +59,7 @@ struct UEngine
 	UGameViewportClient* GameViewportClient;
 };
 
+
 template <class T>
 struct TArray
 {
@@ -244,6 +245,16 @@ struct FRotator
 	float Yaw;
 	float Roll;
 };
+
+typedef struct {
+	FVector Location;
+	FRotator Rotation;
+	float FOV;
+	float OrthoWidth;
+	float OrthoNearClipPlane;
+	float OrthoFarClipPlane;
+	float AspectRatio;
+} FMinimalViewInfo;
 
 struct APlayerController
 {

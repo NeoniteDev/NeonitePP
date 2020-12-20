@@ -27,3 +27,14 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	return ProcessEvent(pObj, pFunc, pParams);
 }
+
+INT GetViewPointDetour(PVOID player, FMinimalViewInfo* viewInfo, BYTE stereoPass)
+{
+
+	auto CurrentViewPoint = GetViewPoint(player, viewInfo, stereoPass);
+
+	auto CurrentFOV = viewInfo->FOV;
+	printf("Current FOV: %f", CurrentFOV);
+
+	return CurrentViewPoint;
+}

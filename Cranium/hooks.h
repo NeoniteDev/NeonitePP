@@ -7,6 +7,7 @@
 inline uintptr_t CurlEasyAdd;
 inline uintptr_t CurlSetAdd;
 inline uintptr_t ProcessEventAdd;
+inline uintptr_t GetViewPointAdd;
 inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
 inline uintptr_t UWorldAdd;
@@ -14,6 +15,7 @@ inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
 
 void* (*ProcessEvent)(void*, void*, void*) = nullptr;
+int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
 UEngine* GEngine;
@@ -80,6 +82,10 @@ namespace Hooks
 
 		SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
+
+
+		GetViewPointAdd = Util::FindPattern(Patterns::GetViewPoint, Masks::GetViewPoint);
+		VALIDATE_ADDRESS(GetViewPointAdd, "Failed to find GetViewPoint Address.");
 
 		return true;
 	}

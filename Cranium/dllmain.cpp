@@ -31,17 +31,24 @@ void dllMain()
 
 #endif
 
+#ifdef HOOKS
 	while (true)
 	{
 		if (isReady)
 		{
 			Hooks::init();
 
+			//PE Hooking
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-
 			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
 			MH_EnableHook((void*)ProcessEventAdd);
 
+			//GVP Hooking
+			GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
+			MH_CreateHook((void*)GetViewPointAdd, GetViewPointDetour, (void**)&GetViewPoint);
+			MH_EnableHook((void*)GetViewPointAdd);
+
+			//Casting UE4 Console
 			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
 
 			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
@@ -59,46 +66,15 @@ void dllMain()
 			));
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
+
+			
 			break;
 		}
 		Sleep(1000 / 30); //30 fps 
 	}
-	while (true)
-	{
-		if (GetAsyncKeyState(VK_F10))
-		{
-			void* world = *UWorld;
-
-			void* GameInstance = READ_POINTER(world, Offsets::GameInstance);
-
-			void* LocalPlayers = READ_POINTER(GameInstance, Offsets::LocalPlayers);
-
-			void* LocalPlayer = READ_POINTER(LocalPlayers, 0);
-
-			auto PlayerController = reinterpret_cast<APlayerController*>(READ_POINTER(LocalPlayer, Offsets::PlayerController));
-
-			void* cCheatManager = FindObject(L"/Script/Engine.CheatManager");
-
-			if (PlayerController)
-			{
-				UCheatManager* CheatManager = reinterpret_cast<UCheatManager*>(StaticConstructObject_Internal(
-					reinterpret_cast<UClass*>(cCheatManager),
-					reinterpret_cast<UObject*>(PlayerController),
-					nullptr,
-					RF_NoFlags,
-					None,
-					nullptr,
-					false,
-					nullptr,
-					false
-				));
-
-				PlayerController->CheatManager = CheatManager;
-			}
-			break;
-		}
-	}
 }
+#endif
+
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
