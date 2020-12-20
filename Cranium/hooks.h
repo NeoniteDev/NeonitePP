@@ -11,7 +11,7 @@ inline uintptr_t GEngineAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
 
-void* (*ProcessEvent)(void*, void*, void*, void*) = nullptr;
+void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 FString(*GetObjectNameInternal)(PVOID) = nullptr;
 
 namespace Hooks
@@ -78,29 +78,31 @@ std::wstring GetObjectName(UObject* object) {
 	return name;
 }
 
-void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams, void* pRes)
+void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
 	if (pObj && pFunc)
 	{
 		auto nObj = GetObjectName(pObj);
 	    auto nFunc = GetObjectName(pFunc);
-		if(wcsstr(nFunc.c_str(), L"BP_OnClicked") && wcsstr(nObj.c_str(), L"Button_Play"))
-		{
-			printf("\n\nBRO WHY DID YOU JUST CLICK PLAY BUTTON ON NEONITE++? LMAO :PES_LAUGH:\n\n");
-		}
+
 		/*
+		if(nFunc.c_str() == L"BP_OnClicked" && nObj.c_str() == L"Button_Play")
+		{
+			//trigger
+		}
+		*/
+		
 		if (!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch")
 			)
 		{
-			printf("\nObject: %ws\nFunction: %ws\n", nObj.c_str(), nFunc.c_str());
+			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
-		*/
 	}
 
-	return ProcessEvent(pObj, pFunc, pParams, pRes);
+	return ProcessEvent(pObj, pFunc, pParams);
 }
 
 #endif

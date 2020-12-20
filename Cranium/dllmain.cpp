@@ -8,13 +8,15 @@
 
 void dllMain()
 {
-	
-#ifdef CONSOLE
 	FILE* fDummy;
 	AllocConsole();
+#ifdef CONSOLE
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
+#else
+	ShowWindow(GetConsoleWindow(), SW_HIDE);
+	freopen_s(&fDummy, "cranium.log", "w", stdout);
 #endif
 	
 	//CURL Detour
@@ -28,7 +30,7 @@ void dllMain()
 
 #endif
 
-	while (true)
+	while(true)
 	{
 
 		if (isReady)
