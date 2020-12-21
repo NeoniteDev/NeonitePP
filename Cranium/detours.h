@@ -48,50 +48,75 @@ int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPa
 	//TODO: proper input handling/hook
 	if (GetAsyncKeyState(VK_ADD) == 0)
 	{
-		GVPM::FOV += 1;
+		GVPM::FOV += 0.1;
 	}
 
 	if (GetAsyncKeyState(VK_SUBTRACT) == 0)
 	{
-		GVPM::FOV -= 1;
+		GVPM::FOV -= 0.1;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD8) == 0)
 	{
 		//Camera UP
-		GVPM::Camera.Y += 1;
+		GVPM::Camera.Y += 0.5;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD5) == 0)
 	{
 		//Camera DOWN
-		GVPM::Camera.Y -= 1;
+		GVPM::Camera.Y -= 0.5;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD4) == 0)
 	{
 		//Camera FORWARD
-		GVPM::Camera.X += 1;
+		GVPM::Camera.X += 0.5;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD6) == 0)
 	{
 		//Camera BACK
-		GVPM::Camera.X -= 1;
+		GVPM::Camera.X -= 0.5;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD9) == 0)
 	{
 		//Camera RIGHT
-		GVPM::Camera.Z += 1;
+		GVPM::Camera.Z += 0.5;
 	}
 
 	if (GetAsyncKeyState(VK_NUMPAD7) == 0)
 	{
 		//Camera LEFT
-		GVPM::Camera.Z -= 1;
+		GVPM::Camera.Z -= 0.5;
 	}
 
+	if (GetAsyncKeyState(VK_UP) == 0)
+	{
+		//Look UP
+		GVPM::Rotation.Pitch -= 0.1;
+	}
+
+	if (GetAsyncKeyState(VK_DOWN) == 0)
+	{
+		//Look DOWN
+		GVPM::Rotation.Pitch += 0.1;
+	}
+
+	if (GetAsyncKeyState(VK_LEFT) == 0)
+	{
+		//Look LEFT
+		GVPM::Rotation.Yaw += 0.1;
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT) == 0)
+	{
+		//Look RIGHT
+		GVPM::Rotation.Yaw -= 0.1;
+	}
+
+	/*
 	hGame = FindWindow((L"UnrealWindow"), (L"Fortnite  "));
 
 	if (GetCursorPos(&pMouse))
@@ -103,6 +128,7 @@ int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPa
 			//ShowCursor(BOOLEAN);
 		}
 	}
+	*/
 	
 	pViewInfo->Location.X = GVPM::Camera.X;
 	pViewInfo->Location.Y = GVPM::Camera.Y;
@@ -110,6 +136,8 @@ int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPa
 	pViewInfo->Rotation.Pitch = GVPM::Rotation.Pitch;
 	pViewInfo->Rotation.Yaw = GVPM::Rotation.Yaw;
 	pViewInfo->Rotation.Roll = GVPM::Rotation.Roll;
+
+	printf("\nPitch: %f\nYaw: %f", GVPM::Rotation.Pitch, GVPM::Rotation.Yaw);
 
 	pViewInfo->FOV = GVPM::FOV;
 	return CurrentViewPoint;

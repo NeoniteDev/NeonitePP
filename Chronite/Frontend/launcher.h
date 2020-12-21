@@ -80,7 +80,6 @@ namespace launcher
 			//TODO: byte code instead of dll.
 			std::string dllPath = util::GetEXEPath() + "\\Cranium.dll";
 
-
 			if (!ManualMap(hClient, dllPath.c_str()))
 			{
 				CloseHandle(hClient);
@@ -88,7 +87,6 @@ namespace launcher
 				system("PAUSE");
 				return;
 			}
-
 
 			while (true)
 			{
