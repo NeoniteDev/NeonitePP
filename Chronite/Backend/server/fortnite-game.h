@@ -87,6 +87,25 @@ R"(
                         "spotlight": false,
                         "websiteURL": "https://discord.gg/DJ6VUmD",
                         "websiteButtonTex" : "Join our discord"
+                    },
+                    {      
+                        "entryType": "Website",
+                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
+                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
+                        "videoMute": false,
+                        "hidden": false,
+                        "tabTitleOverride": "Neonite++",
+                        "_type": "CommonUI Simple Message MOTD",
+                        "title": "Neonite++",
+                        "body": "Made by Kemo (@xkem0x). If you have any bugs, you can join our Discord by clicking the button below.",
+                        "videoLoop": false,
+                        "videoStreamingEnabled": false,
+                        "sortingPriority": 80,
+                        "id": "NeoniteNewsBR",
+                        "videoAutoplay": false,
+                        "videoFullscreen": false,
+                        "spotlight": false,
+                        "websiteButtonTex" : "Enable Camera"
                     }
                 ]
                 },

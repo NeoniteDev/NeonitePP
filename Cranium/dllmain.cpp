@@ -40,18 +40,18 @@ void dllMain()
 
 			//PE Hooking
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-			MH_CreateHook((void*)ProcessEventAdd, ProcessEventDetour, (void**)&ProcessEvent);
-			MH_EnableHook((void*)ProcessEventAdd);
+			MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+			MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
 
 			//GVP Hooking
 			GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
-			MH_CreateHook((void*)GetViewPointAdd, GetViewPointDetour, (void**)&GetViewPoint);
-			MH_EnableHook((void*)GetViewPointAdd);
+			MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
+			MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));
 
 			//Casting UE4 Console
-			GEngine = *(UEngine**)(GEngineAdd + 22 + *(int32_t*)(GEngineAdd + 18));
+			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 22 + *reinterpret_cast<int32_t*>(GEngineAdd + 18));
 
-			StaticConstructObject_Internal = (f_StaticConstructObject_Internal)(SCOIAdd);
+			StaticConstructObject_Internal = f_StaticConstructObject_Internal(SCOIAdd);
 
 			UConsole* Console = reinterpret_cast<UConsole*>(StaticConstructObject_Internal(
 				GEngine->ConsoleClass,
@@ -67,11 +67,11 @@ void dllMain()
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
 
-			
 			break;
 		}
 		Sleep(1000 / 30); //30 fps 
 	}
+	//DumpAllGObjects();
 }
 #endif
 

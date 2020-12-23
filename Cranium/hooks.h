@@ -115,6 +115,30 @@ std::wstring GetObjectName(UObject* object)
 	return name;
 }
 
+void DumpAllGObjects()
+{
+	for (auto array : GObjs->ObjectArray->Objects)
+	{
+		auto fuObject = array;
+		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
+		{
+			auto object = fuObject->Object;
+			if (object->ObjectFlags != 0x41)
+			{
+				try
+				{
+					auto objectName = GetObjectName(object).c_str();
+					printf("\n[%i] %ws\n", i, objectName);
+				}
+				catch (...)
+				{
+				}
+			}
+		}
+	}
+
+}
+
 void* FindObject(wchar_t const* name)
 {
 	for (auto array : GObjs->ObjectArray->Objects)
@@ -126,10 +150,6 @@ void* FindObject(wchar_t const* name)
 			if (object->ObjectFlags == 0x41)
 			{
 				break;
-			}
-			else
-			{
-				printf("\n\n%ls\n\n", GetObjectName(object).c_str());
 			}
 			
 			if (GetObjectName(object) == name)
