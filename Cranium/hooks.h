@@ -31,7 +31,7 @@ typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
 	bool bCopyTransientsFromClassDefaults,
 	void* InstanceGraph,
 	bool bAssumeTemplateIsArchetype
-	);
+);
 
 static f_StaticConstructObject_Internal StaticConstructObject_Internal;
 
@@ -107,13 +107,20 @@ std::wstring GetObjectName(UObject* object)
 	std::wstring name(L"");
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
-		FString internalName = GetObjectNameInternal(object);
-		if (!internalName.c_str()) break;
-		name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
+		try
+		{
+			FString internalName = GetObjectNameInternal(object);
+			if (!internalName.c_str()) break;
+			name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
+		}
+		catch (...)
+		{
+		}
 	}
 
 	return name;
 }
+
 
 void DumpAllGObjects()
 {
@@ -127,8 +134,9 @@ void DumpAllGObjects()
 			{
 				try
 				{
+					auto className = GetObjectName((UObject*)object->Class).c_str();
 					auto objectName = GetObjectName(object).c_str();
-					printf("\n[%i] %ws\n", i, objectName);
+					printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
 				}
 				catch (...)
 				{
@@ -136,7 +144,6 @@ void DumpAllGObjects()
 			}
 		}
 	}
-
 }
 
 void* FindObject(wchar_t const* name)
@@ -151,7 +158,7 @@ void* FindObject(wchar_t const* name)
 			{
 				break;
 			}
-			
+
 			if (GetObjectName(object) == name)
 			{
 				return object;
@@ -160,4 +167,32 @@ void* FindObject(wchar_t const* name)
 	}
 
 	return nullptr;
+}
+
+bool IsA(UObject* Object, wchar_t const* className)
+{
+	auto objectClassName = GetObjectName((UObject*)Object->Class).c_str();
+	if (wcsstr(objectClassName, className))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void DumpIDs()
+{
+	for (auto array : GObjs->ObjectArray->Objects)
+	{
+		auto fuObject = array;
+		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
+		{
+			auto object = fuObject->Object;
+			if(IsA(object,L"/Script/FortniteGame.AthenaCharacterItemDefinition"))
+			{
+				auto objectName = GetObjectName(object).c_str();
+				printf("\n%ws\n", objectName);
+			}
+		}
+	}
 }
