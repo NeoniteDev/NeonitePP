@@ -41,7 +41,7 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	{
 		std::string url = va_arg(arg, char*);
 
-		if (url.find("ClientQuestLogin") != std::string::npos) isReady = true;
+		if (url.find("ClientQuestLogin") != std::string::npos) isReady = !isReady;
 
 		Uri uri = Uri::Parse(url);
 		if (uri.Host.ends_with(".ol.epicgames.com"))

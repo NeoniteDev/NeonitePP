@@ -3,6 +3,7 @@
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
+#include "structs.h"
 
 inline uintptr_t CurlEasyAdd;
 inline uintptr_t CurlSetAdd;
@@ -10,6 +11,7 @@ inline uintptr_t ProcessEventAdd;
 inline uintptr_t GetViewPointAdd;
 inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
+inline uintptr_t GNamesAdd;
 inline uintptr_t UWorldAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
@@ -18,6 +20,7 @@ void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
+TNameEntryArray* FName::GNames = nullptr;
 UEngine* GEngine;
 void** UWorld;
 
@@ -75,6 +78,14 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+		/*
+		 * COMMENTED UNTIL I HAVE THE PATTERNS
+		GNamesAdd = Util::FindPattern(Patterns::GNames, Masks::GNames);
+		VALIDATE_ADDRESS(GNamesAdd, "Failed to find GNames Address.");
+
+		FName::GNames = decltype(FName::GNames)(GNamesAdd);
+		*/
+
 		UWorldAdd = Util::FindPattern(Patterns::UWorld, Masks::UWorld);
 		VALIDATE_ADDRESS(UWorldAdd, "Failed to find UWorld Address.");
 
@@ -114,7 +125,6 @@ std::wstring GetObjectName(UObject* object)
 
 	return name;
 }
-
 
 void DumpAllGObjects()
 {
@@ -166,10 +176,29 @@ static T FindObject(wchar_t const* name)
 	return nullptr;
 }
 
+/*
+//COMMENTED UNTIL I HAVE THE PATTERN
+void DumpUnversioned()
+{
+	UClass* ACID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
+	auto props = ACID->SuperStruct->ChildProperties;
+	auto name = props->NamePrivate;
+	printf("\nIMAGINE: %s\n", name.GetName());
+}
+*/
 void DumpIDs()
 {
 	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
 	UClass* BID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaBackpackItemDefinition");
+	UClass* PCID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPetCarrierItemDefinition");
+	UClass* EID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaEmojiItemDefinition");
+	UClass* DID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaDanceItemDefinition");
+	UClass* PID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPickaxeItemDefinition");
+	UClass* GID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaGliderItemDefinition");
+	UClass* TID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaToyItemDefinition");
+	UClass* IWID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaItemWrapItemDefinition");
+	UClass* LSID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaLoadingScreenItemDefinition");
+	UClass* MPID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaMusicPackItemDefinition");
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
 		if (array == nullptr)
@@ -180,8 +209,17 @@ void DumpIDs()
 		for (DWORD i = 0x0; i < GObjs->ObjectCount && fuObject->Object; i++, fuObject++)
 		{
 			auto object = fuObject->Object;
-			if (object->IsA(CID) || 
-				object->IsA(BID))
+			if (object->IsA(CID) ||
+				object->IsA(BID) ||
+				object->IsA(PCID) ||
+				object->IsA(EID) ||
+				object->IsA(DID) ||
+				object->IsA(PID) ||
+				object->IsA(GID) ||
+				object->IsA(TID) ||
+				object->IsA(IWID) ||
+				object->IsA(LSID) ||
+				object->IsA(MPID))
 			{
 				auto objectName = GetObjectName(object).c_str();
 				printf("\n%ws\n", objectName);

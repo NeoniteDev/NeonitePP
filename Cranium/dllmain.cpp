@@ -73,6 +73,7 @@ void dllMain()
 	}
 	DumpIDs();
 	//DumpAllGObjects();
+	//DumpUnversioned();
 }
 #endif
 
