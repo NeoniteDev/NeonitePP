@@ -107,15 +107,9 @@ std::wstring GetObjectName(UObject* object)
 	std::wstring name(L"");
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
-		try
-		{
-			FString internalName = GetObjectNameInternal(object);
-			if (!internalName.c_str()) break;
-			name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
-		}
-		catch (...)
-		{
-		}
+		FString internalName = GetObjectNameInternal(object);
+		if (!internalName.c_str()) break;
+		name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
 	}
 
 	return name;
@@ -126,32 +120,35 @@ void DumpAllGObjects()
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
+		if (array == nullptr)
+		{
+			continue;
+		}
 		auto fuObject = array;
-		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
+		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
 			if (object->ObjectFlags != 0x41)
 			{
-				try
-				{
-					auto className = GetObjectName((UObject*)object->Class).c_str();
-					auto objectName = GetObjectName(object).c_str();
-					printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
-				}
-				catch (...)
-				{
-				}
+				auto className = GetObjectName((UObject*)object->Class).c_str();
+				auto objectName = GetObjectName(object).c_str();
+				printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
 			}
 		}
 	}
 }
 
-void* FindObject(wchar_t const* name)
+template <typename T>
+static T FindObject(wchar_t const* name)
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
+		if (array == nullptr)
+		{
+			continue;
+		}
 		auto fuObject = array;
-		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
+		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
 			if (object->ObjectFlags == 0x41)
@@ -161,7 +158,7 @@ void* FindObject(wchar_t const* name)
 
 			if (GetObjectName(object) == name)
 			{
-				return object;
+				return reinterpret_cast<T>(object);
 			}
 		}
 	}
@@ -169,26 +166,22 @@ void* FindObject(wchar_t const* name)
 	return nullptr;
 }
 
-bool IsA(UObject* Object, wchar_t const* className)
-{
-	auto objectClassName = GetObjectName((UObject*)Object->Class).c_str();
-	if (wcsstr(objectClassName, className))
-	{
-		return true;
-	}
-
-	return false;
-}
-
 void DumpIDs()
 {
+	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
+	UClass* BID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaBackpackItemDefinition");
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
+		if (array == nullptr)
+		{
+			continue;
+		}
 		auto fuObject = array;
-		for (auto i = 0; i < 0x10000 && fuObject->Object; ++i, ++fuObject)
+		for (DWORD i = 0x0; i < GObjs->ObjectCount && fuObject->Object; i++, fuObject++)
 		{
 			auto object = fuObject->Object;
-			if(IsA(object,L"/Script/FortniteGame.AthenaCharacterItemDefinition"))
+			if (object->IsA(CID) || 
+				object->IsA(BID))
 			{
 				auto objectName = GetObjectName(object).c_str();
 				printf("\n%ws\n", objectName);

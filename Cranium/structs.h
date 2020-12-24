@@ -15,6 +15,15 @@ struct UObject
 	UClass* Class;
 	BYTE unknown1[0x8];
 	UObject* Outer;
+
+	bool IsA(UClass* cmp) const
+	{
+		if (this->Class == cmp)
+		{
+			return true;
+		}
+		return false;
+	}
 };
 
 struct FUObjectItem
