@@ -71,7 +71,6 @@ void dllMain()
 		}
 		Sleep(1000 / 30); //30 fps 
 	}
-	DumpIDs();
 	//DumpAllGObjects();
 }
 #endif
