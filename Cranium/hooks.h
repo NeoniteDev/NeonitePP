@@ -3,7 +3,7 @@
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
-#include "structs.h"
+
 
 inline uintptr_t CurlEasyAdd;
 inline uintptr_t CurlSetAdd;
@@ -208,21 +208,42 @@ void DumpIDs()
 		auto fuObject = array;
 		for (DWORD i = 0x0; i < GObjs->ObjectCount && fuObject->Object; i++, fuObject++)
 		{
+			//          __o 
+			//        _ \<_ 
+			//       (_)/(_)
 			auto object = fuObject->Object;
-			if (object->IsA(CID) ||
-				object->IsA(BID) ||
-				object->IsA(PCID) ||
-				object->IsA(EID) ||
-				object->IsA(DID) ||
-				object->IsA(PID) ||
+			if (object->IsA(CID) || // OH NO ROBERT FELL 
+				object->IsA(BID) || //        ,   
+				object->IsA(PCID) || //      /     
+				object->IsA(EID) || //    `\_\     
+				object->IsA(DID) || //        \@     
+				object->IsA(PID) || //       /O\     
 				object->IsA(GID) ||
 				object->IsA(TID) ||
 				object->IsA(IWID) ||
 				object->IsA(LSID) ||
 				object->IsA(MPID))
 			{
-				auto objectName = GetObjectName(object).c_str();
-				printf("\n%ws\n", objectName);
+				//                      __==~^~~==
+				//                    _==~        ~~@@==_
+				//                    ===  |   | , /  @@@@
+				//                    \ \  |   |' /  / @@@@
+				//                     \ \ |   | /  /  /  /
+				//                      ` \|   |/  /  / ,'
+				//                      \  |   |  / ,','
+				//                       \ |   | /,' ,'
+				//                        \`   ;/' ,'
+				//                         \`  / ,'
+				//                          |o| '
+				//                          _@'    SIKE
+				//                         ||
+				//                        ''
+				auto objectName = GetObjectName(object);
+				std::string objectNameS = std::string(objectName.begin(), objectName.end());
+				size_t pos = objectNameS.find_last_of(".");
+				std::string id = objectNameS.substr(pos + 1);
+				if (id.starts_with("Default__")) break;
+				printf("\n%s\n", id.c_str());
 			}
 		}
 	}
