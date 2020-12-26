@@ -14,8 +14,8 @@ inline void initDynamics()
 			"allowedActions": ["PLAY", "DOWNLOAD"],
 			"banned": false
 		}]
-		)"_json;
-		res.set_content(j.dump(), "application/json");
+		)";
+		res.set_content(j, "application/json");
 	});
 
 	app.Get(R"(/fortnite/api/v2/versioncheck/(.*))", [](const Request& req, Response& res)
@@ -39,7 +39,8 @@ inline void initDynamics()
 	app.Get("/account/api/public/account", [](const Request& req, Response& res)
 	{
 		auto account_id = req.get_param_value("accountId");
-		json j = {
+		json j;
+		j[0] = {
 			{"id", account_id},
 			{"displayName", account_id},
 			{"externalAuths", json({})}
@@ -68,15 +69,58 @@ inline void initDynamics()
 		res.set_content(j.dump(), "application/json");
 	});
 
-	app.Get(R"(/friends/api/public/blocklist/(.*))", [](const Request& req, Response& res)
+	app.Post("/api/v1/user/setting", [](const Request& req, Response& res)
 	{
-		const auto j = R"({ "blockedUsers": [] })"_json;
+		const auto j =
+		R"(
+          [{
+              "accountId": "neoniteuseridplaceholder",
+              "key": "avatar",
+              "value": "cid_005_athena_commando_m_default"
+          }, {
+              "accountId": "neoniteuseridplaceholder",
+              "key": "avatarBackground",
+              "value": "[\"#8EFDE5\",\"#1CBA9E\",\"#034D3F\"]"
+          }, {
+              "accountId": "neoniteuseridplaceholder",
+              "key": "appInstalled",
+              "value": "init"
+          }]
+		)"_json;
+		res.set_content(j.dump(), "application/json");
+	});
+
+	app.Get("/api/v1/Fortnite/get", [](const Request& req, Response& res)
+	{
+		const auto j =
+		R"({"interactions": []})"_json;
+
 		res.set_content(j.dump(), "application/json");
 	});
 
 	app.Get(R"(/friends/api/v1/(.*)/settings)", [](const Request& req, Response& res)
 	{
-		const auto j = R"({ "blockedUsers": [] })"_json;
+		const auto j =
+		R"(
+        {
+        "friends": [],
+        "incoming": [],
+        "outgoing": [],
+        "suggested": [],
+        "blocklist": [],
+        "settings": {"acceptInvites": "public"},
+        "limitsReached": {"incoming": false, "outgoing": false, "accepted": false}
+        }
+		)"_json;
+
+		res.set_content(j.dump(), "application/json");
+	});
+
+	app.Get(R"(/friends/api/v1/(.*)/summary)", [](const Request& req, Response& res)
+	{
+		json j = {
+			{"acceptInvites", "public"}
+		};
 		res.set_content(j.dump(), "application/json");
 	});
 
@@ -86,6 +130,13 @@ inline void initDynamics()
 	});
 
 	app.Get(R"(/affiliate/api/public/affiliates/slug/(.*))", [](const Request& req, Response& res)
+	{
+		const auto j =
+		R"({"bans":[],"warnings":[]})"_json;
+		res.set_content(j.dump(), "application/json");
+	});
+
+	app.Get(R"(/socialban/api/public/v1/(.*))", [](const Request& req, Response& res)
 	{
 		const auto j =
 		R"(
@@ -105,5 +156,15 @@ inline void initDynamics()
 	{
 		const auto j = R"({ "current": [], "pending": [], "invites": [], "pings": [] })"_json;
 		res.set_content(j.dump(), "application/json");
+	});
+
+	app.Get("/fortnite/api/storefront/v2/catalog", [](const Request& req, Response& res)
+	{
+		res.status = 204;
+	});
+
+	app.Get("/fortnite/api/cloudstorage/system/config", [](const Request& req, Response& res)
+	{
+		res.status = 204;
 	});
 }

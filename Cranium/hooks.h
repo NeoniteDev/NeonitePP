@@ -130,17 +130,14 @@ void DumpAllGObjects()
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
-		if (array == nullptr)
-		{
-			continue;
-		}
+		if (array == nullptr) continue;
 		auto fuObject = array;
 		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
 			if (object->ObjectFlags != 0x41)
 			{
-				auto className = GetObjectName((UObject*)object->Class).c_str();
+				auto className = GetObjectName(reinterpret_cast<UObject*>(object->Class)).c_str();
 				auto objectName = GetObjectName(object).c_str();
 				printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
 			}
@@ -153,10 +150,7 @@ static T FindObject(wchar_t const* name)
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
-		if (array == nullptr)
-		{
-			continue;
-		}
+		if (array == nullptr) continue;
 		auto fuObject = array;
 		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
@@ -186,6 +180,7 @@ void DumpUnversioned()
 	printf("\nIMAGINE: %s\n", name.GetName());
 }
 */
+
 void DumpIDs()
 {
 	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
@@ -195,53 +190,34 @@ void DumpIDs()
 	UClass* DID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaDanceItemDefinition");
 	UClass* PID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPickaxeItemDefinition");
 	UClass* GID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaGliderItemDefinition");
+	UClass* SDID = FindObject<UClass*>(L"/Script/FortiteGame.AthenaSkyDiveContrailItemDefinition");
 	UClass* TID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaToyItemDefinition");
-	UClass* IWID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaItemWrapItemDefinition");
+	UClass* IWD = FindObject<UClass*>(L"/Script/FortniteGame.AthenaItemWrapDefinition");
 	UClass* LSID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaLoadingScreenItemDefinition");
 	UClass* MPID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaMusicPackItemDefinition");
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
-		if (array == nullptr)
-		{
-			continue;
-		}
+		if (array == nullptr) continue;
 		auto fuObject = array;
 		for (DWORD i = 0x0; i < GObjs->ObjectCount && fuObject->Object; i++, fuObject++)
 		{
-			//          __o 
-			//        _ \<_ 
-			//       (_)/(_)
 			auto object = fuObject->Object;
-			if (object->IsA(CID) || // OH NO ROBERT FELL 
-				object->IsA(BID) || //        ,   
-				object->IsA(PCID) || //      /     
-				object->IsA(EID) || //    `\_\     
-				object->IsA(DID) || //        \@     
-				object->IsA(PID) || //       /O\     
+			if (object->IsA(CID) ||
+				object->IsA(BID) ||
+				object->IsA(PCID) ||
+				object->IsA(EID) ||
+				object->IsA(DID) ||
+				object->IsA(PID) ||
 				object->IsA(GID) ||
+				object->IsA(SDID) ||
 				object->IsA(TID) ||
-				object->IsA(IWID) ||
+				object->IsA(IWD) ||
 				object->IsA(LSID) ||
 				object->IsA(MPID))
 			{
-				//                      __==~^~~==
-				//                    _==~        ~~@@==_
-				//                    ===  |   | , /  @@@@
-				//                    \ \  |   |' /  / @@@@
-				//                     \ \ |   | /  /  /  /
-				//                      ` \|   |/  /  / ,'
-				//                      \  |   |  / ,','
-				//                       \ |   | /,' ,'
-				//                        \`   ;/' ,'
-				//                         \`  / ,'
-				//                          |o| '
-				//                          _@'    SIKE
-				//                         ||
-				//                        ''
-				auto objectName = GetObjectName(object);
-				std::string objectNameS = std::string(objectName.begin(), objectName.end());
-				size_t pos = objectNameS.find_last_of(".");
-				std::string id = objectNameS.substr(pos + 1);
+				auto objectNameW = GetObjectName(object);
+				std::string objectName = std::string(objectNameW.begin(), objectNameW.end());
+				std::string id = objectName.substr(objectName.find_last_of(".") + 1);
 				if (id.starts_with("Default__")) break;
 				printf("\n%s\n", id.c_str());
 			}

@@ -35,7 +35,8 @@ namespace server
 			auto fmt = "{}";
 			char buf[BUFSIZ];
 			snprintf(buf, sizeof(buf), fmt, res.status);
-			auto test = req.path;
+			//auto test = req.path;
+			//console.AddLog(test.c_str());
 			res.set_content(buf, "application/json");
 		});
 

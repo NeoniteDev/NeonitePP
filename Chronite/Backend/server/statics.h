@@ -33,6 +33,11 @@ inline void initStatics()
 		res.status = 204;
 	});
 
+	app.Get(R"(/eulatracking/api/public/agreements/fn/account/(.*))", [](const Request& req, Response& res)
+	{
+		res.status = 204;
+	});
+
 	app.Get("/fortnite/api/game/v2/br-inventory/account/NeoniteUser", [](const Request& req, Response& res)
 	{
 		res.status = 204;
@@ -115,7 +120,12 @@ inline void initStatics()
 		res.set_content("[]", "application/json");
 	});
 
-	app.Get(R"(/friends/(.*))", [](const Request& req, Response& res)
+	app.Get(R"(/friends/api/v1/(.*)/recent/fortnite)", [](const Request& req, Response& res)
+	{
+		res.set_content("[]", "application/json");
+	});
+
+	app.Get(R"(/friends/api/v1/(.*)/blocklist)", [](const Request& req, Response& res)
 	{
 		res.set_content("[]", "application/json");
 	});

@@ -40,7 +40,7 @@ R"(
             },
             "Character": {
               "items": [
-                "AthenaCharacter:cid_791_athena_commando_m_henchmangoodshorts_d"
+                "AthenaCharacter:cid_npc_athena_commando_m_fallback"
               ],
               "activeVariants": [
                 {
@@ -301,24 +301,15 @@ R"(
       },
       "quantity": 1
     },
-    "AthenaBackpack:bid_367_tacticalfishermanmale": {
-      "templateId": "AthenaBackpack:bid_367_tacticalfishermanmale",
+    "AthenaCharacter:cid_npc_athena_commando_m_fallback": {
+      "templateId": "AthenaCharacter:cid_npc_athena_commando_m_fallback",
       "attributes": {
         "max_level_bonus": 0,
         "level": 1,
         "item_seen": true,
         "rnd_sel_cnt": 0,
         "xp": 0,
-        "variants": [
-          {
-            "channel": "Progressive",
-            "active": "Stage1",
-            "owned": [
-              "Stage1",
-              "Stage2"
-            ]
-          }
-        ],
+        "variants": [],
         "favorite": false
       },
       "quantity": 1
