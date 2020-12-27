@@ -262,7 +262,7 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					settings::loadLocker(false);
 				}
-				
+
 				SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
 				SetWindowSize(ImVec2(500, 460), ImGuiCond_FirstUseEver);
 
@@ -355,10 +355,11 @@ void ImGui::ShowLoader(bool* p_open)
 				int length = IDs.size();
 
 				static int selected = -1;
+				static int i = 0;
 
 				if (!bHasImportedLocker)
 				{
-					for (int i = 0; i < length; i++)
+					for (i; i < length; i++)
 					{
 						if (Selectable(IDs.at(i).c_str(), selected == i,
 						               ImGuiSelectableFlags_SpanAllColumns))
@@ -379,9 +380,6 @@ void ImGui::ShowLoader(bool* p_open)
 	{
 		SetCursorPosX(GetCursorPosX() + 145);
 		SetCursorPosY(GetCursorPosY() + 5);
-
-		float cX = GetCursorPosY();
-		float cY = GetCursorPosY();
 
 		Text("Backend: Kemo (@xkem0x)");
 

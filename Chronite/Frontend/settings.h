@@ -4,6 +4,13 @@
 
 namespace settings
 {
+	void writeTo(const std::string& filepath, const std::vector data)
+	{
+		std::ofstream filestream(filepath);
+		std::copy(data.begin(), data.end(), std::ostream_iterator<T>(filestream, " "));
+		filestream.close();
+	}
+
 	inline bool config(bool sol)
 	{
 		std::string configPath = util::GetEXEPath() + "\\neonite.config";
@@ -78,8 +85,9 @@ namespace settings
 				               std::fstream::in | std::fstream::out |
 				               std::fstream::trunc);
 
-				std::ostream_iterator<std::string> output_iterator(i, "\n");
-				std::copy(IDs.begin(), IDs.end(), output_iterator);
+				writeTo(itemsPath, IDs)
+				//std::ostream_iterator<std::string> output_iterator(i, "\n");
+				//std::copy(IDs.begin(), IDs.end(), output_iterator);
 			}
 			catch (...)
 			{
@@ -96,7 +104,8 @@ namespace settings
 			std::string line;
 			while (std::getline(i, line))
 			{
-				if (line.starts_with("Athena")) return IDs.push_back(line.c_str());
+				if (line.starts_with("Athena")) IDs.push_back(line.c_str());
+				return;
 			}
 			i.close();
 		}
