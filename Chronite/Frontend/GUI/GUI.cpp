@@ -272,13 +272,19 @@ void ImGui::ShowLoader(bool* p_open)
 				SameLine();
 				if (Button("+"))
 				{
-					//if (lowID.size() > 0) 
-					if (std::find(IDs.begin(), IDs.end(), lowID) != IDs.end())
+					if (lowID.size() == 0)
+					{
+						MessageBoxA(window, "Please input a definition.",
+							"Neonite++", ERROR);
+						return;
+					}
+					if (std::find(IDs.begin(), IDs.end(), lowID) == IDs.end())
 					{
 						if (!strstr(lowID.c_str(), "athena"))
 						{
 							MessageBoxA(window, "The item added doesn't seem to be existing.",
 							            "Neonite++", ERROR);
+							return;
 						}
 						else
 						{
@@ -290,6 +296,7 @@ void ImGui::ShowLoader(bool* p_open)
 					{
 						MessageBoxA(window, "The item is already in the list.",
 						            "Neonite++", ERROR);
+						return;
 					}
 				}
 
