@@ -80,7 +80,6 @@ namespace settings
 
 				std::ostream_iterator<std::string> output_iterator(i, "\n");
 				std::copy(IDs.begin(), IDs.end(), output_iterator);
-				//bHasImportedLocker = false;
 			}
 			catch (...)
 			{
@@ -100,7 +99,6 @@ namespace settings
 				if (line.starts_with("Athena")) return IDs.push_back(line.c_str());
 			}
 			i.close();
-			bHasImportedLocker = true;
 		}
 	}
 }

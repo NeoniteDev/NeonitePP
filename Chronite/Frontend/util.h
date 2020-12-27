@@ -25,8 +25,6 @@ inline int seasonLevel = 100;
 inline int vbucks = 100000;
 
 //locker
-inline bool bIsLockerOpen = false;
-inline bool bHasImportedLocker = false;
 inline char ID[125];
 inline std::vector<std::string> IDs;
 inline std::vector<std::string> LockerBackup;
