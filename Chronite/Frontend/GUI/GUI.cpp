@@ -84,7 +84,7 @@ void ImGui::ShowLoader(bool* p_open)
 				if (hServer == INVALID_HANDLE_VALUE)
 				{
 					hServer = CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)&server::init,
-					                       nullptr, NULL, nullptr);
+						nullptr, NULL, nullptr);
 					console.AddLog("[+] Server started...");
 				}
 				else
@@ -96,7 +96,7 @@ void ImGui::ShowLoader(bool* p_open)
 			SameLine(GetWindowWidth() - 390);
 
 			InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter,
-			                  FilterNoSpace);
+				FilterNoSpace);
 
 			SameLine(GetWindowWidth() - 100);
 
@@ -120,8 +120,8 @@ void ImGui::ShowLoader(bool* p_open)
 					}
 
 					hLauncher = CreateThread(nullptr, NULL,
-					                         (LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
-					                         NULL, nullptr);
+						(LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
+						NULL, nullptr);
 				}
 				else
 				{
@@ -255,7 +255,7 @@ void ImGui::ShowLoader(bool* p_open)
 		if (bIsLockerOpen)
 		{
 			if (Begin("Locker", nullptr,
-			          ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
+				ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
 			{
 				if (!bHasImportedLocker)
 				{
@@ -276,171 +276,188 @@ void ImGui::ShowLoader(bool* p_open)
 					{
 						MessageBoxA(window, "Please input a definition.",
 							"Neonite++", ERROR);
-						return;
 					}
-					if (std::find(IDs.begin(), IDs.end(), lowID) == IDs.end())
+					
+					if (!strstr(lowID.c_str(), "athena"))
+					{
+						MessageBoxA(window, "The item added doesn't seem to be existing.",
+							"Neonite++", ERROR);
+					}
+
+					if (any_of(IDs.begin(), IDs.end(), [&](const string& elem) { return elem == lowID; })) {
+						MessageBoxA(window, "The item is already in the list.",
+							"Neonite++", ERROR);
+					} else {
+							IDs.push_back(lowID);
+							LockerBackup.push_back(lowID);
+						}
+					
+					
+						/*if (*find(IDs.begin(), IDs.end(), lowID) == lowID) {
+							MessageBoxA(window, "The item is already in the list.",
+										"Neonite++", ERROR);
+
+
+						}
+						else
+						{
+						if (!strstr(lowID.c_str(), "athena"))
+							{
+								MessageBoxA(window, "The item added doesn't seem to be existing.",
+									"Neonite++", ERROR);
+							}
+							else
+							{
+								IDs.push_back(ID);
+								LockerBackup.push_back(ID);
+							}*/
+				}
+
+
+					SameLine();
+					if (Button("-"))
 					{
 						if (!strstr(lowID.c_str(), "athena"))
 						{
-							MessageBoxA(window, "The item added doesn't seem to be existing.",
-							            "Neonite++", ERROR);
-							return;
+							MessageBoxA(window, "This item isn't correct.", "Neonite++",
+								ERROR);
 						}
 						else
 						{
-							IDs.push_back(ID);
-							LockerBackup.push_back(ID);
+							std::vector<std::string>::iterator it = std::find(
+								IDs.begin(), IDs.end(), lowID);
+
+							int id = std::distance(IDs.begin(), it);
+
+
+							if (it != IDs.end())
+							{
+								IDs.erase(IDs.begin() + id);
+								//LockerBackup.erase(LockerBackup.begin() + id);
+							}
+							else
+							{
+								MessageBoxA(window, "This item doesn't seem to exist.",
+									"Neonite++", ERROR);
+							}
 						}
 					}
-					else
+
+					SameLine();
+					if (Button(("Erase")))
 					{
-						MessageBoxA(window, "The item is already in the list.",
-						            "Neonite++", ERROR);
-						return;
-					}
-				}
-
-				SameLine();
-				if (Button("-"))
-				{
-					if (!strstr(lowID.c_str(), "athena"))
-					{
-						MessageBoxA(window, "This item isn't correct.", "Neonite++",
-						            ERROR);
-					}
-					else
-					{
-						std::vector<std::string>::iterator it = std::find(
-							IDs.begin(), IDs.end(), ID);
-
-						int id = std::distance(IDs.begin(), it);
-
-
-						if (it != IDs.end())
+						if (IDs.empty())
 						{
-							IDs.erase(IDs.begin() + id);
-							//LockerBackup.erase(LockerBackup.begin() + id);
+							MessageBoxA(window, "The list is already empty!", "Neonite++",
+								ERROR);
 						}
 						else
 						{
-							MessageBoxA(window, "This item doesn't seem to exist.",
-							            "Neonite++", ERROR);
+							IDs.clear();
 						}
 					}
-				}
-
-				SameLine();
-				if (Button(("Erase")))
-				{
-					if (IDs.empty())
+					SameLine();
+					if (Button(("Save Locker")))
 					{
-						MessageBoxA(window, "The list is already empty!", "Neonite++",
-						            ERROR);
+						settings::loadLocker(true);
 					}
-					else
+
+					Columns(1, "");
+					Separator();
+					SetCursorPosX(GetCursorPosX() + 205);
+					SetCursorPosY(GetCursorPosY() + 5);
+					Text("ID");
+					Separator();
+
+					int length = IDs.size();
+
+					static int selected = -1;
+
+					if (bHasImportedLocker)
 					{
-						IDs.clear();
+						for (int i = 0; i < length; i++)
+						{
+							if (Selectable(IDs.at(i).c_str(), selected == i,
+								ImGuiSelectableFlags_SpanAllColumns))
+								selected = i;
+
+							NextColumn();
+							Separator();
+						}
 					}
-				}
-				SameLine();
-				if (Button(("Save Locker")))
-				{
-					settings::loadLocker(true);
-				}
-
-				Columns(1, "");
-				Separator();
-				SetCursorPosX(GetCursorPosX() + 205);
-				SetCursorPosY(GetCursorPosY() + 5);
-				Text("ID");
-				Separator();
-
-				int length = IDs.size();
-
-				static int selected = -1;
-
-				if (bHasImportedLocker)
-				{
-					for (int i = 0; i < length; i++)
+					else if (didntImport)
 					{
-						if (Selectable(IDs.at(i).c_str(), selected == i,
-						               ImGuiSelectableFlags_SpanAllColumns))
-							selected = i;
+						for (int i = 0; i < length; i++)
+						{
+							if (Selectable(IDs.at(i).c_str(), selected == i,
+								ImGuiSelectableFlags_SpanAllColumns))
+								selected = i;
 
-						NextColumn();
-						Separator();
+							NextColumn();
+							Separator();
+						}
 					}
-				}
-				else if (didntImport)
-				{
-					for (int i = 0; i < length; i++)
-					{
-						if (Selectable(IDs.at(i).c_str(), selected == i,
-						               ImGuiSelectableFlags_SpanAllColumns))
-							selected = i;
 
-						NextColumn();
-						Separator();
-					}
+					End();
 				}
-
-				End();
 			}
+			EndTabItem();
 		}
-		EndTabItem();
-	}
 
-	if (BeginTabItem("Credits"))
-	{
-		SetCursorPosX(GetCursorPosX() + 145);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		float cX = GetCursorPosY();
-		float cY = GetCursorPosY();
-
-		Text("Backend: Kemo (@xkem0x)");
-
-		SetCursorPosX(GetCursorPosX() + 145);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Frontend: Sammy (@madSammy)");
-
-		SetCursorPosX(GetCursorPosX() + 145);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Manager: Ayal (@Ayal01)");
-
-		SetCursorPosX(GetCursorPosX() + 145);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Rendering Engine: Dear, ImGui.");
-
-		SetCursorPosY(GetCursorPosY() + 115);
-		SetCursorPosX(GetCursorPosX() + 3.50);
-
-		if (Button("Join Server"))
+		if (BeginTabItem("Credits"))
 		{
-			system("start https://discord.com/invite/qSJ9jGp");
+			SetCursorPosX(GetCursorPosX() + 145);
+			SetCursorPosY(GetCursorPosY() + 5);
+
+			float cX = GetCursorPosY();
+			float cY = GetCursorPosY();
+
+			Text("Backend: Kemo (@xkem0x)");
+
+			SetCursorPosX(GetCursorPosX() + 145);
+			SetCursorPosY(GetCursorPosY() + 5);
+
+			Text("Frontend: Sammy (@madSammy)");
+
+			SetCursorPosX(GetCursorPosX() + 145);
+			SetCursorPosY(GetCursorPosY() + 5);
+
+			Text("Manager: Ayal (@Ayal01)");
+
+			SetCursorPosX(GetCursorPosX() + 145);
+			SetCursorPosY(GetCursorPosY() + 5);
+
+			Text("Rendering Engine: Dear, ImGui.");
+
+			SetCursorPosY(GetCursorPosY() + 115);
+			SetCursorPosX(GetCursorPosX() + 3.50);
+
+			if (Button("Join Server"))
+			{
+				system("start https://discord.com/invite/qSJ9jGp");
+			}
+
+			SameLine(GetWindowWidth() - 150);
+
+			if (Button("Github Repository"))
+			{
+				system("start https://github.com/NeoniteDev");
+			}
+
+			SameLine(GetWindowWidth() - 315);
+
+			if (Button("Website"))
+			{
+				system("start https://neonite.dev");
+			}
+
+			EndTabItem();
 		}
-
-		SameLine(GetWindowWidth() - 150);
-
-		if (Button("Github Repository"))
-		{
-			system("start https://github.com/NeoniteDev");
-		}
-
-		SameLine(GetWindowWidth() - 315);
-
-		if (Button("Website"))
-		{
-			system("start https://neonite.dev");
-		}
-
-		EndTabItem();
-	}
 
 	EndTabBar();
+	
+
+
 
 	if (*p_open == false)
 	{
@@ -451,65 +468,67 @@ void ImGui::ShowLoader(bool* p_open)
 
 	End();
 
-	ImGuiStyle* style = &GetStyle();
 
-	style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
-	style->WindowPadding = ImVec2(15, 8);
-	style->WindowRounding = 3.0f;
-	style->FramePadding = ImVec2(5, 5);
-	style->FrameRounding = 4.0f;
-	style->ItemSpacing = ImVec2(12, 8);
-	style->ItemInnerSpacing = ImVec2(8, 6);
-	style->IndentSpacing = 25.0f;
-	style->ScrollbarSize = 15.0f;
-	style->ScrollbarRounding = 9.0f;
-	style->GrabMinSize = 5.0f;
-	style->GrabRounding = 3.0f;
+		ImGuiStyle* style = &GetStyle();
 
-	style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
-	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-	style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 0.9f);
-	style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-	style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
-	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_TitleBg] = ImColor(85, 0, 255);
-	style->Colors[ImGuiCol_TitleBgCollapsed] = ImColor(85, 0, 255);
-	style->Colors[ImGuiCol_TitleBgActive] = ImColor(85, 0, 255);
-	style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-	style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(
-		0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(
-		0.06f, 0.05f, 0.07f, 1.00f);
-	style->Colors[ImGuiCol_CheckMark] = ImColor(85, 0, 255);
-	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
-	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-	style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-	style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style->Colors[ImGuiCol_ResizeGripHovered] =
-	ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-	style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-	style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
-	style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-	style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(
-		0.25f, 1.00f, 0.00f, 1.00f);
-	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
-	style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
-		1.00f, 0.98f, 0.95f, 0.73f);
-}
+		style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
+		style->WindowPadding = ImVec2(15, 8);
+		style->WindowRounding = 3.0f;
+		style->FramePadding = ImVec2(5, 5);
+		style->FrameRounding = 4.0f;
+		style->ItemSpacing = ImVec2(12, 8);
+		style->ItemInnerSpacing = ImVec2(8, 6);
+		style->IndentSpacing = 25.0f;
+		style->ScrollbarSize = 15.0f;
+		style->ScrollbarRounding = 9.0f;
+		style->GrabMinSize = 5.0f;
+		style->GrabRounding = 3.0f;
+
+		style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
+		style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+		style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 0.9f);
+		style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+		style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
+		style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
+		style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+		style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+		style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_TitleBg] = ImColor(85, 0, 255);
+		style->Colors[ImGuiCol_TitleBgCollapsed] = ImColor(85, 0, 255);
+		style->Colors[ImGuiCol_TitleBgActive] = ImColor(85, 0, 255);
+		style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+		style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+		style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+		style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(
+			0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(
+			0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_CheckMark] = ImColor(85, 0, 255);
+		style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
+		style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_Button] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+		style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+		style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_Header] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+		style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_Separator] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+		style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+		style->Colors[ImGuiCol_ResizeGripHovered] =
+			ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+		style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+		style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+		style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
+		style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(
+			0.25f, 1.00f, 0.00f, 1.00f);
+		style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
+		style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
+			1.00f, 0.98f, 0.95f, 0.73f);
+	}
+	
 
 #endif
