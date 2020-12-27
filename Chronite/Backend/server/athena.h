@@ -635,7 +635,7 @@ R"(
       "party_assist_quest": "",
       "purchased_battle_pass_tier_offers": [],
       "rested_xp_exchange": 0.333,
-      "level": 1000,
+      "level": 99999,
       "xp_overflow": 0,
       "rested_xp": 204000,
       "rested_xp_mult": 12.75,
@@ -662,5 +662,7 @@ inline json pAthena()
 	profile_athena["updated"] = date;
 	profile_athena["_id"] = name;
 	profile_athena["accountId"] = name;
+    profile_athena["stats"]["attributes"]["book_level"] = seasonLevel;
+    profile_athena["stats"]["attributes"]["book_purchased"] = bHasBattlepass;
 	return profile_athena;
 }

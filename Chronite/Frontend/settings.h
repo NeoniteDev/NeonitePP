@@ -84,7 +84,7 @@ namespace settings
 			}
 			catch (...)
 			{
-				console.AddLog("[x] Impossible to import locker.");
+				console.AddLog("[x] Failed to import locker.");
 			}
 		}
 
@@ -97,8 +97,7 @@ namespace settings
 			std::string line;
 			while (std::getline(i, line))
 			{
-				printf("%s", line.c_str());
-				IDs.push_back(line.c_str());
+				if (line.starts_with("Athena")) return IDs.push_back(line.c_str());
 			}
 			i.close();
 			bHasImportedLocker = true;
