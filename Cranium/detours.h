@@ -8,10 +8,8 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		auto nObj = GetObjectFirstName(pObj);
 		auto nFunc = GetObjectFirstName(pFunc);
 
-		if (nFunc == L"BP_OnClicked" && nObj == L"Button_SendMessage")
-		{
-			printf("\n\n\n\n\n\n\n\n\n\nSCUFF NIGGER\n\n\n\n\n\n\n\n\n");
-		}
+		//if (nFunc == L"BP_OnClicked" && nObj == L"Button_SendMessage")
+
 
 		if (!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -19,7 +17,7 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnMouse") &&
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
+			//printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
 	}
 

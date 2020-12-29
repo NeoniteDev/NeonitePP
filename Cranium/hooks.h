@@ -12,6 +12,7 @@ inline uintptr_t GetViewPointAdd;
 inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
 inline uintptr_t GNamesAdd;
+inline uintptr_t FNameToStringAdd;
 inline uintptr_t UWorldAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
@@ -20,7 +21,7 @@ void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
-TNameEntryArray* FName::GNames = nullptr;
+void (*FNameToString)(FName* pThis, FString& out);
 UEngine* GEngine;
 void** UWorld;
 
@@ -59,7 +60,7 @@ namespace Hooks
 		if (MH_Initialize() != MH_OK)
 		{
 			MessageBoxA(0, "Failed to initialize min-hook, terminating the thread.", "Cranium", MB_OK);
-			FreeLibraryAndExitThread(GetModuleHandle(NULL), 0);
+			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
 		}
 
 		ProcessEventAdd = Util::FindPattern(Patterns::ProcessEvent, Masks::ProcessEvent);
@@ -78,13 +79,10 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
-		/*
-		 * COMMENTED UNTIL I HAVE THE PATTERNS
-		GNamesAdd = Util::FindPattern(Patterns::GNames, Masks::GNames);
-		VALIDATE_ADDRESS(GNamesAdd, "Failed to find GNames Address.");
+		FNameToStringAdd = Util::FindPattern(Patterns::FNameToString, Masks::FNameToString);
+		VALIDATE_ADDRESS(FNameToStringAdd, "Failed to find FNameToString Address.");
 
-		FName::GNames = decltype(FName::GNames)(GNamesAdd);
-		*/
+		FNameToString = decltype(FNameToString)(FNameToStringAdd);
 
 		UWorldAdd = Util::FindPattern(Patterns::UWorld, Masks::UWorld);
 		VALIDATE_ADDRESS(UWorldAdd, "Failed to find UWorld Address.");
@@ -106,9 +104,9 @@ namespace Hooks
 std::wstring GetObjectFirstName(UObject* object)
 {
 	FString internalName = GetObjectNameInternal(object);
-	if (!internalName.c_str()) return L"";
+	if (!internalName.ToString()) return L"";
 
-	std::wstring name(internalName.c_str());
+	std::wstring name(internalName.ToString());
 
 	return name;
 }
@@ -119,8 +117,8 @@ std::wstring GetObjectName(UObject* object)
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
 		FString internalName = GetObjectNameInternal(object);
-		if (!internalName.c_str()) break;
-		name = internalName.c_str() + std::wstring(i > 0 ? L"." : L"") + name;
+		if (!internalName.ToString()) break;
+		name = internalName.ToString() + std::wstring(i > 0 ? L"." : L"") + name;
 	}
 
 	return name;
@@ -130,14 +128,17 @@ void DumpAllGObjects()
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
-		if (array == nullptr) continue;
+		if (array == nullptr)
+		{
+			continue;
+		}
 		auto fuObject = array;
 		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
 			if (object->ObjectFlags != 0x41)
 			{
-				auto className = GetObjectName(reinterpret_cast<UObject*>(object->Class)).c_str();
+				auto className = GetObjectName((UObject*)object->Class).c_str();
 				auto objectName = GetObjectName(object).c_str();
 				printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
 			}
@@ -150,7 +151,11 @@ static T FindObject(wchar_t const* name)
 {
 	for (auto array : GObjs->ObjectArray->Objects)
 	{
-		if (array == nullptr) continue;
+		if (array == nullptr)
+		{
+			continue;
+		}
+
 		auto fuObject = array;
 		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
 		{
@@ -166,20 +171,17 @@ static T FindObject(wchar_t const* name)
 			}
 		}
 	}
-
 	return nullptr;
 }
 
-/*
-//COMMENTED UNTIL I HAVE THE PATTERN
 void DumpUnversioned()
 {
-	UClass* ACID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
+	auto ACID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
 	auto props = ACID->SuperStruct->ChildProperties;
-	auto name = props->NamePrivate;
-	printf("\nIMAGINE: %s\n", name.GetName());
+	FString s;
+	FNameToString(&props->NamePrivate, s);
+	printf("\n\n\n\n\n\n\nPrivateName: %ls\n\n\n\n\n\n\n", s.ToString());
 }
-*/
 
 void DumpIDs()
 {

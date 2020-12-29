@@ -516,8 +516,8 @@ R"(
       },
       "quantity": 1
     },
-    "AthenaBackpack:bid_379_redridingremix": {
-      "templateId": "AthenaBackpack:bid_379_redridingremix",
+    "AthenaEmote:EID_SuckerPunch": {
+      "templateId": "AthenaDance:EID_SuckerPunch",
       "attributes": {
         "max_level_bonus": 0,
         "level": 1,

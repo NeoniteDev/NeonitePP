@@ -4,12 +4,13 @@
 
 namespace settings
 {
+	/*
 	void writeTo(const std::string& filepath, const std::vector data)
 	{
 		std::ofstream filestream(filepath);
 		std::copy(data.begin(), data.end(), std::ostream_iterator<T>(filestream, " "));
 		filestream.close();
-	}
+	}*/
 
 	inline bool config(bool sol)
 	{
@@ -85,7 +86,7 @@ namespace settings
 				               std::fstream::in | std::fstream::out |
 				               std::fstream::trunc);
 
-				writeTo(itemsPath, IDs)
+				//writeTo(itemsPath, IDs)
 				//std::ostream_iterator<std::string> output_iterator(i, "\n");
 				//std::copy(IDs.begin(), IDs.end(), output_iterator);
 			}

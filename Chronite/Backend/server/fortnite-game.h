@@ -36,11 +36,11 @@ R"(
                 "jcr:isCheckedOut": true,
                 "backgrounds": {
                     "backgrounds": [{
-                        "stage": "season14",
+                        "stage": "season15xmas",
                         "_type": "DynamicBackground",
                         "key": "lobby"
                     }, {
-                        "stage": "season14",
+                        "stage": "XmasStore2020",
                         "_type": "DynamicBackground",
                         "key": "vault"
                     }],
@@ -70,8 +70,8 @@ R"(
                 "news": {
                     "motds": [{
                         "entryType": "Website",
-                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
-                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
+                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/792648701297295390/NeoniteWallpaper.png",
+                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/792654680512921640/InGameBanner.png",
                         "videoMute": false,
                         "hidden": false,
                         "tabTitleOverride": "Neonite++",
@@ -87,25 +87,6 @@ R"(
                         "spotlight": false,
                         "websiteURL": "https://discord.gg/DJ6VUmD",
                         "websiteButtonTex" : "Join our discord"
-                    },
-                    {      
-                        "entryType": "Website",
-                        "image": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
-                        "tileImage": "https://cdn.discordapp.com/attachments/703974059121049720/788709757024337930/NeoniteWallpaper.png",
-                        "videoMute": false,
-                        "hidden": false,
-                        "tabTitleOverride": "Neonite++",
-                        "_type": "CommonUI Simple Message MOTD",
-                        "title": "Neonite++",
-                        "body": "Made by Kemo (@xkem0x). If you have any bugs, you can join our Discord by clicking the button below.",
-                        "videoLoop": false,
-                        "videoStreamingEnabled": false,
-                        "sortingPriority": 80,
-                        "id": "NeoniteNewsBR",
-                        "videoAutoplay": false,
-                        "videoFullscreen": false,
-                        "spotlight": false,
-                        "websiteButtonTex" : "Enable Camera"
                     }
                 ]
                 },
