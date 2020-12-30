@@ -9,7 +9,7 @@ inline HANDLE hClient = INVALID_HANDLE_VALUE;
 
 namespace launcher
 {
-	inline bool isFortniteRunning(const wchar_t* processName)
+	/*inline bool isFortniteRunning(const wchar_t* processName)
 	{
 		bool exists = false;
 		PROCESSENTRY32 entry;
@@ -24,7 +24,7 @@ namespace launcher
 
 		CloseHandle(snapshot);
 		return exists;
-	}
+	}*/
 	
 	inline void init()
 	{
