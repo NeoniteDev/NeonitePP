@@ -11,9 +11,6 @@ inline uintptr_t ProcessEventAdd;
 inline uintptr_t GetViewPointAdd;
 inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
-inline uintptr_t GNamesAdd;
-inline uintptr_t FNameToStringAdd;
-inline uintptr_t UWorldAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
 
@@ -21,9 +18,7 @@ void* (*ProcessEvent)(void*, void*, void*) = nullptr;
 int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE) = nullptr;
 FString (*GetObjectNameInternal)(PVOID) = nullptr;
 GObjects* GObjs = nullptr;
-void (*FNameToString)(FName* pThis, FString& out);
 UEngine* GEngine;
-void** UWorld;
 
 typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
 	UClass* Class,
@@ -79,19 +74,8 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
-		FNameToStringAdd = Util::FindPattern(Patterns::FNameToString, Masks::FNameToString);
-		VALIDATE_ADDRESS(FNameToStringAdd, "Failed to find FNameToString Address.");
-
-		FNameToString = decltype(FNameToString)(FNameToStringAdd);
-
-		UWorldAdd = Util::FindPattern(Patterns::UWorld, Masks::UWorld);
-		VALIDATE_ADDRESS(UWorldAdd, "Failed to find UWorld Address.");
-
-		UWorld = decltype(UWorld)(RELATIVE_ADDRESS(UWorldAdd, 7));
-
 		SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, "Failed to find SCOI Address.");
-
 
 		GetViewPointAdd = Util::FindPattern(Patterns::GetViewPoint, Masks::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, "Failed to find GetViewPoint Address.");
@@ -124,28 +108,6 @@ std::wstring GetObjectName(UObject* object)
 	return name;
 }
 
-void DumpAllGObjects()
-{
-	for (auto array : GObjs->ObjectArray->Objects)
-	{
-		if (array == nullptr)
-		{
-			continue;
-		}
-		auto fuObject = array;
-		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
-		{
-			auto object = fuObject->Object;
-			if (object->ObjectFlags != 0x41)
-			{
-				auto className = GetObjectName((UObject*)object->Class).c_str();
-				auto objectName = GetObjectName(object).c_str();
-				printf("\n[%i] Object:[%ws] Class:[%ws]\n", i, objectName, className);
-			}
-		}
-	}
-}
-
 template <typename T>
 static T FindObject(wchar_t const* name)
 {
@@ -174,17 +136,10 @@ static T FindObject(wchar_t const* name)
 	return nullptr;
 }
 
-void DumpUnversioned()
-{
-	auto ACID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
-	auto props = ACID->SuperStruct->ChildProperties;
-	FString s;
-	FNameToString(&props->NamePrivate, s);
-	printf("\n\n\n\n\n\n\nPrivateName: %ls\n\n\n\n\n\n\n", s.ToString());
-}
-
 void DumpIDs()
 {
+	std::ofstream log("ids.config", std::ofstream::app | std::ofstream::out);
+	
 	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
 	UClass* BID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaBackpackItemDefinition");
 	UClass* PCID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPetCarrierItemDefinition");
@@ -221,7 +176,7 @@ void DumpIDs()
 				std::string objectName = std::string(objectNameW.begin(), objectNameW.end());
 				std::string id = objectName.substr(objectName.find_last_of(".") + 1);
 				if (id.starts_with("Default__")) break;
-				printf("\n%s\n", id.c_str());
+				log << id + "\n";
 			}
 		}
 	}
