@@ -9,6 +9,23 @@ inline HANDLE hClient = INVALID_HANDLE_VALUE;
 
 namespace launcher
 {
+	/*inline bool isFortniteRunning(const wchar_t* processName)
+	{
+		bool exists = false;
+		PROCESSENTRY32 entry;
+		entry.dwSize = sizeof(PROCESSENTRY32);
+
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+		if (Process32First(snapshot, &entry))
+			while (Process32Next(snapshot, &entry))
+				if (!wcsicmp((wchar_t*)entry.szExeFile, processName))
+					exists = true;
+
+		CloseHandle(snapshot);
+		return exists;
+	}*/
+	
 	inline void init()
 	{
 		char programData[MAX_PATH];
@@ -90,7 +107,7 @@ namespace launcher
 
 			while (true)
 			{
-				if (WaitForSingleObject(hClient, 1) != WAIT_TIMEOUT) break;
+				if (WaitForSingleObject(hClient, 10) != WAIT_TIMEOUT) break;
 			}
 			util::resume(hEAC);
 			TerminateProcess(hEAC, 1);
