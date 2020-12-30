@@ -2,7 +2,7 @@
 #include "curl.h"
 #include "url.h"
 
-#define URL_HOST "localhost"
+//#define URL_HOST "localhost"
 #define URL_PORT "5595"
 
 inline bool isReady = false;
@@ -36,13 +36,13 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	}
 
 	//URL redirection
-#ifdef URL_HOST	
+
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
 
 		if (url.find("token") != std::string::npos) isReady = !isReady;
-
+#ifdef URL_HOST	
 		//printf("LogURL: %s\n", url.c_str());
 		
 		Uri uri = Uri::Parse(url);
@@ -50,11 +50,11 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		{
 			url = Uri::CreateUri("http", URL_HOST, URL_PORT, uri.Path, uri.QueryString);
 		}
-		
+#endif
 		result = CurlSetOpt_(data, tag, url.c_str());
 	}
 
-#endif
+
 	else
 	{
 		result = CurlSetOpt(data, tag, arg);

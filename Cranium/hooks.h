@@ -222,7 +222,7 @@ void TestSummon()
 
 			auto& pCheatManager = GET_POINTER(PlayerController, Offsets::CheatManager);
 
-			const auto cCheatManager = FindObject<UCheatManager*>(L"Class /Script/Engine.CheatManager");
+			const auto cCheatManager = FindObject<UCheatManager*>(L"Class /Script/FortniteGame.FortCheatManager");
 
 			if (PlayerController && cCheatManager)
 			{

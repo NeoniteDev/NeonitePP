@@ -8,13 +8,14 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		auto nObj = GetObjectFirstName(pObj);
 		auto nFunc = GetObjectFirstName(pFunc);
 
+		/*
 		if (nFunc == L"Summon")
 		{
 			auto className = static_cast<UCheatManager_Summon_Params*>(pParams)->ClassName;
 			std::wstring classNameW = className.ToString();
 			printf("\n\n\nCLASSNAME: %ls", classNameW.c_str());
 		}
-
+		
 
 		if (!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -24,6 +25,7 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		{
 			//printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
+		*/
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);
