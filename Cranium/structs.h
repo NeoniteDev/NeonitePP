@@ -118,11 +118,13 @@ struct UObject
 
 struct FField
 {
-	void* ClassPrivate;
-	void* Owner;
-	FField* Next;
-	FName NamePrivate;
-	EObjectFlags FlagsPrivate;
+	void* vtable; // 0x0 
+	void* padding_01; // 0x8
+	void* ClassPrivate; // 0x10
+	void* Owner; // 0x18
+	FField* Next; // 0x20
+	FName NamePrivate; // 0x28
+	EObjectFlags FlagsPrivate; // 0x30
 };
 
 struct FProperty : FField

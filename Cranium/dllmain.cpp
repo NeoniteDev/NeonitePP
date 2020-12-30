@@ -39,7 +39,7 @@ void dllMain()
 			Hooks::init();
 
 			DumpIDs();
-			
+
 			//PE Hooking
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 			MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
@@ -74,7 +74,6 @@ void dllMain()
 		Sleep(1000 / 30); //30 fps 
 	}
 	//DumpAllGObjects();
-	DumpUnversioned();
 }
 #endif
 
