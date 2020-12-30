@@ -13,11 +13,13 @@ inline uintptr_t GEngineAdd;
 inline uintptr_t GObjectsAdd;
 inline uintptr_t SCOIAdd;
 inline uintptr_t GONIAdd;
+inline uintptr_t GetObjectFullNameAdd;
 
-void* (*ProcessEvent)(void*, void*, void*) = nullptr;
-int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE) = nullptr;
-FString (*GetObjectNameInternal)(PVOID) = nullptr;
-GObjects* GObjs = nullptr;
+void* (*ProcessEvent)(void*, void*, void*);
+int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
+FString (*GetObjectNameInternal)(PVOID);
+void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
+GObjects* GObjs;
 UEngine* GEngine;
 
 typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
@@ -33,7 +35,6 @@ typedef UObject* (__fastcall* f_StaticConstructObject_Internal)(
 );
 
 static f_StaticConstructObject_Internal StaticConstructObject_Internal;
-
 
 namespace Hooks
 {
@@ -65,6 +66,11 @@ namespace Hooks
 		VALIDATE_ADDRESS(GONIAdd, "Failed to find GetObjectName Address.");
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
+
+		GetObjectFullNameAdd = Util::FindPattern(Patterns::GetFullName, Masks::GetFullName);
+		VALIDATE_ADDRESS(GetObjectFullNameAdd, "Failed to find GetObjectName Address.");
+
+		GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
 
 		GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, "Failed to find GEngine Address.");
@@ -108,10 +114,18 @@ std::wstring GetObjectName(UObject* object)
 	return name;
 }
 
+std::wstring GetObjectFullName(UObject* object)
+{
+	FString s;
+	GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
+	std::wstring objectNameW = s.ToString();
+	return objectNameW;
+}
+
 template <typename T>
 static T FindObject(wchar_t const* name)
 {
-	for (auto array : GObjs->ObjectArray->Objects)
+	for (auto array : GObjs->ObjectArray->FUObject)
 	{
 		if (array == nullptr)
 		{
@@ -119,7 +133,7 @@ static T FindObject(wchar_t const* name)
 		}
 
 		auto fuObject = array;
-		for (auto i = 0x0; i < GObjs->ObjectCount && fuObject->Object; ++i, ++fuObject)
+		for (auto i = 0x0; i < GObjs->NumElements && fuObject->Object; ++i, ++fuObject)
 		{
 			auto object = fuObject->Object;
 			if (object->ObjectFlags == 0x41)
@@ -127,7 +141,7 @@ static T FindObject(wchar_t const* name)
 				break;
 			}
 
-			if (GetObjectName(object) == name)
+			if (GetObjectFullName(object) == name)
 			{
 				return reinterpret_cast<T>(object);
 			}
@@ -138,8 +152,9 @@ static T FindObject(wchar_t const* name)
 
 void DumpIDs()
 {
-	std::ofstream log("ids.config", std::ofstream::app | std::ofstream::out);
-	
+	std::ofstream log("ids.config", std::ios::trunc);
+
+	//TODO: Better way.
 	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
 	UClass* BID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaBackpackItemDefinition");
 	UClass* PCID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPetCarrierItemDefinition");
@@ -152,11 +167,11 @@ void DumpIDs()
 	UClass* IWD = FindObject<UClass*>(L"/Script/FortniteGame.AthenaItemWrapDefinition");
 	UClass* LSID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaLoadingScreenItemDefinition");
 	UClass* MPID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaMusicPackItemDefinition");
-	for (auto array : GObjs->ObjectArray->Objects)
+	for (auto array : GObjs->ObjectArray->FUObject)
 	{
 		if (array == nullptr) continue;
 		auto fuObject = array;
-		for (DWORD i = 0x0; i < GObjs->ObjectCount && fuObject->Object; i++, fuObject++)
+		for (DWORD i = 0x0; i < GObjs->NumElements && fuObject->Object; i++, fuObject++)
 		{
 			auto object = fuObject->Object;
 			if (object->IsA(CID) ||
@@ -179,5 +194,56 @@ void DumpIDs()
 				log << id + "\n";
 			}
 		}
+	}
+	log.flush(); //make sure it outputted everything.
+}
+
+void TestSummon()
+{
+	while (true)
+	{
+		if (GetAsyncKeyState(VK_F10))
+		{
+			/*
+			static auto fn = FindObject<UFunction*>(L"Function /Script/Engine.CheatManager:Summon");
+
+			FString ClassName = TEXT("PBWA_W1_StairSpiral_C");
+
+			UCheatManager_Summon_Params params;
+			params.ClassName = ClassName;
+			fn->FunctionFlags |= 0x400;
+			*/
+
+			const auto LocalPlayers = READ_POINTER(GEngine->GameViewportClient->GameInstance, Offsets::LocalPlayers);
+
+			const auto LocalPlayer = READ_POINTER(LocalPlayers, 0);
+
+			const auto PlayerController = READ_POINTER(LocalPlayer, Offsets::PlayerController);
+
+			auto& pCheatManager = GET_POINTER(PlayerController, Offsets::CheatManager);
+
+			const auto cCheatManager = FindObject<UCheatManager*>(L"Class /Script/Engine.CheatManager");
+
+			if (PlayerController && cCheatManager)
+			{
+				UCheatManager* CheatManager = reinterpret_cast<UCheatManager*>(StaticConstructObject_Internal(
+					reinterpret_cast<UClass*>(cCheatManager),
+					reinterpret_cast<UObject*>(PlayerController),
+					nullptr,
+					RF_NoFlags,
+					None,
+					nullptr,
+					false,
+					nullptr,
+					false
+				));
+
+				pCheatManager = CheatManager;
+
+				//ProcessEvent(PlayerController->CheatManager, fn, &params);
+			}
+			break;
+		}
+		Sleep(300);
 	}
 }

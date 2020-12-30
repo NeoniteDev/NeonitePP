@@ -2,7 +2,6 @@
 #include "enums.h"
 #include <set>
 
-
 template <class T>
 struct TArray
 {
@@ -34,6 +33,35 @@ private:
 	T* Data;
 	INT Count;
 	INT Max;
+};
+
+struct FString : private TArray<WCHAR>
+{
+	FString()
+	{
+		Data = nullptr;
+		Max = Count = 0;
+	}
+
+	FString(LPCWSTR other)
+	{
+		Max = Count = static_cast<INT>(wcslen(other));
+
+		if (Count)
+		{
+			Data = const_cast<PWCHAR>(other);
+		}
+	};
+
+	BOOLEAN IsValid()
+	{
+		return Data != nullptr;
+	}
+
+	PWCHAR ToString()
+	{
+		return Data;
+	}
 };
 
 template <class TEnum>
@@ -82,7 +110,6 @@ struct FName
 
 	explicit FName(int64_t name)
 	{
-		// Split the 64-bit integer into two 32-bit integers
 		DisplayIndex = (name & 0xFFFFFFFF00000000LL) >> 32;
 		ComparisonIndex = (name & 0xFFFFFFFFLL);
 	};
@@ -118,13 +145,13 @@ struct UObject
 
 struct FField
 {
-	void* vtable; // 0x0 
-	void* padding_01; // 0x8
-	void* ClassPrivate; // 0x10
-	void* Owner; // 0x18
-	FField* Next; // 0x20
-	FName NamePrivate; // 0x28
-	EObjectFlags FlagsPrivate; // 0x30
+	void* vtable;
+	void* padding_01;
+	void* ClassPrivate;
+	void* Owner;
+	FField* Next;
+	FName NamePrivate;
+	EObjectFlags FlagsPrivate;
 };
 
 struct FProperty : FField
@@ -167,6 +194,27 @@ struct UClass : UStruct
 {
 };
 
+struct UFunction : UStruct
+{
+	int32_t FunctionFlags;
+	int16_t RepOffset;
+	int8_t NumParms;
+	char unknown1[1];
+	int16_t ParmsSize;
+	int16_t ReturnValueOffset;
+	int16_t RPCId;
+	int16_t RPCResponseId;
+	class UProperty* FirstPropertyToInit;
+	UFunction* EventGraphFunction;
+	int32_t EventGraphCallOffset;
+	void* Func;
+};
+
+struct UCheatManager_Summon_Params
+{
+	FString ClassName;
+};
+
 struct FUObjectItem
 {
 	UObject* Object;
@@ -176,29 +224,102 @@ struct FUObjectItem
 	DWORD SerialNumber2;
 };
 
-struct TUObjectArray
+struct PreFUObjectItem
 {
-	FUObjectItem* Objects[9];
+	FUObjectItem* FUObject[10];
 };
 
 struct GObjects
 {
-	TUObjectArray* ObjectArray;
-	BYTE unknown1[0xC];
-	DWORD ObjectCount;
+	PreFUObjectItem* ObjectArray;
+	BYTE unknown1[8];
+	int32_t MaxElements;
+	int32_t NumElements;
+
+	inline void NumChunks(int* start, int* end) const
+	{
+		int cStart = 0, cEnd = 0;
+
+		if (!cEnd)
+		{
+			while (1)
+			{
+				if (ObjectArray->FUObject[cStart] == 0)
+				{
+					cStart++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			cEnd = cStart;
+			while (1)
+			{
+				if (ObjectArray->FUObject[cEnd] == 0)
+				{
+					break;
+				}
+				else
+				{
+					cEnd++;
+				}
+			}
+		}
+
+		*start = cStart;
+		*end = cEnd;
+	}
+
+	inline UObject* GetByIndex(int32_t index) const
+	{
+		int cStart = 0, cEnd = 0;
+		int chunkIndex = 0, chunkSize = 0xFFFF, chunkPos;
+		FUObjectItem* Object;
+
+		NumChunks(&cStart, &cEnd);
+
+		chunkIndex = index / chunkSize;
+		if (chunkSize * chunkIndex != 0 &&
+			chunkSize * chunkIndex == index)
+		{
+			chunkIndex--;
+		}
+
+		chunkPos = cStart + chunkIndex;
+		if (chunkPos < cEnd)
+		{
+			Object = ObjectArray->FUObject[chunkPos] + (index - chunkSize * chunkIndex);
+			if (!Object) { return NULL; }
+
+			return Object->Object;
+		}
+
+		return nullptr;
+	}
 };
 
 struct UConsole;
 
 struct UCheatManager
 {
-	CHAR unknown1[0x50];
+	class ADebugCameraController* DebugCameraControllerRef;
+	class UClass* DebugCameraControllerClass;
+	unsigned char UnknownData00[0x40];
 };
 
 struct UGameViewportClient
 {
 	CHAR unknown1[0x40];
 	UConsole* ViewportConsole;
+	TArray<struct FDebugDisplayProperty> DebugProperties;
+	unsigned char UnknownData01[0x10]; 
+	int MaxSplitscreenPlayers; 
+	unsigned char UnknownData02[0xC]; 
+	class UWorld* World;
+	class UGameInstance* GameInstance;
+	unsigned char UnknownData03[0x2B8];
 };
 
 struct UEngine
@@ -207,35 +328,6 @@ struct UEngine
 	UClass* ConsoleClass;
 	CHAR unknown2[0x688];
 	UGameViewportClient* GameViewportClient;
-};
-
-struct FString : private TArray<WCHAR>
-{
-	FString()
-	{
-		Data = nullptr;
-		Max = Count = 0;
-	}
-
-	FString(LPCWSTR other)
-	{
-		Max = Count = static_cast<INT>(wcslen(other));
-
-		if (Count)
-		{
-			Data = const_cast<PWCHAR>(other);
-		}
-	};
-
-	BOOLEAN IsValid()
-	{
-		return Data != nullptr;
-	}
-
-	PWCHAR ToString()
-	{
-		return Data;
-	}
 };
 
 
@@ -313,4 +405,45 @@ struct FMinimalViewInfo
 	unsigned char bUseFieldOfViewForLOD : 1;
 	unsigned char PreviousViewTransform[0x3];
 	TEnumAsByte<ECameraProjectionMode> ProjectionMode;
+};
+
+struct FWeakObjectPtr
+{
+public:
+	inline bool SerialNumbersMatch(FUObjectItem* ObjectItem) const
+	{
+		return ObjectItem->SerialNumber == ObjectSerialNumber;
+	}
+
+	bool IsValid() const;
+
+	UObject* Get() const;
+
+	int32_t ObjectIndex;
+	int32_t ObjectSerialNumber;
+};
+
+template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>
+struct TWeakObjectPtr : private TWeakObjectPtrBase
+{
+public:
+	inline T* Get() const
+	{
+		return (T*)TWeakObjectPtrBase::Get();
+	}
+
+	inline T& operator*() const
+	{
+		return *Get();
+	}
+
+	inline T* operator->() const
+	{
+		return Get();
+	}
+
+	inline bool IsValid() const
+	{
+		return TWeakObjectPtrBase::IsValid();
+	}
 };

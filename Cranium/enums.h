@@ -1,7 +1,5 @@
 #pragma once
 
-#define PI (3.141592653589793f)
-
 //Memory
 namespace Patterns
 {
@@ -10,15 +8,14 @@ namespace Patterns
 	constexpr const char* GEngine = "\x48\x89\x74\x24\x20\xE8\x00\x00\x00\x00\x48\x8B\x4C\x24\x40\x48\x89\x05";
 	//\x48\x8b\x05\x00\x00\x00\x00\x4c\x8d\x34\xcd xxx????xxxx
 	constexpr const char* GObjects = "\x48\x8B\x05\x7E\x38\x79\x05\x4C\x8D\x34\xCD";
-	constexpr const char* FNameToString = "\x48\x89\x5c\x24\x00\x48\x89\x6c\x24\x00\x48\x89\x74\x24\x00\x57\x48\x83\xec\x00\x8b\x01\x48\x8b\xda";
-	constexpr const char* UWorld = "\x48\x8B\x1D\x00\x00\x00\x00\x48\x85\xDB\x74\x3B\x41";
 	constexpr const char* SCOI =
 	"\x4C\x89\x44\x24\x18\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\xAC\x24\x00\x00\x00\x00\x48\x81\xEC\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC4";
 	constexpr const char* ProcessEvent =
 	"\x40\x55\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x81\xEC\x00\x00\x00\x00\x48\x8D\x6C\x24\x00\x48\x89\x9D\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC5\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x0C\x45\x33\xF6\x3B\x05\x00\x00\x00\x00\x4D\x8B\xF8\x48\x8B\xF2\x4C\x8B\xE1\x41\xB8\x00\x00\x00\x00\x7D\x2A";
 	constexpr const char* GONI =
 	"\x40\x53\x48\x83\xEC\x20\x48\x8B\xD9\x48\x85\xD2\x75\x45\x33\xC0\x48\x89\x01\x48\x89\x41\x08\x8D\x50\x05\xE8\x00\x00\x00\x00\x8B\x53\x08\x8D\x42\x05\x89\x43\x08\x3B\x43\x0C\x7E\x08\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\x0B\x48\x8D\x15\x00\x00\x00\x00\x41\xB8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\xC3\x48\x83\xC4\x20\x5B\xC3\x48\x8B\x42\x18";
-	constexpr const char* GetFullName = "\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x30\x48\x8B\xD9\x48\x8B\xFA\x48\x8B\x49\x08";
+	constexpr const char* GetFullName = "\x40\x53\x55\x56\x57\x41\x56\x48\x81\xec\x00\x00\x00\x00\x48\x8b\x05\x00\x00\x00\x00\x48\x33\xc4\x48\x89\x84\x24\x00\x00\x00\x00\x48\x8b\xda\x45\x33\xf6";
+	//constexpr const char* GetFullName = "\x48\x89\x5c\x24\x00\x55\x56\x41\x56\x48\x83\xec\x00\x45\x33\xf6\x48\x8b\xe9";
 	constexpr const char* GetViewPoint =
 	"\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x41\x8B\xF0\x48\x8B\x49\x30\x48\x8B\xFA\xE8\x00\x00\x00\x00\xBA\x00\x00\x00\x00\x48\x8B\xC8";
 };
@@ -30,11 +27,11 @@ namespace Masks
 	constexpr const char* GEngine = "xxxxxx????xxxxxxxx";
 	constexpr const char* GObjects = "xxx????xxxx";
 	constexpr const char* FNameToString = "xxxx?xxxx?xxxx?xxxx?xxxxx";
-	constexpr const char* UWorld = "xxx????xxxxxx";
 	constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
 	constexpr const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
 	constexpr const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
-	constexpr const char* GetFullName = "xxxxxxxxxxxxxxxxxxxx";
+	constexpr const char* GetFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
+	//constexpr const char* GetFullName = "xxxx?xxxxxxx?xxxxxx";
 	constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
 };
 
@@ -43,6 +40,8 @@ namespace Offsets
 	constexpr DWORD GameInstance = 0x180;
 	constexpr DWORD LocalPlayers = 0x38;
 	constexpr DWORD PlayerController = 0x30;
+	constexpr DWORD CheatManager = 0x338;
+	
 }
 
 //UE4
@@ -100,6 +99,69 @@ enum class ECameraProjectionMode : uint8_t
 	Perspective = 0,
 	Orthographic = 1,
 	ECameraProjectionMode_MAX = 2
+};
+
+enum class EObjectFullNameFlags
+{
+	None = 0,
+	IncludeClassPackage = 1,
+};
+
+enum class EMouseCursor : uint8_t
+{
+	None = 0,
+	Default = 1,
+	TextEditBeam = 2,
+	ResizeLeftRight = 3,
+	ResizeUpDown = 4,
+	ResizeSouthEast = 5,
+	ResizeSouthWest = 6,
+	CardinalCross = 7,
+	Crosshairs = 8,
+	Hand = 9,
+	GrabHand = 10,
+	GrabHandClosed = 11,
+	SlashedCircle = 12,
+	EyeDropper = 13,
+	EMouseCursor_MAX = 14
+};
+
+enum class ECollisionChannel : uint8_t
+{
+	ECC_WorldStatic = 0,
+	ECC_WorldDynamic = 1,
+	ECC_Pawn = 2,
+	ECC_Visibility = 3,
+	ECC_Camera = 4,
+	ECC_PhysicsBody = 5,
+	ECC_Vehicle = 6,
+	ECC_Destructible = 7,
+	ECC_EngineTraceChannel1 = 8,
+	ECC_EngineTraceChannel2 = 9,
+	ECC_EngineTraceChannel3 = 10,
+	ECC_EngineTraceChannel4 = 11,
+	ECC_EngineTraceChannel5 = 12,
+	ECC_EngineTraceChannel6 = 13,
+	ECC_GameTraceChannel1 = 14,
+	ECC_GameTraceChannel2 = 15,
+	ECC_GameTraceChannel3 = 16,
+	ECC_GameTraceChannel4 = 17,
+	ECC_GameTraceChannel5 = 18,
+	ECC_GameTraceChannel6 = 19,
+	ECC_GameTraceChannel7 = 20,
+	ECC_GameTraceChannel8 = 21,
+	ECC_GameTraceChannel9 = 22,
+	ECC_GameTraceChannel10 = 23,
+	ECC_GameTraceChannel11 = 24,
+	ECC_GameTraceChannel12 = 25,
+	ECC_GameTraceChannel13 = 26,
+	ECC_GameTraceChannel14 = 27,
+	ECC_GameTraceChannel15 = 28,
+	ECC_GameTraceChannel16 = 29,
+	ECC_GameTraceChannel17 = 30,
+	ECC_GameTraceChannel18 = 31,
+	ECC_OverlapAll_Deprecated = 32,
+	ECC_MAX = 33
 };
 
 enum EPropertyFlags : uint64_t

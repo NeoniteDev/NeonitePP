@@ -4,7 +4,6 @@ inline void initProfile()
 {
 	app.Post(R"(/fortnite/api/game/v2/profile/(.*)/client/(.*))", [](const Request& req, Response& res)
 	         {
-		         //TODO: handle this somewhere else.
 		         std::string account_id = static_cast<std::string>(req.matches[1]);
 		         std::string command = static_cast<std::string>(req.matches[2]);
 		         std::string profile_id = "common_core";
@@ -91,11 +90,8 @@ inline void initProfile()
 
 			         if (bChanged)
 			         {
-				         //TODO: make this a function.
-
 				         auto itemId = body["lockerItem"].get<std::string>();
 				         auto item = profileData["items"][itemId];
-				         //if (item.is_null()) return false;
 				         if (item["attributes"].is_null())
 				         {
 					         item["attributes"] = json::object();

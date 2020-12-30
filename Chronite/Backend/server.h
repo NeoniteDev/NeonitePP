@@ -26,8 +26,8 @@ namespace server
 	inline void init()
 	{
 		initStatics();
-		initApi();
 		initDynamics();
+		initApi();
 		initProfile();
 
 		app.set_error_handler([](const auto& req, auto& res)

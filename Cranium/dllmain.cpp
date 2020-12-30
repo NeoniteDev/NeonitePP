@@ -38,7 +38,7 @@ void dllMain()
 		{
 			Hooks::init();
 
-			DumpIDs();
+			//DumpIDs();
 
 			//PE Hooking
 			ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
@@ -73,7 +73,7 @@ void dllMain()
 		}
 		Sleep(1000 / 30); //30 fps 
 	}
-	//DumpAllGObjects();
+	TestSummon();
 }
 #endif
 

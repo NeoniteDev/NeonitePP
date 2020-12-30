@@ -13,6 +13,8 @@
 
 #define READ_POINTER(base, offset) (*(PVOID *)(((PBYTE)base + offset)))
 
+#define GET_POINTER(base, offset) *reinterpret_cast<void**>((static_cast<PBYTE>(base) + offset));
+
 class Util
 {
 private:

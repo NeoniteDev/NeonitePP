@@ -381,7 +381,7 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 145);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Backend: Kemo (@xkem0x)");
+		Text("Backend: Kemo (@xkem0x), CheatingMuppet (UNKNOWN)");
 
 		SetCursorPosX(GetCursorPosX() + 145);
 		SetCursorPosY(GetCursorPosY() + 5);
