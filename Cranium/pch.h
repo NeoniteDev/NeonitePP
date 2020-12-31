@@ -4,6 +4,8 @@
 #define CONSOLE
 #define SSL_BYPASS
 #define HOOKS
+//#define INJECT_ASAP
+
 
 #include "framework.h"
 

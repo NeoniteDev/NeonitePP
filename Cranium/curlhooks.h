@@ -41,7 +41,10 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	{
 		std::string url = va_arg(arg, char*);
 
+
+#ifdef INJECT_ASAP
 		if (url.find("token") != std::string::npos) isReady = !isReady;
+#endif
 #ifdef URL_HOST	
 		//printf("LogURL: %s\n", url.c_str());
 		

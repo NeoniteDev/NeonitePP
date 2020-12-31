@@ -32,10 +32,12 @@ void dllMain()
 #endif
 
 #ifdef HOOKS
+#ifdef INJECT_ASAP
 	while (true)
 	{
 		if (isReady)
 		{
+#endif
 			Hooks::init();
 
 			//DumpIDs();
@@ -68,11 +70,12 @@ void dllMain()
 			));
 
 			GEngine->GameViewportClient->ViewportConsole = Console;
-
+#ifdef INJECT_ASAP
 			break;
 		}
 		Sleep(1000 / 30); //30 fps 
 	}
+#endif
 	TestSummon();
 }
 #endif
