@@ -17,6 +17,7 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 
 		//Destroy all HLODs after the loading screen.
+		//TODO: better function as this will crash on back to lobby.
 		if (nFunc == L"DynamicHandleLoadingScreenVisibilityChanged" && nObj == L"AthenaLobby")
 		{
 			UFunctions::DestroyAllHLODs();
