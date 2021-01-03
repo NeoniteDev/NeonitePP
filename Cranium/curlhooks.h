@@ -2,7 +2,7 @@
 #include "curl.h"
 #include "url.h"
 
-//#define URL_HOST "localhost"
+#define URL_HOST "localhost"
 #define URL_PORT "5595"
 
 inline bool isReady = false;

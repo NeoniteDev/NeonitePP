@@ -45,4 +45,15 @@ public:
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &info, sizeof(info));
 		return FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
 	}
+
+	static __forceinline std::wstring sSplit(std::wstring s, std::wstring delimiter)
+	{
+		size_t pos = 0;
+		std::wstring token;
+		while ((pos = s.find(delimiter)) != std::string::npos)
+		{
+			token = s.substr(0, pos);
+			return token;
+		}
+	}
 };

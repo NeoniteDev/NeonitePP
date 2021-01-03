@@ -9,58 +9,50 @@ inline HANDLE hClient = INVALID_HANDLE_VALUE;
 
 namespace launcher
 {
-	/*inline bool isFortniteRunning(const wchar_t* processName)
-	{
-		bool exists = false;
-		PROCESSENTRY32 entry;
-		entry.dwSize = sizeof(PROCESSENTRY32);
-
-		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-
-		if (Process32First(snapshot, &entry))
-			while (Process32Next(snapshot, &entry))
-				if (!wcsicmp((wchar_t*)entry.szExeFile, processName))
-					exists = true;
-
-		CloseHandle(snapshot);
-		return exists;
-	}*/
-	
 	inline void init()
 	{
-		char programData[MAX_PATH];
-		char datPath[] = "\\Epic\\UnrealEngineLauncher\\LauncherInstalled.dat";
-		json launcherInstalled;
-
-		SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
-		                NULL, 0, programData); //why would someone run this on linux ?
-
-		//TODO: change this
-		char* launcherInstalledPath = new char[
-			std::strlen(programData) + std::strlen(datPath) + 1];
-
-		std::strcpy(launcherInstalledPath, programData);
-		std::strcat(launcherInstalledPath, datPath);
-
-		std::ifstream f(launcherInstalledPath);
-		f >> launcherInstalled;
-
-		json installationList = launcherInstalled["InstallationList"];
-
+		std::string altPath; //= "E:\\14.30";
 		std::string fnPath;
 
-		for (int i = 0; i < installationList.size(); i++)
+		if (altPath.empty())
 		{
-			if (installationList[i]["AppName"] == "Fortnite")
+			char programData[MAX_PATH];
+			char datPath[] = "\\Epic\\UnrealEngineLauncher\\LauncherInstalled.dat";
+			json launcherInstalled;
+
+			SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
+			                NULL, 0, programData); //why would someone run this on linux ?
+
+			//TODO: change this
+			char* launcherInstalledPath = new char[
+				std::strlen(programData) + std::strlen(datPath) + 1];
+
+			std::strcpy(launcherInstalledPath, programData);
+			std::strcat(launcherInstalledPath, datPath);
+
+			std::ifstream f(launcherInstalledPath);
+			f >> launcherInstalled;
+
+			json installationList = launcherInstalled["InstallationList"];
+
+
+			for (int i = 0; i < installationList.size(); i++)
 			{
-				fnPath = installationList[i]["InstallLocation"];
+				if (installationList[i]["AppName"] == "Fortnite")
+				{
+					fnPath = installationList[i]["InstallLocation"];
+				}
+			}
+
+			if (fnPath.empty())
+			{
+				console.AddLog("[x] Couldn't find Fortnite directory.");
+				return;
 			}
 		}
-
-		if (fnPath.empty())
+		else
 		{
-			console.AddLog("[x] Couldn't find Fortnite directory.");
-			return;
+			fnPath = altPath;
 		}
 
 		std::string szClientFile =

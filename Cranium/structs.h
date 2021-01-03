@@ -35,32 +35,41 @@ private:
 	INT Max;
 };
 
-struct FString : private TArray<WCHAR>
+struct FString : private TArray<wchar_t>
 {
-	FString()
+	inline FString()
 	{
-		Data = nullptr;
-		Max = Count = 0;
-	}
+	};
 
-	FString(LPCWSTR other)
+	FString(const wchar_t* other)
 	{
-		Max = Count = static_cast<INT>(wcslen(other));
+		Max = Count = *other ? std::wcslen(other) + 1 : 0;
 
 		if (Count)
 		{
-			Data = const_cast<PWCHAR>(other);
+			Data = const_cast<wchar_t*>(other);
 		}
 	};
 
-	BOOLEAN IsValid()
+	inline bool IsValid() const
 	{
 		return Data != nullptr;
 	}
 
-	PWCHAR ToString()
+	inline const wchar_t* ToWString() const
 	{
 		return Data;
+	}
+
+	std::string ToString() const
+	{
+		auto length = std::wcslen(Data);
+
+		std::string str(length, '\0');
+
+		std::use_facet<std::ctype<wchar_t>>(std::locale()).narrow(Data, Data + length, '?', &str[0]);
+
+		return str;
 	}
 };
 
@@ -215,6 +224,16 @@ struct UCheatManager_Summon_Params
 	FString ClassName;
 };
 
+struct UCheatManager_DestroyAll_Params
+{
+	UClass* Class;
+};
+
+struct APlayerController_SwitchLevel_Params
+{
+	FString URL;
+};
+
 struct FUObjectItem
 {
 	UObject* Object;
@@ -314,9 +333,9 @@ struct UGameViewportClient
 	CHAR unknown1[0x40];
 	UConsole* ViewportConsole;
 	TArray<struct FDebugDisplayProperty> DebugProperties;
-	unsigned char UnknownData01[0x10]; 
-	int MaxSplitscreenPlayers; 
-	unsigned char UnknownData02[0xC]; 
+	unsigned char UnknownData01[0x10];
+	int MaxSplitscreenPlayers;
+	unsigned char UnknownData02[0xC];
 	class UWorld* World;
 	class UGameInstance* GameInstance;
 	unsigned char UnknownData03[0x2B8];

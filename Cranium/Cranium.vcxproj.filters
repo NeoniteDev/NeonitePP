@@ -46,6 +46,9 @@
     <ClInclude Include="detours.h">
       <Filter>Hooks</Filter>
     </ClInclude>
+    <ClInclude Include="finder.h" />
+    <ClInclude Include="mods.h" />
+    <ClInclude Include="ue4.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

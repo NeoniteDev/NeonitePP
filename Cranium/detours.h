@@ -1,5 +1,6 @@
 #pragma once
-#include "hooks.h"
+#include "ue4.h"
+#include "mods.h"
 
 void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -8,24 +9,44 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		auto nObj = GetObjectFirstName(pObj);
 		auto nFunc = GetObjectFirstName(pFunc);
 
-		/*
-		if (nFunc == L"Summon")
+
+		//Open game mode base on play click
+		if(nFunc == L"BP_OnClicked" && nObj == L"Button_Play")
 		{
-			auto className = static_cast<UCheatManager_Summon_Params*>(pParams)->ClassName;
-			std::wstring classNameW = className.ToString();
+			UFunctions::Travel(L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase");
+		}
+
+		//Destroy all HLODs after the loading screen.
+		if (nFunc == L"DynamicHandleLoadingScreenVisibilityChanged" && nObj == L"AthenaLobby")
+		{
+			UFunctions::DestroyAllHLODs();
+		}
+
+		//LOG ARG
+		/*
+		if (nFunc == L"DestroyAll")
+		{
+			auto className = static_cast<UCheatManager_DestroyAll_Params*>(pParams)->Class;
+			std::wstring classNameW = GetObjectFullName(className);
 			printf("\n\n\nCLASSNAME: %ls", classNameW.c_str());
 		}
-		
+		*/
 
-		if (!wcsstr(nFunc.c_str(), L"Tick") &&
+		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
+			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
 			!wcsstr(nFunc.c_str(), L"OnMouse") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
+			!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
+			!wcsstr(nFunc.c_str(), L"UpdateTime") &&
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			//printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
+			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
-		*/
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);
@@ -121,20 +142,6 @@ int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPa
 			GVPM::Rotation.Yaw -= GVPM::Speed;
 		}
 
-		/*
-		hGame = FindWindow((L"UnrealWindow"), (L"Fortnite  "));
-	
-		if (GetCursorPos(&pMouse))
-		{
-			if (ScreenToClient(hGame, &pMouse) && bFreeCameraEnabled)
-			{
-				//3d maths go duuuuuuh
-				//GVPM::Rotation.Yaw = atan2(pMouse.y, pMouse.x) * PI / 180.0f;
-				//ShowCursor(BOOLEAN);
-			}
-		}
-		*/
-
 		pViewInfo->Location.X = GVPM::Camera.X;
 		pViewInfo->Location.Y = GVPM::Camera.Y;
 		pViewInfo->Location.Z = GVPM::Camera.Z;
@@ -150,9 +157,9 @@ int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPa
 	else
 	{
 		GVPM::FOV = 52.0;
-		GVPM::Camera.X = 52.274170;
-		GVPM::Camera.Y = 125912.695313;
-		GVPM::Camera.Z = 89.249969;
+		//GVPM::Camera.X = 52.274170;
+		//GVPM::Camera.Y = 125912.695313;
+		//GVPM::Camera.Z = 89.249969;
 		GVPM::Rotation.Pitch = 0.870931;
 		GVPM::Rotation.Yaw = -88.071960;
 		GVPM::Rotation.Roll = 0.008899;
