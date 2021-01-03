@@ -22,7 +22,7 @@ inline UObject* (*StaticConstructObject)(
 //Returns the very first name of the object (E.G: BP_PlayButton).
 inline std::wstring GetObjectFirstName(UObject* object)
 {
-	FString internalName = GetObjectNameInternal(object);
+	const FString internalName = GetObjectNameInternal(object);
 	if (!internalName.ToWString()) return L"";
 
 	std::wstring name(internalName.ToWString());
@@ -96,7 +96,7 @@ static T FindObject(wchar_t const* name)
 		{
 			auto object = fuObject->Object;
 
-			if (GetObjectFullName(object) == name)
+			if (GetObjectFullName(object).starts_with(name))
 			{
 				return reinterpret_cast<T>(object);
 			}
@@ -104,7 +104,6 @@ static T FindObject(wchar_t const* name)
 	}
 	return nullptr;
 }
-
 
 inline void DumpAllGObjects()
 {
@@ -130,23 +129,23 @@ inline void DumpAllGObjects()
 	log.flush();
 }
 
-inline void DumpIDs()
+inline bool DumpIDs()
 {
 	std::ofstream log("ids.config", std::ios::trunc);
 
 	//TODO: Better way.
-	UClass* CID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaCharacterItemDefinition");
-	UClass* BID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaBackpackItemDefinition");
-	UClass* PCID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPetCarrierItemDefinition");
-	UClass* EID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaEmojiItemDefinition");
-	UClass* DID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaDanceItemDefinition");
-	UClass* PID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaPickaxeItemDefinition");
-	UClass* GID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaGliderItemDefinition");
-	UClass* SDID = FindObject<UClass*>(L"/Script/FortiteGame.AthenaSkyDiveContrailItemDefinition");
-	UClass* TID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaToyItemDefinition");
-	UClass* IWD = FindObject<UClass*>(L"/Script/FortniteGame.AthenaItemWrapDefinition");
-	UClass* LSID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaLoadingScreenItemDefinition");
-	UClass* MPID = FindObject<UClass*>(L"/Script/FortniteGame.AthenaMusicPackItemDefinition");
+	UClass* CID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition");
+	UClass* BID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition");
+	UClass* PCID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition");
+	UClass* EID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition");
+	UClass* DID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaDanceItemDefinition");
+	UClass* PID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition");
+	UClass* GID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaGliderItemDefinition");
+	UClass* SDID = FindObject<UClass*>(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition");
+	UClass* TID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaToyItemDefinition");
+	UClass* IWD = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaItemWrapDefinition");
+	UClass* LSID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition");
+	UClass* MPID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition");
 	for (auto array : GObjs->ObjectArray->FUObject)
 	{
 		if (array == nullptr) continue;
@@ -176,4 +175,5 @@ inline void DumpIDs()
 		}
 	}
 	log.flush(); //make sure it outputted everything.
+	return true;
 }

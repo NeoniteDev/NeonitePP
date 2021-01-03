@@ -11,7 +11,7 @@ namespace Hooks
 {
 #ifdef SSL_BYPASS
 
-	bool curl()
+	inline bool curl()
 	{
 		//cURL Hooking.
 		const auto CurlEasyAdd = Util::FindPattern(Patterns::CurlEasySetOpt, Masks::CurlEasySetOpt);
@@ -29,7 +29,7 @@ namespace Hooks
 
 #endif
 
-	bool init()
+	inline bool Misc()
 	{
 		if (MH_Initialize() != MH_OK)
 		{

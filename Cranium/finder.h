@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "pch.h"
+#include "structs.h"
 
 namespace Offsets
 {
@@ -86,6 +87,7 @@ class ObjectFinder
 	{
 		return *reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal());
 	}
+
 	GameObject*& resolveArrayValuePointer(GameObject* bastePtr, GameObject* prop)
 	{
 		return *reinterpret_cast<GameObject**>(*reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal()));
@@ -104,7 +106,7 @@ public:
 
 	static ObjectFinder GetEngine(uintptr_t GEngine)
 	{
-		return ObjectFinder{ L"GameEngine", L"None", reinterpret_cast<GameObject*>(GEngine), reinterpret_cast<GameObject*&>(GEngine) };
+		return ObjectFinder{L"GameEngine", L"None", reinterpret_cast<GameObject*>(GEngine), reinterpret_cast<GameObject*&>(GEngine)};
 	}
 
 	ObjectFinder Find(const std::wstring& objectToFind)
@@ -154,8 +156,5 @@ public:
 			GameObject*& valuePtrRef = resolveValuePointer(m_object, propertyFound);
 			return ObjectFinder(objectToFind, type, valuePtr, valuePtrRef);
 		}
-
 	}
-
-
 };

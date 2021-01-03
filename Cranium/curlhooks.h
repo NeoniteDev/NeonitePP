@@ -2,6 +2,7 @@
 #include "curl.h"
 #include "url.h"
 
+#define URL_PROTOCOL "http"
 #define URL_HOST "localhost"
 #define URL_PORT "5595"
 
@@ -49,12 +50,11 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		Uri uri = Uri::Parse(url);
 		if (uri.Host.ends_with(".ol.epicgames.com"))
 		{
-			url = Uri::CreateUri("http", URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+			url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
 		}
 #endif
 		result = CurlSetOpt_(data, tag, url.c_str());
 	}
-
 
 	else
 	{

@@ -63,6 +63,13 @@ namespace UFunctions
 		ProcessEvent(PlayerControllerFinder.GetObj(), SwitchLevel, &params);
 		
 	}
+
+	//possess a player pawn
+	inline void Possess(UObject* Actor)
+	{
+		
+	}
+	
 }
 
 namespace Console
@@ -111,9 +118,9 @@ namespace Console
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(L"GameViewport");
 		ObjectFinder ViewportConsoleFinder = GameViewPortClientFinder.Find(L"ViewportConsole");
 
-		UConsole*& ViewportConsole = reinterpret_cast<UConsole*&>(ViewportConsoleFinder.GetObj());
+		UObject*& ViewportConsole = reinterpret_cast<UObject*&>(ViewportConsoleFinder.GetObj());
 
-		UConsole* Console = reinterpret_cast<UConsole*>(StaticConstructObject(
+		const auto Console = StaticConstructObject(
 			static_cast<UClass*>(ConsoleClassFinder.GetObj()),
 			reinterpret_cast<UObject*>(GameViewPortClientFinder.GetObj()),
 			nullptr,
@@ -123,7 +130,7 @@ namespace Console
 			false,
 			nullptr,
 			false
-		));
+		);
 
 		ViewportConsole = Console;
 

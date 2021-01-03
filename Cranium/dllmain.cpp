@@ -3,7 +3,6 @@
 #include "hooks.h"
 #include "util.h"
 
-
 void dllMain()
 {
 #ifdef CONSOLE
@@ -14,7 +13,6 @@ void dllMain()
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 #endif
 
-	//CURL Detour
 #ifdef SSL_BYPASS
 	Hooks::curl();
 #endif
@@ -24,11 +22,11 @@ void dllMain()
 	{
 		if (isReady)
 		{
-			if (Hooks::init() && Console::Unlock())
+			if (Hooks::Misc() && DumpIDs() && Console::Unlock()) //IKR THIS CAN CAUSE A MEMORY LEAK BUT I FUCKING MERGED THE WRONG FILE AND I DONT REMEBER WHAT I DID
 			{
 				break;
 			}
-			//DumpIDs();
+			
 		}
 		Sleep(1000 / 30); //30 fps 
 	}

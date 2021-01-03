@@ -2,6 +2,7 @@
 #include "enums.h"
 #include <set>
 
+
 template <class T>
 struct TArray
 {
@@ -14,30 +15,35 @@ public:
 		Count = Max = 0;
 	};
 
-	INT Num() const
+	int Num() const
 	{
 		return Count;
 	};
 
-	T& operator[](INT i)
+	T& operator[](int i)
 	{
 		return Data[i];
 	};
 
-	BOOLEAN IsValidIndex(INT i)
+	const T& operator[](int i) const
+	{
+		return Data[i];
+	};
+
+	bool IsValidIndex(int i) const
 	{
 		return i < Num();
 	}
 
 private:
 	T* Data;
-	INT Count;
-	INT Max;
+	int32_t Count;
+	int32_t Max;
 };
 
 struct FString : private TArray<wchar_t>
 {
-	inline FString()
+	FString()
 	{
 	};
 
@@ -51,12 +57,12 @@ struct FString : private TArray<wchar_t>
 		}
 	};
 
-	inline bool IsValid() const
+	bool IsValid() const
 	{
 		return Data != nullptr;
 	}
 
-	inline const wchar_t* ToWString() const
+	const wchar_t* ToWString() const
 	{
 		return Data;
 	}
@@ -77,33 +83,33 @@ template <class TEnum>
 class TEnumAsByte
 {
 public:
-	inline TEnumAsByte()
+	TEnumAsByte()
 	{
 	}
 
-	inline TEnumAsByte(TEnum _value)
+	TEnumAsByte(TEnum _value)
 		: value(static_cast<uint8_t>(_value))
 	{
 	}
 
-	explicit inline TEnumAsByte(int32_t _value)
+	explicit TEnumAsByte(int32_t _value)
 		: value(static_cast<uint8_t>(_value))
 	{
 	}
 
-	explicit inline TEnumAsByte(uint8_t _value)
+	explicit TEnumAsByte(uint8_t _value)
 		: value(_value)
 	{
 	}
 
-	inline operator TEnum() const
+	operator TEnum() const
 	{
-		return (TEnum)value;
+		return static_cast<TEnum>(value);
 	}
 
-	inline TEnum GetValue() const
+	TEnum GetValue() const
 	{
-		return (TEnum)value;
+		return static_cast<TEnum>(value);
 	}
 
 private:
@@ -255,15 +261,15 @@ struct GObjects
 	int32_t MaxElements;
 	int32_t NumElements;
 
-	inline void NumChunks(int* start, int* end) const
+	void NumChunks(int* start, int* end) const
 	{
 		int cStart = 0, cEnd = 0;
 
 		if (!cEnd)
 		{
-			while (1)
+			while (true)
 			{
-				if (ObjectArray->FUObject[cStart] == 0)
+				if (ObjectArray->FUObject[cStart] == nullptr)
 				{
 					cStart++;
 				}
@@ -274,16 +280,13 @@ struct GObjects
 			}
 
 			cEnd = cStart;
-			while (1)
+			while (true)
 			{
-				if (ObjectArray->FUObject[cEnd] == 0)
+				if (ObjectArray->FUObject[cEnd] == nullptr)
 				{
 					break;
 				}
-				else
-				{
-					cEnd++;
-				}
+				cEnd++;
 			}
 		}
 
@@ -291,7 +294,7 @@ struct GObjects
 		*end = cEnd;
 	}
 
-	inline UObject* GetByIndex(int32_t index) const
+	UObject* GetByIndex(int32_t index) const
 	{
 		int cStart = 0, cEnd = 0;
 		int chunkIndex = 0, chunkSize = 0xFFFF, chunkPos;
@@ -310,7 +313,7 @@ struct GObjects
 		if (chunkPos < cEnd)
 		{
 			Object = ObjectArray->FUObject[chunkPos] + (index - chunkSize * chunkIndex);
-			if (!Object) { return NULL; }
+			if (!Object) { return nullptr; }
 
 			return Object->Object;
 		}
@@ -356,12 +359,12 @@ struct FVector
 	float Y;
 	float Z;
 
-	inline FVector()
+	FVector()
 		: X(0), Y(0), Z(0)
 	{
 	}
 
-	inline FVector(float x, float y, float z)
+	FVector(float x, float y, float z)
 		: X(x),
 		  Y(y),
 		  Z(z)
@@ -429,7 +432,7 @@ struct FMinimalViewInfo
 struct FWeakObjectPtr
 {
 public:
-	inline bool SerialNumbersMatch(FUObjectItem* ObjectItem) const
+	bool SerialNumbersMatch(FUObjectItem* ObjectItem) const
 	{
 		return ObjectItem->SerialNumber == ObjectSerialNumber;
 	}
@@ -446,22 +449,22 @@ template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>
 struct TWeakObjectPtr : private TWeakObjectPtrBase
 {
 public:
-	inline T* Get() const
+	T* Get() const
 	{
-		return (T*)TWeakObjectPtrBase::Get();
+		return static_cast<T*>(TWeakObjectPtrBase::Get());
 	}
 
-	inline T& operator*() const
+	T& operator*() const
 	{
 		return *Get();
 	}
 
-	inline T* operator->() const
+	T* operator->() const
 	{
 		return Get();
 	}
 
-	inline bool IsValid() const
+	bool IsValid() const
 	{
 		return TWeakObjectPtrBase::IsValid();
 	}
