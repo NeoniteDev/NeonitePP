@@ -4,28 +4,35 @@
 
 inline bool bIsDebugCamera = false;
 
-void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
+inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
 	if (pObj && pFunc)
 	{
-		auto nObj = GetObjectFirstName(pObj);
-		auto nFunc = GetObjectFirstName(pFunc);
+		const auto nObj = GetObjectFirstName(pObj);
+		const auto nFunc = GetObjectFirstName(pFunc);
 
-		//Open game mode base on play click
-		if (nFunc == L"BP_OnClicked" && nObj == L"Button_Play")
+		/*
+		if(wcsstr(nFunc.c_str(), XOR(L"Pain")))
+		{
+		}
+		*/
+
+		//Open game mode base on play click.
+		if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
 		{
 			UFunctions::Travel(APOLLO_PAPAYA_BASE);
 		}
 
-		//Destroy all HLODs after the loading screen.a
-		//TODO: better function as this will crash on back to lobby.
-		if (nFunc == L"DynamicHandleLoadingScreenVisibilityChanged" && nObj == L"AthenaLobby")
+		//Destroy all HLODs after the loading screen.
+		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 		{
+			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
 			Console::CheatManager();
 			UFunctions::DestroyAllHLODs();
 		}
 
-		if (nFunc == L"ToggleDebugCamera" && nObj.starts_with(L"FortCheatManager_"))
+		//Toggle our debug camera on "toggledebugcamera" command.
+		if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"FortCheatManager_")))
 		{
 			bIsDebugCamera = !bIsDebugCamera;
 		}
@@ -40,6 +47,9 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 		*/
 
+
+		//Logging
+		/*
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -55,6 +65,7 @@ void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		{
 			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
+		*/
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);
@@ -74,7 +85,6 @@ inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE s
 
 	if (bIsDebugCamera)
 	{
-
 		//fov increase and decrease
 		if (GetAsyncKeyState(VK_OEM_PLUS) == 0) CameraHook::FOV += CameraHook::Speed;
 

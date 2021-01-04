@@ -2,9 +2,9 @@
 #include "curl.h"
 #include "url.h"
 
-#define URL_PROTOCOL "http"
-#define URL_HOST "localhost"
-#define URL_PORT "5595"
+#define URL_PROTOCOL XOR("http")
+#define URL_HOST XOR("localhost")
+#define URL_PORT XOR("5595")
 
 inline bool isReady = false;
 
@@ -42,13 +42,13 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	{
 		std::string url = va_arg(arg, char*);
 
-		if (url.find("token") != std::string::npos) isReady = !isReady;
+		if (url.find(XOR("token")) != std::string::npos) isReady = !isReady;
 		
 #ifdef URL_HOST	
 		//printf("LogURL: %s\n", url.c_str());
 		
 		Uri uri = Uri::Parse(url);
-		if (uri.Host.ends_with(".ol.epicgames.com"))
+		if (uri.Host.ends_with(XOR(".ol.epicgames.com")))
 		{
 			url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
 		}

@@ -1,7 +1,7 @@
 #pragma once
 
-#define APOLLO_TERRAIN_BASE L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase"
-#define APOLLO_PAPAYA_BASE L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase"
+#define APOLLO_TERRAIN_BASE XOR(L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase")
+#define APOLLO_PAPAYA_BASE XOR(L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase")
 
 //Memory
 namespace Patterns

@@ -5,17 +5,16 @@
 namespace UFunctions
 {
 	//same as summon command in-game but from code.
-	//UFunctions::Summon(L"Trap_Wall_BouncePad_C");
 	inline void Summon(const wchar_t* ClassToSummon)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(L"GameInstance").Find(L"LocalPlayers");
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(L"PlayerController");
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(L"CheatManager");
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		const auto Summon = FindObject<UFunction*>(L"Function /Script/Engine.CheatManager:Summon");
+		const auto Summon = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
 
 		const FString ClassName = ClassToSummon;
 
@@ -25,19 +24,18 @@ namespace UFunctions
 		ProcessEvent(CheatManagerFinder.GetObj(), Summon, &params);
 	}
 
-	//destroys all hlods
 	inline void DestroyAllHLODs()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(L"GameInstance").Find(L"LocalPlayers");
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(L"PlayerController");
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(L"CheatManager");
+		const auto DestroyAll = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"));
 
-		const auto DestroyAll = FindObject<UFunction*>(L"Function /Script/Engine.CheatManager:DestroyAll");
-
-		const auto HLODSMActor = FindObject<UClass*>(L"Class /Script/FortniteGame.FortHLODSMActor");
+		const auto HLODSMActor = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
 		UCheatManager_DestroyAll_Params params;
 		params.Class = HLODSMActor;
@@ -45,31 +43,23 @@ namespace UFunctions
 		ProcessEvent(CheatManagerFinder.GetObj(), DestroyAll, &params);
 	}
 
-	//travel to a umap
-	inline void Travel(const wchar_t* umap)
+	//travel to a url
+	inline void Travel(const wchar_t* url)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(L"GameInstance").Find(L"LocalPlayers");
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(L"PlayerController");
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		const auto SwitchLevel = FindObject<UFunction*>(L"Function /Script/Engine.PlayerController:SwitchLevel");
+		const auto SwitchLevel = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
 
-		const FString URL = umap;
+		const FString URL = url;
 
 		APlayerController_SwitchLevel_Params params;
 		params.URL = URL;
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), SwitchLevel, &params);
-		
 	}
-
-	//possess a player pawn
-	inline void Possess(UObject* Actor)
-	{
-		
-	}
-	
 }
 
 namespace Console
@@ -78,21 +68,21 @@ namespace Console
 	inline bool CheatManager()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(L"GameInstance").Find(L"LocalPlayers");
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		if (!LocalPlayer.GetObj()) return false;
 
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(L"PlayerController");
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(L"CheatManager");
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		UCheatManager*& pcCheatManager = reinterpret_cast<UCheatManager*&>(CheatManagerFinder.GetObj());
+		UObject*& pcCheatManager = reinterpret_cast<UObject*&>(CheatManagerFinder.GetObj());
 
-		const auto cCheatManager = FindObject<UClass*>(L"Class /Script/FortniteGame.FortCheatManager");
+		const auto cCheatManager = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortCheatManager"));
 
 		if (!pcCheatManager && cCheatManager)
 		{
-			UCheatManager* CheatManager = reinterpret_cast<UCheatManager*>(StaticConstructObject(
+			const auto CheatManager = StaticConstructObject(
 				cCheatManager,
 				PlayerControllerFinder.GetObj(),
 				nullptr,
@@ -102,7 +92,7 @@ namespace Console
 				false,
 				nullptr,
 				false
-			));
+			);
 
 			pcCheatManager = CheatManager;
 			return true;
@@ -114,9 +104,9 @@ namespace Console
 	inline bool Unlock()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder ConsoleClassFinder = EngineFinder.Find(L"ConsoleClass");
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(L"GameViewport");
-		ObjectFinder ViewportConsoleFinder = GameViewPortClientFinder.Find(L"ViewportConsole");
+		ObjectFinder ConsoleClassFinder = EngineFinder.Find(XOR(L"ConsoleClass"));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder ViewportConsoleFinder = GameViewPortClientFinder.Find(XOR(L"ViewportConsole"));
 
 		UObject*& ViewportConsole = reinterpret_cast<UObject*&>(ViewportConsoleFinder.GetObj());
 

@@ -107,7 +107,7 @@ static T FindObject(wchar_t const* name)
 
 inline void DumpAllGObjects()
 {
-	std::ofstream log("GObjects.log");
+	std::ofstream log(XOR("GObjects.log"));
 	for (auto array : GObjs->ObjectArray->FUObject)
 	{
 		if (array == nullptr)
@@ -131,21 +131,21 @@ inline void DumpAllGObjects()
 
 inline bool DumpIDs()
 {
-	std::ofstream log("ids.config", std::ios::trunc);
+	std::ofstream log(XOR("ids.config"), std::ios::trunc);
 
 	//TODO: Better way.
-	UClass* CID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition");
-	UClass* BID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition");
-	UClass* PCID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition");
-	UClass* EID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition");
-	UClass* DID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaDanceItemDefinition");
-	UClass* PID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition");
-	UClass* GID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaGliderItemDefinition");
-	UClass* SDID = FindObject<UClass*>(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition");
-	UClass* TID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaToyItemDefinition");
-	UClass* IWD = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaItemWrapDefinition");
-	UClass* LSID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition");
-	UClass* MPID = FindObject<UClass*>(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition");
+	UClass* CID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition"));
+	UClass* BID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition"));
+	UClass* PCID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition"));
+	UClass* EID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition"));
+	UClass* DID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaDanceItemDefinition"));
+	UClass* PID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition"));
+	UClass* GID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaGliderItemDefinition"));
+	UClass* SDID = FindObject<UClass*>(XOR(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition"));
+	UClass* TID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaToyItemDefinition"));
+	UClass* IWD = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition"));
+	UClass* LSID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition"));
+	UClass* MPID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition"));
 	for (auto array : GObjs->ObjectArray->FUObject)
 	{
 		if (array == nullptr) continue;
@@ -169,7 +169,7 @@ inline bool DumpIDs()
 				auto objectNameW = GetObjectName(object);
 				std::string objectName = std::string(objectNameW.begin(), objectNameW.end());
 				std::string id = objectName.substr(objectName.find_last_of(".") + 1);
-				if (id.starts_with("Default__")) break;
+				if (id.starts_with(XOR("Default__"))) break;
 				log << id + "\n";
 			}
 		}
