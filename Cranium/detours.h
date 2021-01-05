@@ -11,12 +11,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		const auto nObj = GetObjectFirstName(pObj);
 		const auto nFunc = GetObjectFirstName(pFunc);
 
-		/*
+		
 		if(wcsstr(nFunc.c_str(), XOR(L"Pain")))
 		{
+			Pain();
 		}
-		*/
-
+		
 		//Open game mode base on play click.
 		if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
 		{
@@ -73,10 +73,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 namespace CameraHook
 {
-	float Speed = 0.1;
-	float FOV = 52.0;
-	FVector Camera(52.274170, 125912.695313, 89.249969);
-	FRotator Rotation = {0.870931, -88.071960, 0.008899};
+	inline float Speed = 0.1;
+	inline float FOV = 52.0;
+	inline FVector Camera(52.274170, 125912.695313, 89.249969);
+	inline FRotator Rotation = {0.870931, -88.071960, 0.008899};
 }
 
 inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass)

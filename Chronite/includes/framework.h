@@ -3,7 +3,7 @@
 
 #ifdef _DEBUG
 #error "Manual mapping dll on debug mode will cause the game to crash,"
-#error "please switch to debug mode or comment out this error on framework.h"
+#error "please switch to release mode or comment out this error on framework.h"
 #endif
 
 #ifdef _WIN32
@@ -11,6 +11,8 @@
 #endif
 
 #define DIRECTINPUT_VERSION 0x0800
+
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 
 #pragma comment(lib, "d3d9.lib")
 
@@ -25,6 +27,9 @@
 #include "../includes/termcolor/termcolor.hpp"
 #include "../includes/DiscordSDK/discord_rpc.h"
 #include "../includes/DiscordSDK/discord_register.h"
+#include "../../xorstr.hpp"
+
+#define XOR(STR) xorstr(STR).crypt_get()
 
 #include <chrono>
 #include <stdio.h>

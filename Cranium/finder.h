@@ -53,13 +53,13 @@ class ObjectFinder
 	GameObject* m_object;
 	GameObject*& m_objectRef;
 
-	GameObject* InternalFindChildInObject(GameObject* inObject, std::wstring_view childName)
+	static GameObject* InternalFindChildInObject(GameObject* inObject, std::wstring_view childName)
 	{
 		GameObject* propertyObject = nullptr;
 		GameObject* next = inObject->GetNext();
 		if (next == nullptr) return nullptr;
 
-		std::wstring firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
+		const auto firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
 
 		if (firstPropertyName == childName)
 		{
@@ -83,12 +83,12 @@ class ObjectFinder
 		return propertyObject;
 	}
 
-	GameObject*& resolveValuePointer(GameObject* bastePtr, GameObject* prop)
+	GameObject*& resolveValuePointer(GameObject* bastePtr, GameObject* prop) const
 	{
 		return *reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal());
 	}
 
-	GameObject*& resolveArrayValuePointer(GameObject* bastePtr, GameObject* prop)
+	GameObject*& resolveArrayValuePointer(GameObject* bastePtr, GameObject* prop) const
 	{
 		return *reinterpret_cast<GameObject**>(*reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal()));
 	}
@@ -99,7 +99,7 @@ public:
 	{
 	};
 
-	UObject*& GetObj()
+	UObject*& GetObj() const
 	{
 		return reinterpret_cast<UObject*&>(m_objectRef);
 	}
@@ -109,12 +109,12 @@ public:
 		return ObjectFinder{L"GameEngine", L"None", reinterpret_cast<GameObject*>(GEngine), reinterpret_cast<GameObject*&>(GEngine)};
 	}
 
-	ObjectFinder Find(const std::wstring& objectToFind)
+	ObjectFinder Find(const std::wstring& objectToFind) const
 	{
 		return FindChildObject(objectToFind);
 	}
 
-	ObjectFinder FindChildObject(const std::wstring& objectToFind)
+	ObjectFinder FindChildObject(const std::wstring& objectToFind) const
 	{
 		GameClass* classPrivate = m_object->GetClass();
 		GameObject* childProperties = classPrivate->GetChildProperties();
@@ -140,9 +140,9 @@ public:
 
 		GameObject* valuePtr = resolveValuePointer(m_object, propertyFound);
 
-		std::wstring type = GetFClassName(reinterpret_cast<FField*>(propertyFound));
+		const std::wstring type = GetFieldClassName(reinterpret_cast<FField*>(propertyFound));
 
-		if (type == L"ArrayProperty")
+		if (type == XOR(L"ArrayProperty"))
 		{
 			//this will return the first element in the array
 			//TODO: recode this part

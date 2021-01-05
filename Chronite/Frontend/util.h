@@ -29,10 +29,6 @@ inline char ID[125];
 inline std::vector<std::string> IDs;
 inline std::vector<std::string> LockerBackup;
 
-//udp server
-
-inline int packetIndex = 0;
-
 
 namespace util
 {

@@ -69,4 +69,7 @@
       <Filter>Common</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="trap.asm" />
+  </ItemGroup>
 </Project>

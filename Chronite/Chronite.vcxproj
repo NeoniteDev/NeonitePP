@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.props" Condition="Exists('..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -268,6 +269,7 @@
     <Import Project="packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('packages\boost.1.72.0.0\build\boost.targets')" />
     <Import Project="packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets" Condition="Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" />
     <Import Project="packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets" Condition="Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" />
+    <Import Project="..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.targets" Condition="Exists('..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -276,5 +278,7 @@
     <Error Condition="!Exists('packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost.1.72.0.0\build\boost.targets'))" />
     <Error Condition="!Exists('packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_date_time-vc142.1.72.0.0\build\boost_date_time-vc142.targets'))" />
     <Error Condition="!Exists('packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\boost_regex-vc142.1.72.0.0\build\boost_regex-vc142.targets'))" />
+    <Error Condition="!Exists('..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.props'))" />
+    <Error Condition="!Exists('..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\openssl-vc141-native.1.1.1\build\native\openssl-vc141-native.targets'))" />
   </Target>
 </Project>

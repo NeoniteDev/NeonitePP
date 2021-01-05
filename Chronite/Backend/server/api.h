@@ -1,5 +1,6 @@
 #pragma once
 
+
 inline void initApi()
 {
 	//==> TO BE IMPLEMENTED <==
@@ -17,7 +18,19 @@ inline void initApi()
 	//==> TO BE IMPLEMENTED <==
 	app.Get("/fortnite/api/storefront/v2/keychain", [](const Request& req, Response& res)
 	{
-		const auto j = R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
+	    Client cli("https://api.nitestats.com");
+
+		auto j = R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
+		
+		if(auto response = cli.Get("/v1/epic/keychain"))
+		{
+			if (response->status == 200)
+			{
+				j.clear();
+				j = json::parse(response->body);
+			}
+		}
+
 		res.set_content(j.dump(), "application/json");
 	});
 
@@ -64,7 +77,7 @@ inline void initApi()
 		else
 		{
 			std::string displayName;
-			std::string body = util::urlDecode(req.body);
+			const std::string body = util::urlDecode(req.body);
 
 			if (util::getQuery(body, "email") != "failed")
 			{

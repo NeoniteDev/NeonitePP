@@ -20,7 +20,7 @@ class Util
 private:
 	static __forceinline bool MaskCompare(PVOID pBuffer, LPCSTR lpPattern, LPCSTR lpMask)
 	{
-		for (PBYTE value = reinterpret_cast<PBYTE>(pBuffer); *lpMask; ++lpPattern, ++lpMask, ++value)
+		for (PBYTE value = static_cast<PBYTE>(pBuffer); *lpMask; ++lpPattern, ++lpMask, ++value)
 		{
 			if (*lpMask == 'x' && *reinterpret_cast<LPCBYTE>(lpPattern) != *value) return false;
 		}
@@ -33,7 +33,7 @@ public:
 		dwSize -= static_cast<DWORD>(strlen(lpMask));
 		for (unsigned long index = 0; index < dwSize; ++index)
 		{
-			PBYTE pAddress = reinterpret_cast<PBYTE>(pBase) + index;
+			PBYTE pAddress = static_cast<PBYTE>(pBase) + index;
 			if (MaskCompare(pAddress, lpPattern, lpMask)) return reinterpret_cast<uintptr_t>(pAddress);
 		}
 		return NULL;
@@ -55,5 +55,6 @@ public:
 			token = s.substr(0, pos);
 			return token;
 		}
+		return token;
 	}
 };

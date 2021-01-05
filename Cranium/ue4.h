@@ -71,12 +71,12 @@ inline std::wstring GetObjectFullName(UObject* object)
 }
 
 //Returns FField's type.
-inline std::wstring GetFClassName(FField* obj)
+inline std::wstring GetFieldClassName(FField* obj)
 {
 	FString s;
 	GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
-	std::wstring objectNameW = s.ToWString();
-	auto className = Util::sSplit(objectNameW, L" ");
+	const std::wstring objectName = s.ToWString();
+	auto className = Util::sSplit(objectName, L" ");
 	return className;
 }
 
@@ -105,33 +105,9 @@ static T FindObject(wchar_t const* name)
 	return nullptr;
 }
 
-inline void DumpAllGObjects()
-{
-	std::ofstream log(XOR("GObjects.log"));
-	for (auto array : GObjs->ObjectArray->FUObject)
-	{
-		if (array == nullptr)
-		{
-			continue;
-		}
-		auto fuObject = array;
-		for (auto i = 0x0; i < GObjs->NumElements && fuObject->Object; ++i, ++fuObject)
-		{
-			auto object = fuObject->Object;
-			std::wstring classNameW = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
-			std::wstring objectNameW = GetObjectFullName(object).c_str();
-			std::string objectName = std::string(objectNameW.begin(), objectNameW.end());
-			std::string className = std::string(classNameW.begin(), classNameW.end());
-			std::string item = "\n[" + std::to_string(i) + "] Object:[" + objectName + "] Class:[" + className + "]\n";
-			log << item;
-		}
-	}
-	log.flush();
-}
-
 inline bool DumpIDs()
 {
-	std::ofstream log(XOR("ids.config"), std::ios::trunc);
+	std::wofstream log(XOR(L"ids.config"), std::ios::trunc);
 
 	//TODO: Better way.
 	UClass* CID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition"));
@@ -166,11 +142,10 @@ inline bool DumpIDs()
 				object->IsA(LSID) ||
 				object->IsA(MPID))
 			{
-				auto objectNameW = GetObjectName(object);
-				std::string objectName = std::string(objectNameW.begin(), objectNameW.end());
-				std::string id = objectName.substr(objectName.find_last_of(".") + 1);
-				if (id.starts_with(XOR("Default__"))) break;
-				log << id + "\n";
+				auto objectName = GetObjectName(object);
+				std::wstring id = objectName.substr(objectName.find_last_of(L".") + 1);
+				if (id.starts_with(XOR(L"Default__"))) break;
+				log << id + L"\n";
 			}
 		}
 	}

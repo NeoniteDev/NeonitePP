@@ -55,7 +55,7 @@ struct FString : private TArray<wchar_t>
 		{
 			Data = const_cast<wchar_t*>(other);
 		}
-	};
+	}
 
 	bool IsValid() const
 	{
@@ -69,7 +69,7 @@ struct FString : private TArray<wchar_t>
 
 	std::string ToString() const
 	{
-		auto length = std::wcslen(Data);
+		const auto length = std::wcslen(Data);
 
 		std::string str(length, '\0');
 

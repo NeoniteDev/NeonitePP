@@ -1,48 +1,11 @@
-#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
-#pragma warning( disable : 4267 4244 )
-
-#include <iostream>
-
-#include "gui.h"
+﻿#include "gui.h"
 #include "../launcher.h"
 #include "../../Backend/server.h"
-#include "..//settings.h"
-
-using namespace std;
-
+#include "../settings.h"
 #include "../util.h"
-#include <limits.h>         // INT_MIN, INT_MAX
-#include <stdio.h>          // vsnprintf, sscanf, printf
-#include <stdlib.h>         // NULL, malloc, free, atoi
-#if defined(_MSC_VER) && _MSC_VER <= 1500 // MSVC 2008 or earlier
-#include <stddef.h>         // intptr_t
-#else
-#include <stdint.h>         // intptr_t
-#endif
 
-#ifdef _MSC_VER
-#pragma warning (disable: 4996) // 'This function or variable may be unsafe': strcpy, strdup, sprintf, vsnprintf, sscanf, fopen
-#endif
-
-// Play it nice with Windows users. Notepad in 2017 still doesn't display text data with Unix-style \n.
-#ifdef _WIN32
-#define IM_NEWLINE  "\r\n"
-#define snprintf    _snprintf
-#define vsnprintf   _vsnprintf
-#else
-#define IM_NEWLINE  "\n"
-#endif
-
-#define IM_MAX(_A,_B)       (((_A) >= (_B)) ? (_A) : (_B))-
-
-#if !defined(IMGUI_DISABLE_OBSOLETE_FUNCTIONS) && defined(IMGUI_DISABLE_TEST_WINDOWS) && !defined(IMGUI_DISABLE_DEMO_WINDOWS)   // Obsolete name since 1.53, TEST->DEMO
-#define IMGUI_DISABLE_DEMO_WINDOWS
-#endif
-
-#if !defined(IMGUI_DISABLE_DEMO_WINDOWS)
+#pragma warning( disable : 4267 4244 4996)
+using namespace std;
 
 static int FilterNoSpace(ImGuiTextEditCallbackData* data)
 {
@@ -50,11 +13,9 @@ static int FilterNoSpace(ImGuiTextEditCallbackData* data)
 	return 0;
 }
 
-static bool hasAdditional = false;
-
 void ImGui::ShowLoader(bool* p_open)
 {
-	ImGuiWindowFlags window_flags = 0;
+	/*ImGuiWindowFlags window_flags = 0;
 
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
@@ -360,27 +321,32 @@ void ImGui::ShowLoader(bool* p_open)
 
 	if (BeginTabItem("Credits"))
 	{
-		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Backend: Kemo (@xkem0x), CheatingMuppet (UNKNOWN)");
+		Text(XOR("Kemo (@xkem0x): Backend, Frontend, Internals."));
 
-		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Frontend: Sammy (@madSammy)");
+		Text(XOR("Sammy (@madSammy): Frontend, General."));
 
-		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Manager: Ayal (@Ayal01)");
+		Text("CheatingMuppet: Internals, General.");
 
-		SetCursorPosX(GetCursorPosX() + 145);
+		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Rendering Engine: Dear, ImGui.");
+		Text("Makks (@MakksFN): ConsoleUnlocker, Information.");
 
-		SetCursorPosY(GetCursorPosY() + 115);
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("AsrielD (@Asriel_Dev): SSL-Bypass, General.");
+
+		SetCursorPosY(GetCursorPosY() + 50);
 		SetCursorPosX(GetCursorPosX() + 3.50);
 
 		if (Button("Join Server"))
@@ -410,6 +376,8 @@ void ImGui::ShowLoader(bool* p_open)
 
 	if (*p_open == false)
 	{
+		TerminateProcess(hClient, 0);
+		TerminateProcess(hEAC, 0);
 		TerminateThread(hLauncher, 0);
 		TerminateThread(hServer, 0);
 		exit(1);
@@ -476,8 +444,27 @@ void ImGui::ShowLoader(bool* p_open)
 		0.25f, 1.00f, 0.00f, 1.00f);
 	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
-		1.00f, 0.98f, 0.95f, 0.73f);
+		1.00f, 0.98f, 0.95f, 0.73f);*/
+
+
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+	window_flags |= ImGuiWindowFlags_NoCollapse;
+	window_flags |= ImGuiWindowFlags_NoSavedSettings;
+	window_flags |= ImGuiWindowFlags_NoScrollbar;
+	window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
+
+	SetNextWindowPos(ImVec2(500, 100), ImGuiCond_FirstUseEver);
+	SetNextWindowSize(ImVec2(535, 320), ImGuiCond_FirstUseEver);
+
+
+	if (!Begin("Neonite++", p_open, window_flags))
+	{
+		End();
+		return;
+	}
+
+
+	
 }
-
-
-#endif
