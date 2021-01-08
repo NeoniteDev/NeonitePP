@@ -15,7 +15,7 @@ static int FilterNoSpace(ImGuiTextEditCallbackData* data)
 
 void ImGui::ShowLoader(bool* p_open)
 {
-	/*ImGuiWindowFlags window_flags = 0;
+	ImGuiWindowFlags window_flags = 0;
 
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
@@ -203,7 +203,7 @@ void ImGui::ShowLoader(bool* p_open)
 			{
 				if (!bHasImportedLocker)
 				{
-					settings::loadLocker(false);
+					settings::readLocker();
 				}
 
 				SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
@@ -285,7 +285,7 @@ void ImGui::ShowLoader(bool* p_open)
 				SameLine();
 				if (Button(("Save Locker")))
 				{
-					settings::loadLocker(true);
+					settings::saveLocker();
 				}
 
 				Columns(1, "");
@@ -444,27 +444,6 @@ void ImGui::ShowLoader(bool* p_open)
 		0.25f, 1.00f, 0.00f, 1.00f);
 	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
-		1.00f, 0.98f, 0.95f, 0.73f);*/
-
-
-	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
-	window_flags |= ImGuiWindowFlags_NoCollapse;
-	window_flags |= ImGuiWindowFlags_NoSavedSettings;
-	window_flags |= ImGuiWindowFlags_NoScrollbar;
-	window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
-
-	SetNextWindowPos(ImVec2(500, 100), ImGuiCond_FirstUseEver);
-	SetNextWindowSize(ImVec2(535, 320), ImGuiCond_FirstUseEver);
-
-
-	if (!Begin("Neonite++", p_open, window_flags))
-	{
-		End();
-		return;
-	}
-
-
+		1.00f, 0.98f, 0.95f, 0.73f);
 	
 }

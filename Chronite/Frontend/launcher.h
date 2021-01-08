@@ -21,7 +21,7 @@ namespace launcher
 			json launcherInstalled;
 
 			SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
-			                NULL, 0, programData); //why would someone run this on linux ?
+			                nullptr, 0, programData); //why would someone run this on linux ?
 
 			//TODO: change this
 			char* launcherInstalledPath = new char[

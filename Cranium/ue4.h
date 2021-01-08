@@ -2,7 +2,7 @@
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
-inline FString(*GetObjectNameInternal)(PVOID);
+inline FString (*GetObjectNameInternal)(PVOID);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline GObjects* GObjs;
@@ -17,7 +17,7 @@ inline UObject* (*StaticConstructObject)(
 	bool bCopyTransientsFromClassDefaults,
 	void* InstanceGraph,
 	bool bAssumeTemplateIsArchetype
-	);
+);
 
 //Returns the very first name of the object (E.G: BP_PlayButton).
 inline std::wstring GetObjectFirstName(UObject* object)
@@ -110,6 +110,7 @@ inline bool DumpIDs()
 	std::wofstream log(XOR(L"ids.config"), std::ios::trunc);
 
 	//TODO: Better way.
+	//THIS FUCKING IS SO BAD CODED BUT IDK WHAT ELSE TO DO
 	UClass* CID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition"));
 	UClass* BID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition"));
 	UClass* PCID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition"));
@@ -142,10 +143,21 @@ inline bool DumpIDs()
 				object->IsA(LSID) ||
 				object->IsA(MPID))
 			{
-				auto objectName = GetObjectName(object);
-				std::wstring id = objectName.substr(objectName.find_last_of(L".") + 1);
+				auto id = GetObjectFirstName(object);
+				auto def = GetObjectFirstName(object->Class);
+
+				std::wstring r = L"ItemDefinition";
+
+				//handle wraps
+				if (object->IsA(IWD)) r = L"Definition";
+
+				std::wstring::size_type i = def.find(r);
+				if (i != std::string::npos)
+				{
+					def.erase(i, r.length());
+				}
 				if (id.starts_with(XOR(L"Default__"))) break;
-				log << id + L"\n";
+				log << def << ":" << id << L"\n";
 			}
 		}
 	}

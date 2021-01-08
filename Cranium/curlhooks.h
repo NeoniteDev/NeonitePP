@@ -7,6 +7,7 @@
 #define URL_PORT XOR("5595")
 
 inline bool isReady = false;
+inline std::string gUrl;
 
 CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
@@ -36,22 +37,21 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		result = CurlSetOpt_(data, tag, 0);
 	}
 
-	//URL redirection
+		//URL redirection
 
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
-
+		gUrl = url;
+		
 		if (url.find(XOR("token")) != std::string::npos) isReady = !isReady;
-		
-#ifdef URL_HOST	
+
+#ifdef URL_HOST
+
 		//printf("LogURL: %s\n", url.c_str());
-		
 		Uri uri = Uri::Parse(url);
-		if (uri.Host.ends_with(XOR(".ol.epicgames.com")))
-		{
-			url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
-		}
+		url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+
 #endif
 		result = CurlSetOpt_(data, tag, url.c_str());
 	}

@@ -1,28 +1,75 @@
 #pragma once
-
+#include "DefaultGame.h"
+#include "DefaultEngine.h"
+#include "DefaultRuntimeOptions.h"
+#include "../../Frontend/settings.h"
 
 inline void initApi()
 {
-	//==> TO BE IMPLEMENTED <==
 	app.Get("/fortnite/api/cloudstorage/system", [](const Request& req, Response& res)
 	{
-		res.status = 204;
+		json j = json::array({
+			{
+				{"uniqueFilename", DefaultGame::name},
+				{"filename", DefaultGame::name},
+				{"hash", DefaultGame::sha1},
+				{"hash256", DefaultGame::sha256},
+				{"length", DefaultGame::ini.size()},
+				{"contentType", "application/octet-stream"},
+				{"uploaded", "2021-01-03T21:17:16.703Z"},
+				{"storageType", "S3"},
+				{"doNotCache", false}
+			},
+			{
+				{"uniqueFilename", DefaultEngine::name},
+				{"filename", DefaultEngine::name},
+				{"hash", DefaultEngine::sha1},
+				{"hash256", DefaultEngine::sha256},
+				{"length", DefaultEngine::ini.size()},
+				{"contentType", "application/octet-stream"},
+				{"uploaded", "2021-01-03T21:17:16.703Z"},
+				{"storageType", "S3"},
+				{"doNotCache", false}
+			},
+			{
+				{"uniqueFilename", DefaultRuntimeOptions::name},
+				{"filename", DefaultRuntimeOptions::name},
+				{"hash", DefaultRuntimeOptions::sha1},
+				{"hash256", DefaultRuntimeOptions::sha256},
+				{"length", DefaultRuntimeOptions::ini.size()},
+				{"contentType", "application/octet-stream"},
+				{"uploaded", "2021-01-03T21:17:16.703Z"},
+				{"storageType", "S3"},
+				{"doNotCache", false}
+			}
+		});
+		res.set_content(j.dump(), "application/json");
 	});
 
-	//==> TO BE IMPLEMENTED <==
-	app.Get(R"(/fortnite/api/cloudstorage/user/(.*))", [](const Request& req, Response& res)
+	app.Get("/fortnite/api/cloudstorage/system/DefaultGame.ini", [](const Request& req, Response& res)
 	{
-		res.set_content("[]", "application/json");
+		boost::replace_all(DefaultGame::ini, "'", "\"");
+		res.set_content(DefaultGame::ini, "application/octet-stream");
 	});
 
-	//==> TO BE IMPLEMENTED <==
+	app.Get("/fortnite/api/cloudstorage/system/DefaultEngine.ini", [](const Request& req, Response& res)
+	{
+		res.set_content(DefaultEngine::ini, "application/octet-stream");
+	});
+
+	app.Get("/fortnite/api/cloudstorage/system/DefaultRuntimeOptions.ini", [](const Request& req, Response& res)
+	{
+		res.set_content(DefaultRuntimeOptions::ini, "application/octet-stream");
+	});
+
+	//Keychain
 	app.Get("/fortnite/api/storefront/v2/keychain", [](const Request& req, Response& res)
 	{
-	    Client cli("https://api.nitestats.com");
+		Client cli("https://api.nitestats.com");
 
 		auto j = R"(["A93064DA8BDA456CADD2CD316BE64EE5:nziBPQTfuEl4IRK6pOaovQpqQC6nsMQZFTx+DEg62q4=:CID_NEONITE_TEMP"])"_json;
-		
-		if(auto response = cli.Get("/v1/epic/keychain"))
+
+		if (auto response = cli.Get("/v1/epic/keychain"))
 		{
 			if (response->status == 200)
 			{
@@ -30,7 +77,6 @@ inline void initApi()
 				j = json::parse(response->body);
 			}
 		}
-
 		res.set_content(j.dump(), "application/json");
 	});
 
@@ -88,6 +134,13 @@ inline void initApi()
 				displayName = util::sSplit(util::getQuery(body, "username"), "@");
 			}
 			else displayName = "NeonitePPUser";
+
+			if (settings::readLocker())
+			{
+				for (const auto& value : IDs) {
+					
+				}
+			}
 
 			j = {
 				{"access_token", util::genRandom(32)},

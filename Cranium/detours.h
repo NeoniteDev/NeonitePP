@@ -4,6 +4,21 @@
 
 inline bool bIsDebugCamera = false;
 
+inline void LobbyThread()
+{
+	Sleep(20000);
+	//If we are in-game we listen for escape key to go lobby
+	while (true)
+	{
+		if (GetAsyncKeyState(VK_ESCAPE))
+		{
+			UFunctions::Travel(FRONTEND);
+			break;
+		}
+		Sleep(300);
+	}
+}
+
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
 	if (pObj && pFunc)
@@ -11,16 +26,26 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		const auto nObj = GetObjectFirstName(pObj);
 		const auto nFunc = GetObjectFirstName(pFunc);
 
-		
-		if(wcsstr(nFunc.c_str(), XOR(L"Pain")))
+		//If the game requested matchmaking we open the game mode
+		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			Pain();
+			CreateThread(nullptr, NULL, LPTHREAD_START_ROUTINE(&LobbyThread), nullptr, NULL, nullptr);
+			UFunctions::Travel(APOLLO_PAPAYA_BASE);
+			gUrl.clear();
 		}
-		
-		//Open game mode base on play click.
+
+		//Open game mode base on play click. (DEPRECATED AS IT WILL TRAVEL ON REPLAY PLAY BUTTON TOO)
+		/*
 		if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
 		{
 			UFunctions::Travel(APOLLO_PAPAYA_BASE);
+		}
+		*/
+
+		//Will crash the game if you type pain in console
+		if (wcsstr(nFunc.c_str(), XOR(L"Pain")))
+		{
+			Pain();
 		}
 
 		//Destroy all HLODs after the loading screen.
@@ -37,17 +62,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			bIsDebugCamera = !bIsDebugCamera;
 		}
 
-		//LOG ARG
-		/*
-		if (nFunc == L"DestroyAll")
-		{
-			auto className = static_cast<UCheatManager_DestroyAll_Params*>(pParams)->Class;
-			std::wstring classNameW = GetObjectFullName(className);
-			printf("\n\n\nCLASSNAME: %ls", classNameW.c_str());
-		}
-		*/
-
-
 		//Logging
 		/*
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
@@ -55,6 +69,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
 			!wcsstr(nFunc.c_str(), L"OnMouse") &&
+			!wcsstr(nFunc.c_str(), L"Pulse") &&
 			!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
 			!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
 			!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&

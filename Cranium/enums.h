@@ -2,6 +2,7 @@
 
 #define APOLLO_TERRAIN_BASE XOR(L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase")
 #define APOLLO_PAPAYA_BASE XOR(L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase")
+#define FRONTEND XOR(L"Frontend?game=/Script/FortniteGame.FortGameModeFrontEnd")
 
 //Memory
 namespace Patterns
@@ -21,7 +22,7 @@ namespace Patterns
 	constexpr const char* GetFullName = "\x48\x89\x5c\x24\x00\x57\x48\x83\xec\x00\x48\x8b\xd9\x48\x8b\xfa\x48\x8b\x49\x00\xe8\x00\x00\x00\x00\x41\xb8";
 	constexpr const char* GetViewPoint =
 	"\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x41\x8B\xF0\x48\x8B\x49\x30\x48\x8B\xFA\xE8\x00\x00\x00\x00\xBA\x00\x00\x00\x00\x48\x8B\xC8";
-};
+}
 
 namespace Masks
 {
@@ -36,15 +37,6 @@ namespace Masks
 	constexpr const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
 	constexpr const char* GetFullName = "xxxx?xxxx?xxxxxxxxx?x????xx";
 	constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
-};
-
-namespace Offsets
-{
-	constexpr DWORD GameInstance = 0x180;
-	constexpr DWORD LocalPlayers = 0x38;
-	constexpr DWORD PlayerController = 0x30;
-	constexpr DWORD CheatManager = 0x338;
-	
 }
 
 //UE4
