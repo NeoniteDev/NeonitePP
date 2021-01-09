@@ -86,7 +86,6 @@ namespace launcher
 				pid = util::GetProcId("FortniteClient-Win64-Shipping.exe");
 			}
 
-			//TODO: byte code instead of dll.
 			std::string dllPath = util::GetEXEPath() + "\\Cranium.dll";
 
 			if (!ManualMap(hClient, dllPath.c_str()))

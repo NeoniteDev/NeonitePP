@@ -32,27 +32,32 @@ R"(
                 "lastModified": "2020-10-30T04:50:59.198Z",
                 "_locale": "en-US"
             },
-            "dynamicbackgrounds": {
-                "jcr:isCheckedOut": true,
-                "backgrounds": {
-                    "backgrounds": [{
-                        "stage": "season15xmas",
-                        "_type": "DynamicBackground",
-                        "key": "lobby"
-                    }, {
-                        "stage": "XmasStore2020",
-                        "_type": "DynamicBackground",
-                        "key": "vault"
-                    }],
-                    "_type": "DynamicBackgroundList"
+"dynamicbackgrounds": {
+        "jcr:isCheckedOut": true,
+        "backgrounds": {
+            "backgrounds": [
+                {
+                    "backgroundimage": "https://cdn.discordapp.com/attachments/703974059121049720/792654680512921640/InGameBanner.png",
+                    "stage": "worldcup",
+                    "_type": "DynamicBackground",
+                    "key": "lobby"
                 },
-                "_title": "dynamicbackgrounds",
-                "_noIndex": false,
-                "jcr:baseVersion": "a7ca237317f1e7bac3355e-3ec1-4054-baf5-f88613799961",
-                "_activeDate": "2019-08-21T15:59:59.342Z",
-                "lastModified": "2020-08-27T08:04:47.051Z",
-                "_locale": "en-US"
-            },
+                {
+                    "backgroundimage": "https://cdn.discordapp.com/attachments/703974059121049720/792654680512921640/InGameBanner.png",
+                    "stage": "season15xmas",
+                    "_type": "DynamicBackground",
+                    "key": "vault"
+                }
+            ],
+            "_type": "DynamicBackgroundList"
+        },
+        "_title": "dynamicbackgrounds",
+        "_noIndex": false,
+        "jcr:baseVersion": "a7ca237317f1e7bac3355e-3ec1-4054-baf5-f88613799961",
+        "_activeDate": "2019-08-21T15:59:59.342Z",
+        "lastModified": "2020-08-27T08:04:47.051Z",
+        "_locale": "en-US"
+    },
             "shopSections": {
                 "jcr:isCheckedOut": true,
                 "_title": "shop-sections",

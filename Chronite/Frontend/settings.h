@@ -66,6 +66,7 @@ namespace settings
 		return true;
 	}
 
+	//TODO: find path function.
 	inline bool readLocker()
 	{
 		char programData[MAX_PATH];
@@ -97,7 +98,9 @@ namespace settings
 			}
 		}
 
-		auto itemsPath = fnPath + "\\FortniteGame\\Binaries\\Win64\\ids.config";
+		std::string itemsPath;
+		if (bPaksIds) itemsPath = fnPath + "\\FortniteGame\\Binaries\\Win64\\ids.config";
+		else itemsPath = util::GetEXEPath() + "\\ids.config";
 		auto itemsFile = itemsPath.c_str();
 		try
 		{
@@ -116,52 +119,5 @@ namespace settings
 		}
 
 		return true;
-	}
-
-	inline void saveLocker()
-	{
-		char programData[MAX_PATH];
-		char datPath[] = "\\Epic\\UnrealEngineLauncher\\LauncherInstalled.dat";
-		json launcherInstalled;
-		std::string fnPath;
-
-		SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
-		                nullptr, 0, programData);
-
-		//TODO: change this
-		auto launcherInstalledPath = new char[
-			std::strlen(programData) + std::strlen(datPath) + 1];
-
-		std::strcpy(launcherInstalledPath, programData);
-		std::strcat(launcherInstalledPath, datPath);
-
-		std::ifstream f(launcherInstalledPath);
-		f >> launcherInstalled;
-
-		json installationList = launcherInstalled["InstallationList"];
-
-
-		for (auto i = 0; i < installationList.size(); i++)
-		{
-			if (installationList[i]["AppName"] == "Fortnite")
-			{
-				fnPath = installationList[i]["InstallLocation"];
-			}
-		}
-
-		try
-		{
-			std::string itemsPath = fnPath + "\\ids.config";
-			const char* itemsFile = itemsPath.c_str();
-			std::fstream i(itemsFile,
-			               std::fstream::in | std::fstream::out |
-			               std::fstream::trunc);
-			std::ostream_iterator<std::string> output_iterator(i, "\n");
-			std::copy(IDs.begin(), IDs.end(), output_iterator);
-		}
-		catch (...)
-		{
-			console.AddLog("[x] Failed to import locker.");
-		}
 	}
 }

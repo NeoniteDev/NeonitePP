@@ -3,46 +3,33 @@
 namespace DefaultEngine
 {
 	inline std::string ini =
-	
 R"(
-[ConsoleVariables]
-FortMatchmakingV2.EnableContentBeacon=0
-FortMatchmakingV2.ContentBeaconFailureCancelsMatchmaking=0
-
-
-[OnlineTracing]
-bEnabled=true
-
 [ConsoleVariables]
 Store.EnableCatabaScreen=0
 Store.EnableCatabaHighlights=0
+FortMatchmakingV2.EnableContentBeacon=0
+FortMatchmakingV2.ContentBeaconFailureCancelsMatchmaking=0
 
 [Core.Log]
-LogHttp=all
-LogXmpp=all
-LogBeacon=all
-LogQos=all
-LogOnline=all
-LogOnlineCloud=all
-LogOnlineGame=all
-LogOnlineParty=all
-LogOnlinePresence=all
-LogParty=all
-LogOnlineChat=all
-LogGarbage=all
-LogTemp=all
-LogSourceControl=all
-LogLootTables=all
-LogMatchmakingServiceClient=all
-LogMatchmakingServiceDedicatedServer=all
-LogUAC=all
-LogBattlEye=all
-LogEasyAntiCheatServer=all
-LogEasyAntiCheatClient=all
-LogFortAnalytics=all
-LogVoiceEngine=Error
-LogEpicCMS=all
-LogNetPlayerMovement=all
+LogHttp=verbose
+LogXmpp=verbose
+LogBeacon=verbose
+LogQos=verbose
+LogOnline=verbose
+LogOnlineCloud=verbose
+LogOnlineGame=verbose
+LogSourceControl=verbose
+LogUAC=verbose
+LogBattlEye=verbose
+LogEasyAntiCheatServer=verbose
+LogEasyAntiCheatClient=verbose
+LogFortAnalytics=verbose
+LogEpicCMS=verbose
+LogNetPlayerMovement=verbose
+LogDerivedDataCache=verbose
+LogOnlineDataAssetDirectory=verbose
+LogContentBeacon=verbose
+LogBPSInstallerConfig=verbose
 
 [PatchCheck]
 ModuleName=FortnitePatchCheck
@@ -55,6 +42,6 @@ bCheckOSSForUpdate=false
 )";
 
 	inline std::string name = "DefaultEngine.ini";
-	inline std::string sha1 = "1c29cbf4bc9f5b1b10cac0114122362601458256";
-	inline std::string sha256 = "0fafc558d86c1c9155b8208c5d8972437a219131640d35931e78c0e9b095c371";
+	inline std::string sha1 = "C8C23C183E44C2AADD3D7DE90CAF451DDD2D6E82";
+	inline std::string sha256 = "223C13EDE8ECF4C4EF8702B8FCC5A247C27A98F399DA03054D3F8F119C0F0D4A";
 }

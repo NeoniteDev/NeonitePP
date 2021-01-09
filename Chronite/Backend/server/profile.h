@@ -7,7 +7,7 @@ inline void initProfile()
 		         std::string account_id = static_cast<std::string>(req.matches[1]);
 		         std::string command = static_cast<std::string>(req.matches[2]);
 		         std::string profile_id = "common_core";
-		         int rvn = -1;
+		         int rvn = 0;
 		         boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
 		         auto date = to_iso_extended_string(t);
 		         date = date.substr(0, date.size() - 3) + "Z";
@@ -16,7 +16,36 @@ inline void initProfile()
 		         if (req.has_param("rvn")) rvn = std::stoi(req.get_param_value("rvn"));
 		         if (req.has_param("profileId")) profile_id = req.get_param_value("profileId");
 
-		         if (profile_id == "athena") profileData = pAthena();
+		         if (profile_id == "athena")
+		         {
+			         profileData = pAthena();
+			         if (settings::readLocker())
+			         {
+				         if (IDs.size() > 0)
+				         {
+					         //TODO: auto updateing.
+					         for (const auto& id : IDs)
+					         {
+						         json item = {
+							         {"templateId", id},
+							         {
+								         "attributes", {
+									         {"max_level_bonus", 0},
+									         {"level", 1},
+									         {"item_seen", true},
+									         {"rnd_sel_cnt", 0},
+									         {"xp", 0},
+									         {"variants", json::array()},
+									         {"favorite", false}
+								         }
+							         },
+							         {"quantity", 1}
+						         };
+						         profileData["items"][id] = item;
+					         }
+				         }
+			         }
+		         }
 		         else if (profile_id == "common_public") profileData = pCommonPublic();
 		         else if (profile_id == "creative") profileData = pCreative();
 		         else if (profile_id == "collections") profileData = pCollections();
@@ -56,10 +85,6 @@ inline void initProfile()
 			         auto category = body["category"].get<std::string>();
 			         auto locker_slot_data = item["attributes"]["locker_slots_data"];
 			         auto lockerSlot = locker_slot_data["slots"][category];
-			         if (lockerSlot.is_null())
-			         {
-				         //Emotes and wraps
-			         }
 			         auto itemsArray = lockerSlot["items"];
 			         bool bChanged = false;
 
@@ -69,6 +94,15 @@ inline void initProfile()
 			         if (slotIndex == -1)
 			         {
 				         //Apply to all
+				         //===============> TO BE FIXED <================
+				         for (auto i = 0; i < itemsArray.size(); i++)
+				         {
+					         if (itemsArray[i] != body["itemToSlot"])
+					         {
+						         itemsArray[i] = body["itemToSlot"];
+						         bChanged = true;
+					         }
+				         }
 			         }
 			         else
 			         {
@@ -86,6 +120,7 @@ inline void initProfile()
 			         if (body["variantUpdates"].size() != 0)
 			         {
 				         //variants update
+				         //===============> TO BE FIXED <================
 			         }
 
 			         if (bChanged)
@@ -108,22 +143,6 @@ inline void initProfile()
 
 			         break;
 		         }
-		         case util::str2int("MarkItemSeen"):
-		         {
-			         //req.body.itemIds.forEach(itemId => Profile.changeItemAttribute(profileData, itemId, "item_seen", true, profileChanges));
-			         /*
-			          json itemsIds = json::parse(req.body)["itemsIds"];
-			          for (auto& item : itemsIds.items())
-			          {
-				          std::string itemId = item.value();
-				          response["profileChanges"].push_back({
-					          {"changeType", "itemRemoved"},
-					          {"itemId", itemId}
-				          });
-			          }
-			          */
-			         break;
-		         }
 		         }
 
 		         if (response["profileChanges"].size() > 0)
@@ -134,6 +153,8 @@ inline void initProfile()
 			         response["profileRevision"] = profileData["rvn"];
 			         response["profileCommandRevision"] = profileData["commandRevision"];
 
+
+			         //TODO: change this shit.
 			         if (profile_id == "athena") profile_athena = profileData;
 			         else if (profile_id == "common_public") profile_public = profileData;
 			         else if (profile_id == "creative") profile_creative = profileData;

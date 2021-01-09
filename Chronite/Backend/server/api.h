@@ -135,13 +135,6 @@ inline void initApi()
 			}
 			else displayName = "NeonitePPUser";
 
-			if (settings::readLocker())
-			{
-				for (const auto& value : IDs) {
-					
-				}
-			}
-
 			j = {
 				{"access_token", util::genRandom(32)},
 				{"expires_in", 28800},

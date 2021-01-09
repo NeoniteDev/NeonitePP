@@ -14,6 +14,8 @@
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 
+#define WIN32_LEAN_AND_MEAN
+
 #pragma comment(lib, "d3d9.lib")
 
 #include "../includes/imgui/imgui.h"
@@ -42,6 +44,7 @@
 #include <shlobj.h>
 #include <fstream>
 #include <Windows.h>
+#include <Dbghelp.h>
 #include <d3d9.h>
 #include <dinput.h>
 #include <tchar.h>

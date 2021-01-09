@@ -155,12 +155,18 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosY(GetCursorPosY() + 5);
 		Text("Customize your Server!");
 
+		Checkbox("Import all items from paks", &bPaksIds);
+
+		Spacing();
+		SetCursorPosY(GetCursorPosY() + 5);
+
 		Checkbox("Cataba Shop Style", &bIsCataba);
 
 		Spacing();
 
 		SetCursorPosX(GetCursorPosX() + 55);
 		SetCursorPosY(GetCursorPosY() + 5);
+		
 
 		Text("*We are going to add more things soon. Stay updated.*");
 
@@ -190,132 +196,7 @@ void ImGui::ShowLoader(bool* p_open)
 		Checkbox("Has Battlepass", &bHasBattlepass);
 
 		SameLine(GetWindowWidth() - 205);
-
-		static bool bIsLockerOpen = false;
-		static bool bHasImportedLocker = false;
-
-		Checkbox("Skin Locker", &bIsLockerOpen);
-
-		if (bIsLockerOpen)
-		{
-			if (Begin("Locker", nullptr,
-			          ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
-			{
-				if (!bHasImportedLocker)
-				{
-					settings::readLocker();
-				}
-
-				SetWindowPos(ImVec2(300, 100), ImGuiCond_FirstUseEver);
-				SetWindowSize(ImVec2(500, 460), ImGuiCond_FirstUseEver);
-
-				std::string lowID = ID;
-
-				boost::to_lower(lowID);
-
-				InputTextWithHint("", "AthenaDefinition:ID", ID, sizeof(ID));
-				SameLine();
-				if (Button("+"))
-				{
-					if (lowID.size() == 0)
-					{
-						MessageBoxA(window, "Please input a definition.",
-						            "Neonite++", ERROR);
-					}
-
-					if (!strstr(lowID.c_str(), "athena"))
-					{
-						MessageBoxA(window, "The item added doesn't seem to be existing.",
-						            "Neonite++", ERROR);
-					}
-
-					if (any_of(IDs.begin(), IDs.end(), [&](const string& elem) { return elem == lowID; }))
-					{
-						MessageBoxA(window, "The item is already in the list.",
-						            "Neonite++", ERROR);
-					}
-					else
-					{
-						IDs.push_back(lowID);
-						LockerBackup.push_back(lowID);
-					}
-				}
-
-				SameLine();
-				if (Button("-"))
-				{
-					if (!strstr(lowID.c_str(), "athena"))
-					{
-						MessageBoxA(window, "This item isn't correct.", "Neonite++",
-						            ERROR);
-					}
-					else
-					{
-						std::vector<std::string>::iterator it = std::find(
-							IDs.begin(), IDs.end(), lowID);
-
-						int id = std::distance(IDs.begin(), it);
-
-
-						if (it != IDs.end())
-						{
-							IDs.erase(IDs.begin() + id);
-						}
-						else
-						{
-							MessageBoxA(window, "This item doesn't seem to exist.",
-							            "Neonite++", ERROR);
-						}
-					}
-				}
-
-				SameLine();
-				if (Button(("Erase")))
-				{
-					if (IDs.empty())
-					{
-						MessageBoxA(window, "The list is already empty!", "Neonite++",
-						            ERROR);
-					}
-					else
-					{
-						IDs.clear();
-					}
-				}
-				SameLine();
-				if (Button(("Save Locker")))
-				{
-					settings::saveLocker();
-				}
-
-				Columns(1, "");
-				Separator();
-				SetCursorPosX(GetCursorPosX() + 205);
-				SetCursorPosY(GetCursorPosY() + 5);
-				Text("ID");
-				Separator();
-
-				int length = IDs.size();
-
-				static int selected = -1;
-				static int i = 0;
-
-				if (!bHasImportedLocker)
-				{
-					for (i; i < length; i++)
-					{
-						if (Selectable(IDs.at(i).c_str(), selected == i,
-						               ImGuiSelectableFlags_SpanAllColumns))
-							selected = i;
-
-						NextColumn();
-						Separator();
-					}
-				}
-
-				End();
-			}
-		}
+		
 		EndTabItem();
 	}
 
@@ -324,7 +205,7 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text(XOR("Kemo (@xkem0x): Backend, Frontend, Internals."));
+		Text(XOR("Kemo (@xkem0x): Developer and mantainer of Neonite++"));
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
@@ -339,35 +220,23 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Makks (@MakksFN): ConsoleUnlocker, Information.");
+		Text("Makks (@MakksFN): ConsoleUnlocker.");
+
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("Syfe (@ItsSyfe): Github readme.");
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
 		Text("AsrielD (@Asriel_Dev): SSL-Bypass, General.");
 
-		SetCursorPosY(GetCursorPosY() + 50);
-		SetCursorPosX(GetCursorPosX() + 3.50);
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
 
-		if (Button("Join Server"))
-		{
-			system("start https://discord.com/invite/qSJ9jGp");
-		}
-
-		SameLine(GetWindowWidth() - 150);
-
-		if (Button("Github Repository"))
-		{
-			system("start https://github.com/NeoniteDev");
-		}
-
-		SameLine(GetWindowWidth() - 315);
-
-		if (Button("Website"))
-		{
-			system("start https://neonite.dev");
-		}
-
+		Text("Beat YT (@Beat-YT): Backend.");
+		
 		EndTabItem();
 	}
 

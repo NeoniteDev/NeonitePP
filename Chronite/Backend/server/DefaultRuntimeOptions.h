@@ -14,9 +14,11 @@ bMOTDSameNewsForCreative=true
 bForceBRMode=true
 bEnableSavedLoadouts=false
 bAllowAllReplays=true
+bEnableClientSettingsSaveToCloud=false
+DefaultFlagRegionId=Neonite
 )";
 
 	inline std::string name = "DefaultRuntimeOptions.ini";
-	inline std::string sha1 = "521842f4ccda42136d099c8a288b7c3b20172e5e";
-	inline std::string sha256 = "05290d7c6e4cb94b0a28bb9547ad21a4cea79ca986c7d911bb159fb61421d96d";
+	inline std::string sha1 = "holder";
+	inline std::string sha256 = "holder";
 }

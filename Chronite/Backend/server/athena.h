@@ -19,13 +19,13 @@ R"(
           "slots": {
             "Pickaxe": {
               "items": [
-                "AthenaPickaxe:pickaxe_id_420_candyapplesour_jxbza"
+                ""
               ],
               "activeVariants": []
             },
             "Dance": {
               "items": [
-                "AthenaDance:eid_loofah",
+                "",
                 null,
                 null,
                 null,
@@ -40,28 +40,18 @@ R"(
             },
             "Character": {
               "items": [
-                "AthenaCharacter:cid_791_athena_commando_m_henchmangoodshorts_d"
+                ""
               ],
               "activeVariants": [
                 {
                   "variants": [
-                    {
-                      "channel": "Parts",
-                      "active": "Stage2",
-                      "owned": []
-                    },
-                    {
-                      "channel": "Material",
-                      "active": "Mat2",
-                      "owned": []
-                    }
                   ]
                 }
               ]
             },
             "Backpack": {
               "items": [
-                "AthenaBackpack:bid_208_cupiddarkmale"
+                ""
               ],
               "activeVariants": []
             },
@@ -154,7 +144,8 @@ R"(
       "season_friend_match_boost": 0,
       "active_loadout_index": 0
     }
-  }
+  },
+  "commandRevision": 0
 }
 )"_json;
 

@@ -128,3 +128,12 @@ namespace Console
 		return true;
 	}
 }
+
+namespace Singleplayer
+{
+	void start()
+	{
+		UFunctions::Travel(APOLLO_TERRAIN);
+		
+	}
+}

@@ -21,6 +21,7 @@ inline ULONG pid = 0;
 inline char name[33] = "NeoniteUser";
 inline bool bHasBattlepass = false;
 inline bool bIsCataba = false;
+inline bool bPaksIds = false;
 inline int seasonLevel = 100;
 inline int vbucks = 100000;
 

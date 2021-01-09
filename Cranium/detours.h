@@ -30,7 +30,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
 			CreateThread(nullptr, NULL, LPTHREAD_START_ROUTINE(&LobbyThread), nullptr, NULL, nullptr);
-			UFunctions::Travel(APOLLO_PAPAYA_BASE);
+			//UFunctions::Travel(APOLLO_TERRAIN_BASE);
+			Singleplayer::start();
 			gUrl.clear();
 		}
 
@@ -63,7 +64,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 
 		//Logging
-		/*
+
+		if(nFunc == L"GetLatestDynamicBackgrounds")
+		{
+			Sleep(9999999);
+		}
+	
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -80,7 +86,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		{
 			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
 		}
-		*/
+		
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);
