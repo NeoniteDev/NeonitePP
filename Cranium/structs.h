@@ -240,6 +240,30 @@ struct APlayerController_SwitchLevel_Params
 	FString URL;
 };
 
+struct AController_Possess_Params
+{
+	UObject* InPawn;
+};
+
+struct Empty_Params
+{
+};
+
+struct AFortPlayerPawn_BeginSkydiving_Params
+{
+	bool bFromBus;
+};
+
+struct UCheatManager_BugItGo_Params
+{
+	float X;
+	float Y;
+	float Z;
+	float Pitch;
+	float Yaw;
+	float Roll;
+};
+
 struct FUObjectItem
 {
 	UObject* Object;

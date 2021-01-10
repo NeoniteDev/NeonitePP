@@ -29,10 +29,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			CreateThread(nullptr, NULL, LPTHREAD_START_ROUTINE(&LobbyThread), nullptr, NULL, nullptr);
+			//CreateThread(nullptr, NULL, LPTHREAD_START_ROUTINE(&LobbyThread), nullptr, NULL, nullptr);
 			//UFunctions::Travel(APOLLO_TERRAIN_BASE);
 			Singleplayer::start();
 			gUrl.clear();
+		}
+
+		if(wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Singleplayer::bIsStarted && !Singleplayer::bIsInit)
+		{
+			Singleplayer::init();
 		}
 
 		//Open game mode base on play click. (DEPRECATED AS IT WILL TRAVEL ON REPLAY PLAY BUTTON TOO)
@@ -65,11 +70,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		//Logging
 
-		if(nFunc == L"GetLatestDynamicBackgrounds")
-		{
-			Sleep(9999999);
-		}
-	
+		
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&

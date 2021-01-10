@@ -158,3 +158,31 @@ public:
 		}
 	}
 };
+
+inline UObject* FindActor(UClass* pClass)
+{
+	ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+	ObjectFinder PersistentLevelFinder = WorldFinder.Find(L"PersistentLevel");
+
+	const DWORD AActors = 0x98;
+
+	for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
+	{
+		const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+
+		const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+
+		//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
+		
+		if(pActor != nullptr)
+		{
+			if(pActor->IsA(pClass))
+			{
+				return pActor;
+			}
+		}
+	}
+	return nullptr;
+}
