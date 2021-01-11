@@ -2,7 +2,6 @@
 #include "enums.h"
 #include <set>
 
-
 template <class T>
 struct TArray
 {
@@ -225,6 +224,7 @@ struct UFunction : UStruct
 	void* Func;
 };
 
+
 struct UCheatManager_Summon_Params
 {
 	FString ClassName;
@@ -243,6 +243,11 @@ struct APlayerController_SwitchLevel_Params
 struct AController_Possess_Params
 {
 	UObject* InPawn;
+};
+
+struct ACharacter_IsJumpProvidingForce_Params
+{
+	bool ReturnValue;
 };
 
 struct Empty_Params

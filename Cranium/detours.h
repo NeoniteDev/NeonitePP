@@ -4,54 +4,21 @@
 
 inline bool bIsDebugCamera = false;
 
-inline void LobbyThread()
-{
-	Sleep(20000);
-	//If we are in-game we listen for escape key to go lobby
-	while (true)
-	{
-		if (GetAsyncKeyState(VK_ESCAPE))
-		{
-			UFunctions::Travel(FRONTEND);
-			break;
-		}
-		Sleep(300);
-	}
-}
-
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	if (pObj && pFunc)
-	{
 		const auto nObj = GetObjectFirstName(pObj);
 		const auto nFunc = GetObjectFirstName(pFunc);
 
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			//CreateThread(nullptr, NULL, LPTHREAD_START_ROUTINE(&LobbyThread), nullptr, NULL, nullptr);
-			//UFunctions::Travel(APOLLO_TERRAIN_BASE);
-			Singleplayer::start();
+			Neoroyale::start();
 			gUrl.clear();
 		}
 
-		if(wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Singleplayer::bIsStarted && !Singleplayer::bIsInit)
+		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
 		{
-			Singleplayer::init();
-		}
-
-		//Open game mode base on play click. (DEPRECATED AS IT WILL TRAVEL ON REPLAY PLAY BUTTON TOO)
-		/*
-		if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
-		{
-			UFunctions::Travel(APOLLO_PAPAYA_BASE);
-		}
-		*/
-
-		//Will crash the game if you type pain in console
-		if (wcsstr(nFunc.c_str(), XOR(L"Pain")))
-		{
-			Pain();
+			Neoroyale::init();
 		}
 
 		//Destroy all HLODs after the loading screen.
@@ -68,9 +35,20 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			bIsDebugCamera = !bIsDebugCamera;
 		}
 
-		//Logging
+		if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
+		{
+			
+			const auto PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
+			if (PlayerPawn)
+			{
+				printf("\n[Neoroyale] PlayerPawn was found!.\n");
 
-		
+				PlayerPawn->Possess();
+			}
+			
+		}
+
+		//Logging
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -83,13 +61,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
 			!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
 			!wcsstr(nFunc.c_str(), L"UpdateTime") &&
+			!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
+			!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			printf("LogObject: %ws\nLogFunction: %ws\n", nObj.c_str(), nFunc.c_str());
+			printf("LogObject: %ws\nLogFunction: %ws\n", GetObjectFullName(pObj).c_str(), GetObjectFullName(pFunc).c_str());
 		}
-		
-	}
-
+	    
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 

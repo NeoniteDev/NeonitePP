@@ -61,9 +61,9 @@ void ImGui::ShowLoader(bool* p_open)
 
 			SameLine(GetWindowWidth() - 100);
 
-			if (strstr(name, " "))
+			if (strstr(gameDir, " "))
 			{
-				memset(name, 0, sizeof(name));
+				memset(gameDir, 0, sizeof(gameDir));
 			}
 
 			if (Button("Start Game"))
@@ -81,7 +81,7 @@ void ImGui::ShowLoader(bool* p_open)
 					}
 
 					hLauncher = CreateThread(nullptr, NULL,
-					                         (LPTHREAD_START_ROUTINE)&launcher::init, nullptr,
+					                         reinterpret_cast<LPTHREAD_START_ROUTINE>(&launcher::init), nullptr,
 					                         NULL, nullptr);
 				}
 				else
@@ -89,6 +89,9 @@ void ImGui::ShowLoader(bool* p_open)
 					console.AddLog("[=] The game is already running.");
 				}
 			}
+
+			InputTextWithHint(" ", "Fortnite Path", gameDir, sizeof(gameDir), ImGuiInputTextFlags_CallbackCharFilter,
+				FilterNoSpace);
 
 			if (Button("Stop Server"))
 			{

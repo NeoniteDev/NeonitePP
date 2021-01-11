@@ -10,7 +10,7 @@ void dllMain()
 	AllocConsole();
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
-	freopen_s(&fDummy, "CONOUT$", "w", stdout);
+	freopen_s(&fDummy, "Crainum.log", "w", stdout);
 #endif
 
 #ifdef SSL_BYPASS

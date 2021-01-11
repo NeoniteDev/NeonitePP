@@ -10,8 +10,6 @@
 //bye bye skid
 #define XOR(STR) xorstr(STR).crypt_get()
 
-extern "C" void Pain();
-
 
 #pragma comment(lib, "minhook/minhook.lib")
 #include "minhook/MinHook.h"

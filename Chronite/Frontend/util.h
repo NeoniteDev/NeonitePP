@@ -19,6 +19,7 @@ inline ULONG pid = 0;
 
 //config
 inline char name[33] = "NeoniteUser";
+inline char gameDir[MAX_PATH];
 inline bool bHasBattlepass = false;
 inline bool bIsCataba = false;
 inline bool bPaksIds = false;

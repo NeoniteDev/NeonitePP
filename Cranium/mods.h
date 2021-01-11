@@ -1,6 +1,60 @@
 #pragma once
 #include "finder.h"
 
+struct Pawn
+{
+	void Possess()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+
+		AController_Possess_Params params;
+		params.InPawn = reinterpret_cast<UObject*>(this);
+
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+	}
+
+	void StartSkydiving(bool bFromBus)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+
+		AFortPlayerPawn_BeginSkydiving_Params params;
+		params.bFromBus = bFromBus;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	bool IsJumpProvidingForce()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+
+		ACharacter_IsJumpProvidingForce_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
+	void Jump()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+
+		Empty_Params params;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+
+	void Test()
+	{
+
+	}
+};
+
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
 {
@@ -13,7 +67,7 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		const auto BugItGo = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
 
 		UCheatManager_BugItGo_Params params;
 		params.X = X;
@@ -23,9 +77,9 @@ namespace UFunctions
 		params.Yaw = Yaw;
 		params.Roll = Roll;
 
-		ProcessEvent(CheatManagerFinder.GetObj(), BugItGo, &params);
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 	}
-	
+
 	//same as summon command in-game but from code.
 	inline void Summon(const wchar_t* ClassToSummon)
 	{
@@ -36,33 +90,33 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		const auto Summon = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
 
 		const FString ClassName = ClassToSummon;
 
 		UCheatManager_Summon_Params params;
 		params.ClassName = ClassName;
 
-		ProcessEvent(CheatManagerFinder.GetObj(), Summon, &params);
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 	}
 
 	inline void DestroyAllHLODs()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-		
+
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		const auto DestroyAll = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"));
 
 		const auto HLODSMActor = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
 		UCheatManager_DestroyAll_Params params;
 		params.Class = HLODSMActor;
 
-		ProcessEvent(CheatManagerFinder.GetObj(), DestroyAll, &params);
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 	}
 
 	//travel to a url
@@ -73,30 +127,14 @@ namespace UFunctions
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		const auto SwitchLevel = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
 
 		const FString URL = url;
 
 		APlayerController_SwitchLevel_Params params;
 		params.URL = URL;
 
-		ProcessEvent(PlayerControllerFinder.GetObj(), SwitchLevel, &params);
-	}
-
-	//Possesses a player pawn
-	inline void Possess(UObject* InPawn)
-	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		const auto Possess = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
-
-		AController_Possess_Params params;
-		params.InPawn = InPawn;
-
-		ProcessEvent(PlayerControllerFinder.GetObj(), Possess, &params);
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
 	inline void ServerReadyToStartMatch()
@@ -106,11 +144,11 @@ namespace UFunctions
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		const auto ServerReadyToStartMatch = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:ServerReadyToStartMatch"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:ServerReadyToStartMatch"));
 
 		Empty_Params params;
 
-		ProcessEvent(PlayerControllerFinder.GetObj(), ServerReadyToStartMatch, &params);
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
 	inline void StartMatch()
@@ -120,26 +158,11 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
 
-		const auto StartMatch = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
 
 		Empty_Params params;
 
-		ProcessEvent(GameModeFinder.GetObj(), StartMatch, &params);
-	}
-
-	inline void StartSkydiving(UObject* Pawn, bool bFromBus)
-	{
-		const auto BeginSkydiving = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
-
-		AFortPlayerPawn_BeginSkydiving_Params params;
-		params.bFromBus = bFromBus;
-
-		ProcessEvent(Pawn, BeginSkydiving, &params);
-	}
-
-	inline void ApplyCosmeticLoadout(UObject* Pawn)
-	{
-		
+		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
 	}
 }
 
@@ -181,7 +204,7 @@ namespace Console
 		return false;
 	}
 
-	//unlocks ue4 console with cheat manager ;)
+	//unlocks ue4 console with cheat manager
 	inline bool Unlock()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
@@ -210,10 +233,12 @@ namespace Console
 	}
 }
 
-namespace Singleplayer
+namespace Neoroyale
 {
 	inline bool bIsInit = false;
 	inline bool bIsStarted = false;
+	inline bool bHasJumped;
+	inline Pawn* PlayerPawn;
 
 	inline void start()
 	{
@@ -221,37 +246,67 @@ namespace Singleplayer
 		bIsStarted = !bIsStarted;
 	}
 
+	inline void thread()
+	{
+		while (true)
+		{
+			if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
+			{
+				if (!bHasJumped)
+				{
+					bHasJumped = !bHasJumped;
+					if (!PlayerPawn->IsJumpProvidingForce())
+					{
+						PlayerPawn->Jump();
+					}
+				}
+			}
+			else
+			{
+				bHasJumped = false;
+			}
+
+			if (GetAsyncKeyState(VK_F3))
+			{
+				UFunctions::Travel(FRONTEND);
+				bIsStarted = false;
+				bIsInit = false;
+				PlayerPawn = nullptr;
+				break;
+			}
+
+			Sleep(100);
+		}
+	}
+
 	inline void init()
 	{
-
 		UFunctions::BugItGo(0, 0, 0, 0, 0, 0);
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 		printf("\n[Neoroyale] PlayerPawn was summoned!.\n");
 
-		const auto cPlayerPawn = FindObject<UClass*>(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C");
-		const auto PlayerPawn = FindActor(cPlayerPawn);
+		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
 
-		if(PlayerPawn)
+		if (PlayerPawn)
 		{
 			printf("\n[Neoroyale] PlayerPawn was found!.\n");
-			
-			UFunctions::Possess(PlayerPawn);
+
+			PlayerPawn->Possess();
 			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
-			
-			UFunctions::ApplyCosmeticLoadout(PlayerPawn);
-			printf("\n[Neoroyale] Applied Cosmetic Loadout!.\n");
-			
+
+			PlayerPawn->Test();
+
 			UFunctions::ServerReadyToStartMatch();
 			printf("\n[Neoroyale] Server is ready to start match now!.\n");
-			
+
 			UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
 			//UFunctions::StartSkydiving(PlayerPawn, true);
-			
+
+			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}
-	
+
 		bIsInit = !bIsInit;
 	}
-	
 }

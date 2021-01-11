@@ -11,7 +11,7 @@ namespace launcher
 {
 	inline void init()
 	{
-		std::string altPath; //= "E:\\14.30";
+		std::string altPath = "D:\\Old Fortnite Builds\\12.61";
 		std::string fnPath;
 
 		if (altPath.empty())
