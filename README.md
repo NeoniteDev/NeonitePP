@@ -25,4 +25,4 @@ Neonite++ is a fully rewritten version of the old project [neoniteV2](https://gi
 
 This project is in an early development phase (About 60% done),
 
-considering it's one of my very first c++ projects so it may contain a lot of bad code, mercy me please.
+(Consider that it's one of my very first c++ projects so it may contain a lot of bad code, have mercy please.)
