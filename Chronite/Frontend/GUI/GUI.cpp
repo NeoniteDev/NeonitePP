@@ -56,15 +56,10 @@ void ImGui::ShowLoader(bool* p_open)
 
 			SameLine(GetWindowWidth() - 390);
 
-			InputTextWithHint(" ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter,
+			InputTextWithHint("  ", "Input your Username", name, sizeof(name), ImGuiInputTextFlags_CallbackCharFilter,
 			                  FilterNoSpace);
 
 			SameLine(GetWindowWidth() - 100);
-
-			if (strstr(gameDir, " "))
-			{
-				memset(gameDir, 0, sizeof(gameDir));
-			}
 
 			if (Button("Start Game"))
 			{
@@ -90,8 +85,10 @@ void ImGui::ShowLoader(bool* p_open)
 				}
 			}
 
-			InputTextWithHint(" ", "Fortnite Path", gameDir, sizeof(gameDir), ImGuiInputTextFlags_CallbackCharFilter,
-				FilterNoSpace);
+
+
+			if (strstr(gameDir, " ")) memset(gameDir, 0, sizeof(gameDir));
+			
 
 			if (Button("Stop Server"))
 			{
@@ -107,6 +104,11 @@ void ImGui::ShowLoader(bool* p_open)
 					console.AddLog("[=] The server isn't running..");
 				}
 			}
+
+
+			SameLine(GetWindowWidth() - 390);
+
+			InputTextWithHint(" ", "Fortnite Path (Optional)", gameDir, sizeof(gameDir), ImGuiInputTextFlags_CallbackCharFilter, FilterNoSpace);
 
 			SameLine(GetWindowWidth() - 100);
 
@@ -228,7 +230,7 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Syfe (@ItsSyfe): Github readme.");
+		Text("Syfe (@ItsSyfe): Github ReadME.");
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
