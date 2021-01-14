@@ -33,7 +33,7 @@ namespace Hooks
 	{
 		if (MH_Initialize() != MH_OK)
 		{
-			MessageBoxA(0, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
+			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
 			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
 		}
 

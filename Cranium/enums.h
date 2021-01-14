@@ -42,10 +42,15 @@ namespace Masks
 {
 	constexpr const char* CurlEasySetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 	constexpr const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+	//Latest
 	constexpr const char* GEngine = "xxxxxx????xxxxxxxx";
+	//12.41
 	constexpr const char* GEngine1 = "xxx?????xxxxxxxx????xxx";
+	//Latest
 	constexpr const char* GObjects = "xxx????xxxx";
+	//12.41
 	constexpr const char* GObjects1 = "xx????xxxxxxxxxxxx";
+	//12.61
 	constexpr const char* GObjects2 = "xxx?x????xxx?x????xx";
 	constexpr const char* FNameToString = "xxxx?xxxx?xxxx?xxxx?xxxxx";
 	constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
