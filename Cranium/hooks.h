@@ -19,10 +19,10 @@ namespace Hooks
 
 		const auto CurlSetAdd = Util::FindPattern(Patterns::CurlSetOpt, Masks::CurlSetOpt);
 		VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
-		
+
 		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
 		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
-		
+
 		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
 		return true;
 	}
@@ -46,7 +46,7 @@ namespace Hooks
 		//Used for Camera Hooking.
 		const auto GetViewPointAdd = Util::FindPattern(Patterns::GetViewPoint, Masks::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
-		
+
 		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
 		//Used for getting UObjects names.
@@ -56,7 +56,10 @@ namespace Hooks
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
 		//Used for getting UObjects full names.
-		const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::GetObjectFullName, Masks::GetObjectFullName);
+		auto GetObjectFullNameAdd = Util::FindPattern(Patterns::GetObjectFullName, Masks::GetObjectFullName);
+
+		if (!GetObjectFullNameAdd) GetObjectFullNameAdd = Util::FindPattern(Patterns::GetObjectFullName1, Masks::GetObjectFullName1);
+
 		VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 		GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
@@ -68,17 +71,40 @@ namespace Hooks
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
 
 		//Used for mostly everything.
-		const auto GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
-		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
+		auto GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
 
-		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 22 + *reinterpret_cast<int32_t*>(GEngineAdd + 18));
+		if (GEngineAdd)
+		{
+			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 22 + *reinterpret_cast<int32_t*>(GEngineAdd + 18));
+		}
+		else
+		{
+			GEngineAdd = Util::FindPattern(Patterns::GEngine1, Masks::GEngine1);
+			VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
+			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 20 + *reinterpret_cast<int32_t*>(GEngineAdd + 16));
+		}
+
 
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		const auto GObjectsAdd = Util::FindPattern(Patterns::GObjects, Masks::GObjects);
-		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+		auto GObjectsAdd = Util::FindPattern(Patterns::GObjects, Masks::GObjects);
 
-		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
+		if(GObjectsAdd)
+		{
+			GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
+		}
+		else
+		{
+			GObjectsAdd = Util::FindPattern(Patterns::GObjects1, Masks::GObjects1);
 
+			if(!GObjectsAdd)
+			{
+				GObjectsAdd = Util::FindPattern(Patterns::GObjects2, Masks::GObjects2);
+			}
+			VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+
+			GObjs = decltype(GObjs)(GObjectsAdd);
+		}
+		
 		//Used to construct objects, mostly used for console stuff.
 		const auto SCOIAdd = Util::FindPattern(Patterns::SCOI, Masks::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
@@ -92,7 +118,7 @@ namespace Hooks
 		//GetViewPoint Hooking.
 		MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
 		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));
-		
+
 		return true;
 	}
 }

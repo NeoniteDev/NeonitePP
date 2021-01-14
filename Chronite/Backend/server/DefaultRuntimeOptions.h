@@ -14,8 +14,6 @@ bMOTDSameNewsForCreative=true
 bForceBRMode=true
 bEnableSavedLoadouts=false
 bAllowAllReplays=true
-bEnableClientSettingsSaveToCloud=false
-DefaultFlagRegionId=Neonite
 )";
 
 	inline std::string name = "DefaultRuntimeOptions.ini";

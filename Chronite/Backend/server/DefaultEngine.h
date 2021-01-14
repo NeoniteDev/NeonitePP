@@ -11,10 +11,10 @@ FortMatchmakingV2.EnableContentBeacon=0
 FortMatchmakingV2.ContentBeaconFailureCancelsMatchmaking=0
 
 [Core.Log]
-LogHttp=verbose
-LogXmpp=verbose
+LogHttp=error
+LogXmpp=error
 LogBeacon=verbose
-LogQos=verbose
+LogQos=error
 LogOnline=verbose
 LogOnlineCloud=verbose
 LogOnlineGame=verbose

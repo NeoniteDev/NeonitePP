@@ -254,6 +254,11 @@ struct Empty_Params
 {
 };
 
+struct UCheatManager_CheatScript_Params
+{
+	FString ScriptName;
+};
+
 struct AFortPlayerPawn_BeginSkydiving_Params
 {
 	bool bFromBus;
@@ -326,7 +331,7 @@ struct GObjects
 	UObject* GetByIndex(int32_t index) const
 	{
 		int cStart = 0, cEnd = 0;
-		int chunkIndex = 0, chunkSize = 0xFFFF, chunkPos;
+		int chunkIndex, chunkSize = 0xFFFF, chunkPos;
 		FUObjectItem* Object;
 
 		NumChunks(&cStart, &cEnd);

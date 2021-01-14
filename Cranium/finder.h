@@ -163,11 +163,10 @@ inline UObject* FindActor(std::wstring name)
 {
 	ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-	ObjectFinder PersistentLevelFinder = WorldFinder.Find(L"PersistentLevel");
+	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+	ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
 
 	const DWORD AActors = 0x98;
-
 
 	for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
 	{

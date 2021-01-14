@@ -22,7 +22,7 @@ void dllMain()
 	{
 		if (isReady)
 		{
-			if (Hooks::Misc() && DumpIDs() && Console::Unlock()) //IKR THIS CAN CAUSE A MEMORY LEAK BUT I FUCKING MERGED THE WRONG FILE AND I DONT REMEBER WHAT I DID
+			if (Hooks::Misc() && Console::Unlock() && DumpIDs())
 			{
 				break;
 			}

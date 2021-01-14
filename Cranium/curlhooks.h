@@ -44,7 +44,7 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		std::string url = va_arg(arg, char*);
 		gUrl = url;
 		
-		if (url.find(XOR("token")) != std::string::npos) isReady = !isReady;
+		if (url.find(XOR("ClientQuestLogin")) != std::string::npos) isReady = !isReady;
 
 #ifdef URL_HOST
 

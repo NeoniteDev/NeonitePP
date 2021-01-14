@@ -48,38 +48,15 @@ struct Pawn
 		ProcessEvent(this, fn, &params);
 	}
 
-
-	void Test()
+	auto Test()
 	{
-
 	}
 };
 
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
 {
-	inline void BugItGo(float X, float Y, float Z, float Pitch, float Yaw, float Roll)
-	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
-
-		UCheatManager_BugItGo_Params params;
-		params.X = X;
-		params.Y = Y;
-		params.Z = Z;
-		params.Pitch = Pitch;
-		params.Yaw = Yaw;
-		params.Roll = Roll;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-	}
-
+	
 	//same as summon command in-game but from code.
 	inline void Summon(const wchar_t* ClassToSummon)
 	{
@@ -137,6 +114,7 @@ namespace UFunctions
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
+	//Simulates the server telling the game that it's ready to start match
 	inline void ServerReadyToStartMatch()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
@@ -151,6 +129,7 @@ namespace UFunctions
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
+	//Read the name lol
 	inline void StartMatch()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
@@ -163,6 +142,15 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+	}
+
+	inline void Play(const wchar_t* AnimationPlayerFullName)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
+
+		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
+		
+		ProcessEvent(Sequence, fn, nullptr);
 	}
 }
 
@@ -242,8 +230,8 @@ namespace Neoroyale
 
 	inline void start()
 	{
-		UFunctions::Travel(APOLLO_TERRAIN);
-		bIsStarted = !bIsStarted;
+		UFunctions::Travel(APOLLO_TERRAIN_BASE);
+		//bIsStarted = !bIsStarted;
 	}
 
 	inline void thread()
@@ -261,10 +249,7 @@ namespace Neoroyale
 					}
 				}
 			}
-			else
-			{
-				bHasJumped = false;
-			}
+			else bHasJumped = false;
 
 			if (GetAsyncKeyState(VK_F3))
 			{
@@ -275,13 +260,14 @@ namespace Neoroyale
 				break;
 			}
 
-			Sleep(100);
+			Sleep(1000 / 60);
 		}
 	}
 
+
 	inline void init()
 	{
-		UFunctions::BugItGo(0, 0, 0, 0, 0, 0);
+		
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 		printf("\n[Neoroyale] PlayerPawn was summoned!.\n");
 
@@ -294,15 +280,13 @@ namespace Neoroyale
 			PlayerPawn->Possess();
 			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 
-			PlayerPawn->Test();
-
 			UFunctions::ServerReadyToStartMatch();
 			printf("\n[Neoroyale] Server is ready to start match now!.\n");
 
 			UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
-			//UFunctions::StartSkydiving(PlayerPawn, true);
+			//PlayerPawn->StartSkydiving(true);
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}

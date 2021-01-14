@@ -4,6 +4,8 @@
 #include "DefaultRuntimeOptions.h"
 #include "../../Frontend/settings.h"
 
+#define GALACTUS_AES_KEY XOR("C60475E046D0F0FBCFE6DE6F9E040E0E:Wc6IzWuqnm7EHqcSx14i6KwXwl4+PmQq180ESMdR+08=")
+
 inline void initApi()
 {
 	app.Get("/fortnite/api/cloudstorage/system", [](const Request& req, Response& res)
@@ -77,6 +79,9 @@ inline void initApi()
 				j = json::parse(response->body);
 			}
 		}
+
+		//Support for galactus event
+		j.push_back(GALACTUS_AES_KEY);
 		res.set_content(j.dump(), "application/json");
 	});
 

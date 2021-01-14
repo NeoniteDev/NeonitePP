@@ -6,68 +6,83 @@ inline bool bIsDebugCamera = false;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-		const auto nObj = GetObjectFirstName(pObj);
-		const auto nFunc = GetObjectFirstName(pFunc);
+	const auto nObj = GetObjectFirstName(pObj);
+	const auto nFunc = GetObjectFirstName(pFunc);
 
-		//If the game requested matchmaking we open the game mode
-		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
-		{
-			Neoroyale::start();
-			gUrl.clear();
-		}
+	//If the game requested matchmaking we open the game mode
+	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+	{
+		Neoroyale::start();
+		gUrl.clear();
+	}
 
-		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
-		{
-			Neoroyale::init();
-		}
+	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
+	{
+		Neoroyale::init();
+	}
 
-		//Destroy all HLODs after the loading screen.
-		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
-		{
-			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
-			Console::CheatManager();
-			UFunctions::DestroyAllHLODs();
-		}
+	//Destroy all HLODs after the loading screen.
+	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
+	{
+		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+		Console::CheatManager();
+		UFunctions::DestroyAllHLODs();
+	}
 
-		//Toggle our debug camera on "toggledebugcamera" command.
-		if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"FortCheatManager_")))
-		{
-			bIsDebugCamera = !bIsDebugCamera;
-		}
+	//Toggle our debug camera on "toggledebugcamera" command.
+	if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"FortCheatManager_")))
+	{
+		bIsDebugCamera = !bIsDebugCamera;
+	}
 
-		if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
+	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
+	{
+		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
+		if (ScriptNameF.IsValid())
 		{
-			
-			const auto PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
-			if (PlayerPawn)
+			std::wstring ScriptNameW = ScriptNameF.ToWString();
+			if (wcsstr(ScriptNameW.c_str(), XOR(L"help")))
 			{
-				printf("\n[Neoroyale] PlayerPawn was found!.\n");
-
-				PlayerPawn->Possess();
+				MessageBoxA(nullptr,
+				            XOR(
+					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\ngalactus (only works on 14.60): Triggers galactus event\n\ntravis (only works on 12.41): Triggers Travis Scott event"),
+				            XOR("Cranium CheatScript Commands"), MB_OK);
 			}
-			
+			else if (ScriptNameW == XOR(L"dumpbps"))
+			{
+				DumpBPs();
+			}
+			else if (ScriptNameW == XOR(L"dump"))
+			{
+				DumpGObjects();
+			}
+			else if (ScriptNameW == XOR(L"galactus"))
+			{
+				UFunctions::Play(GALACTUS_EVENT);
+			}
 		}
+	}
 
-		//Logging
-		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
-			!wcsstr(nFunc.c_str(), L"Tick") &&
-			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
-			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
-			!wcsstr(nFunc.c_str(), L"OnMouse") &&
-			!wcsstr(nFunc.c_str(), L"Pulse") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
-			!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
-			!wcsstr(nFunc.c_str(), L"UpdateTime") &&
-			!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
-			!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
-			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
-		{
-			printf("LogObject: %ws\nLogFunction: %ws\n", GetObjectFullName(pObj).c_str(), GetObjectFullName(pFunc).c_str());
-		}
-	    
+	//Logging
+	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
+		!wcsstr(nFunc.c_str(), L"Tick") &&
+		!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
+		!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
+		!wcsstr(nFunc.c_str(), L"OnMouse") &&
+		!wcsstr(nFunc.c_str(), L"Pulse") &&
+		!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
+		!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
+		!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
+		!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
+		!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
+		!wcsstr(nFunc.c_str(), L"UpdateTime") &&
+		!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
+		!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
+		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
+	{
+		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());
+	}
+
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 

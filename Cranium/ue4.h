@@ -84,22 +84,17 @@ inline std::wstring GetFieldClassName(FField* obj)
 template <typename T>
 static T FindObject(wchar_t const* name)
 {
-	for (auto array : GObjs->ObjectArray->FUObject)
+	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
-		if (array == nullptr)
+		const auto object = GObjs->GetByIndex(i);
+		if (object == nullptr)
 		{
 			continue;
 		}
 
-		auto fuObject = array;
-		for (auto i = 0x0; i < GObjs->NumElements && fuObject->Object; ++i, ++fuObject)
+		if (GetObjectFullName(object).starts_with(name))
 		{
-			auto object = fuObject->Object;
-
-			if (GetObjectFullName(object).starts_with(name))
-			{
-				return reinterpret_cast<T>(object);
-			}
+			return reinterpret_cast<T>(object);
 		}
 	}
 	return nullptr;
@@ -163,4 +158,45 @@ inline bool DumpIDs()
 	}
 	log.flush(); //make sure it outputted everything.
 	return true;
+}
+
+inline void DumpGObjects()
+{
+	std::wofstream log("GObjects.log");
+
+	for (auto i = 0x0; i < GObjs->NumElements; ++i)
+	{
+		const auto object = GObjs->GetByIndex(i);
+		if (object == nullptr)
+		{
+			continue;
+		}
+		std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
+		std::wstring objectName = GetObjectFullName(object).c_str();
+		std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
+		log << item;
+	}
+	log.flush();
+}
+
+inline void DumpBPs()
+{
+	std::wofstream log("Blueprints.log");
+	for (auto i = 0x0; i < GObjs->NumElements; ++i)
+	{
+		const auto object = GObjs->GetByIndex(i);
+		if (object == nullptr)
+		{
+			continue;
+		}
+
+		auto ClassName = GetObjectFirstName(object->Class);
+
+		if (ClassName == XOR(L"BlueprintGeneratedClass"))
+		{
+			auto objectNameW = GetObjectFirstName(object);
+			log << objectNameW + L"\n";
+		}
+	}
+	log.flush();
 }

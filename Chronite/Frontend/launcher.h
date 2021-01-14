@@ -11,7 +11,7 @@ namespace launcher
 {
 	inline void init()
 	{
-		std::string altPath = "D:\\Old Fortnite Builds\\12.61";
+		std::string altPath;
 		std::string fnPath;
 
 		if (altPath.empty())
@@ -34,7 +34,6 @@ namespace launcher
 			f >> launcherInstalled;
 
 			json installationList = launcherInstalled["InstallationList"];
-
 
 			for (int i = 0; i < installationList.size(); i++)
 			{
