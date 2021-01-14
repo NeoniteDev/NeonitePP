@@ -2,6 +2,8 @@
 #include "ue4.h"
 #include "mods.h"
 
+//#define LOGGING
+
 inline bool bIsDebugCamera = false;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
@@ -60,9 +62,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				UFunctions::Play(GALACTUS_EVENT);
 			}
+			else if (ScriptNameW == XOR(L"test"))
+			{
+				UFunctions::Travel(APOLLO_TERRAIN);
+				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
+			}
 		}
 	}
 
+#ifdef LOGGING
 	//Logging
 	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 		!wcsstr(nFunc.c_str(), L"Tick") &&
@@ -82,7 +90,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());
 	}
-
+#endif
+	
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 

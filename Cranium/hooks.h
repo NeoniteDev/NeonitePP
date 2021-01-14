@@ -29,7 +29,7 @@ namespace Hooks
 
 #endif
 
-	inline bool Misc()
+	inline bool Misc(std::string version)
 	{
 		if (MH_Initialize() != MH_OK)
 		{

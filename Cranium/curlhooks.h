@@ -8,6 +8,7 @@
 
 inline bool isReady = false;
 inline std::string gUrl;
+inline std::string gVersion;
 
 CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
@@ -23,6 +24,7 @@ CURLcode CurlSetOpt_(struct Curl_easy* data, CURLoption option, ...)
 	return result;
 }
 
+static bool bIsVersionFound = false;
 CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 {
 	va_list arg;
@@ -38,13 +40,12 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	}
 
 		//URL redirection
-
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
 		gUrl = url;
-		
-		if (url.find(XOR("ClientQuestLogin")) != std::string::npos) isReady = !isReady;
+
+		if (url.find(XOR("token")) != std::string::npos) isReady = !isReady;
 
 #ifdef URL_HOST
 
@@ -54,6 +55,25 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 
 #endif
 		result = CurlSetOpt_(data, tag, url.c_str());
+	}
+
+		//Version determination
+	else if (tag == CURLOPT_HTTPHEADER && !bIsVersionFound)
+	{
+		auto list = va_arg(arg, curl_slist*);;
+
+
+		while (list->next != nullptr && list->data)
+		{
+			std::string data = list->data;
+			if (data.starts_with("User-Agent:"))
+			{
+				printf("\n[UserAgent]: %s\n", list->data);
+				bIsVersionFound = !bIsVersionFound;
+			}
+			list = list->next;
+		}
+		
 	}
 
 	else

@@ -19,8 +19,7 @@ inline ULONG pid = 0;
 
 //config
 inline char name[33] = "NeoniteUser";
-inline char gameDir[225]; // max length var made it bug i dont suppose anyone to have a 225 long dir tho
-//inline char altPath[100]; kemo idk is this supposed to be a var -sammy
+inline char gameDir[MAX_PATH];
 inline bool bHasBattlepass = false;
 inline bool bIsCataba = false;
 inline bool bPaksIds = false;

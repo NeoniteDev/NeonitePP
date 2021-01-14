@@ -1,62 +1,9 @@
 #pragma once
 #include "finder.h"
 
-struct Pawn
-{
-	void Possess()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
-
-		AController_Possess_Params params;
-		params.InPawn = reinterpret_cast<UObject*>(this);
-
-		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
-	}
-
-	void StartSkydiving(bool bFromBus)
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
-
-		AFortPlayerPawn_BeginSkydiving_Params params;
-		params.bFromBus = bFromBus;
-
-		ProcessEvent(this, fn, &params);
-	}
-
-	bool IsJumpProvidingForce()
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
-
-		ACharacter_IsJumpProvidingForce_Params params;
-
-		ProcessEvent(this, fn, &params);
-
-		return params.ReturnValue;
-	}
-
-	void Jump()
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
-
-		Empty_Params params;
-
-		ProcessEvent(this, fn, &params);
-	}
-
-	auto Test()
-	{
-	}
-};
-
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
 {
-	
 	//same as summon command in-game but from code.
 	inline void Summon(const wchar_t* ClassToSummon)
 	{
@@ -149,7 +96,7 @@ namespace UFunctions
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
 
 		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
-		
+
 		ProcessEvent(Sequence, fn, nullptr);
 	}
 }
@@ -221,6 +168,62 @@ namespace Console
 	}
 }
 
+//TODO: move this from here
+struct Pawn
+{
+	void Possess()
+	{
+		UFunctions::Summon(L"Athena_PlayerController_C");
+
+		const auto PlayerController = FindObject<UObject*>(L"Athena_PlayerController_C /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.Athena_PlayerController_C_");
+
+
+		printf("\n[Possessed The Pawn Using]: %ls\n", GetObjectFullName(PlayerController).c_str());
+
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+
+		AController_Possess_Params params;
+		params.InPawn = reinterpret_cast<UObject*>(this);
+
+		ProcessEvent(PlayerController, fn, &params);
+	}
+
+	void StartSkydiving(bool bFromBus)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+
+		AFortPlayerPawn_BeginSkydiving_Params params;
+		params.bFromBus = bFromBus;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	bool IsJumpProvidingForce()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+
+		ACharacter_IsJumpProvidingForce_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
+	void Jump()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+
+		Empty_Params params;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	auto Test()
+	{
+	}
+};
+
 namespace Neoroyale
 {
 	inline bool bIsInit = false;
@@ -267,7 +270,6 @@ namespace Neoroyale
 
 	inline void init()
 	{
-		
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 		printf("\n[Neoroyale] PlayerPawn was summoned!.\n");
 
@@ -280,10 +282,10 @@ namespace Neoroyale
 			PlayerPawn->Possess();
 			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 
-			UFunctions::ServerReadyToStartMatch();
+			//UFunctions::ServerReadyToStartMatch();
 			printf("\n[Neoroyale] Server is ready to start match now!.\n");
 
-			UFunctions::StartMatch();
+			//UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
 			//PlayerPawn->StartSkydiving(true);

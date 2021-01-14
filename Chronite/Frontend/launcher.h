@@ -11,7 +11,7 @@ namespace launcher
 {
 	inline void init()
 	{
-		std::string altPath;
+		std::string altPath = gameDir;
 		std::string fnPath;
 
 		if (altPath.empty())
@@ -21,7 +21,7 @@ namespace launcher
 			json launcherInstalled;
 
 			SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
-			                nullptr, 0, programData); //why would someone run this on linux ?
+			                nullptr, 0, programData);
 
 			//TODO: change this
 			char* launcherInstalledPath = new char[

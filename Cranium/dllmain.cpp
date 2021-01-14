@@ -10,7 +10,7 @@ void dllMain()
 	AllocConsole();
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
-	freopen_s(&fDummy, "Crainum.log", "w", stdout);
+	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 #endif
 
 #ifdef SSL_BYPASS
@@ -22,7 +22,7 @@ void dllMain()
 	{
 		if (isReady)
 		{
-			if (Hooks::Misc() && DumpIDs() && Console::Unlock())
+			if (Hooks::Misc(gVersion) && DumpIDs() && Console::Unlock())
 			{
 				break;
 			}

@@ -220,7 +220,7 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("CheatingMuppet: Internals, General.");
+		Text("Nyamimi (@nyameows): Internals, General.");
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
