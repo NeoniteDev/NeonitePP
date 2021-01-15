@@ -25,6 +25,7 @@ CURLcode CurlSetOpt_(struct Curl_easy* data, CURLoption option, ...)
 }
 
 static bool bIsVersionFound = false;
+
 CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 {
 	va_list arg;
@@ -62,18 +63,17 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 	{
 		auto list = va_arg(arg, curl_slist*);;
 
-
 		while (list->next != nullptr && list->data)
 		{
 			std::string data = list->data;
 			if (data.starts_with("User-Agent:"))
 			{
-				printf("\n[UserAgent]: %s\n", list->data);
+				const auto version = data.erase(0, 44).erase(5, data.size() - 5);
+				gVersion = version;
 				bIsVersionFound = !bIsVersionFound;
 			}
 			list = list->next;
 		}
-		
 	}
 
 	else

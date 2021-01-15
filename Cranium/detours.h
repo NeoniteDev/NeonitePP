@@ -8,6 +8,7 @@ inline bool bIsDebugCamera = false;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
+
 	const auto nObj = GetObjectFirstName(pObj);
 	const auto nFunc = GetObjectFirstName(pFunc);
 

@@ -233,8 +233,8 @@ namespace Neoroyale
 
 	inline void start()
 	{
-		UFunctions::Travel(APOLLO_TERRAIN_BASE);
-		//bIsStarted = !bIsStarted;
+		UFunctions::Travel(APOLLO_TERRAIN);
+		bIsStarted = !bIsStarted;
 	}
 
 	inline void thread()
@@ -282,10 +282,10 @@ namespace Neoroyale
 			PlayerPawn->Possess();
 			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 
-			//UFunctions::ServerReadyToStartMatch();
+			UFunctions::ServerReadyToStartMatch();
 			printf("\n[Neoroyale] Server is ready to start match now!.\n");
 
-			//UFunctions::StartMatch();
+			UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
 			//PlayerPawn->StartSkydiving(true);
