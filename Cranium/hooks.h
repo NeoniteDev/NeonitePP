@@ -108,20 +108,13 @@ namespace Hooks
 
 			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 22 + *reinterpret_cast<int32_t*>(GEngineAdd + 18));
 		}
-
-
-		/*
-		 * UWorld: 0x8140D68
-           LineOfSight: 0x1E40ED0
-           Free: 0x2B273C0
-           GetObjName: 0x41E3470
-           GObjects: 0x8050438
-           GetObjNameIndex: 0x2C23050
-		 */
 		
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
 		if (gVersion == "12.41")
 		{
+			const auto GObjectsAdd = Util::FindPattern(Patterns::GObjects12_41, Masks::GObjects12_41);
+			VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+			GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 		}
 		else
 		{

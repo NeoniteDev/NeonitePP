@@ -15,7 +15,7 @@
 
 #define READ_DWORD(base, offset) (*(PDWORD)(((PBYTE)base + offset)))
 
-#define GET_POINTER(base, offset) *reinterpret_cast<void**>((static_cast<PBYTE>(base) + offset));
+#define GET_POINTER(base, offset) *reinterpret_cast<PVOID*>((static_cast<PBYTE>(base) + offset));
 
 class Util
 {

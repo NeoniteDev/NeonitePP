@@ -84,7 +84,6 @@ inline std::wstring GetFieldClassName(FField* obj)
 template <typename T>
 static T FindObject(wchar_t const* name)
 {
-	printf("\nfuck me: %i\n", GObjs->NumElements);
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
 		const auto object = GObjs->GetByIndex(i);
@@ -95,13 +94,9 @@ static T FindObject(wchar_t const* name)
 
 		if (GetObjectFullName(object).starts_with(name))
 		{
-			printf("\nNIGGER %ls\n", GetObjectFullName(object).c_str());
 			return reinterpret_cast<T>(object);
 		}
-		else
-		{
-			printf("fuck");
-		}
+
 	}
 	return nullptr;
 }

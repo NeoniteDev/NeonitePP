@@ -22,12 +22,8 @@ void dllMain()
 	{
 		if (isReady)
 		{
-			if (Hooks::Misc(gVersion)) //&& DumpIDs())  //&& Console::Unlock()) 
+			if (Hooks::Misc(gVersion) && DumpIDs()) //&& Console::Unlock()) 
 			{
-				ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-				ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-				ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-				printf("\nYAY: %ls\n", GetObjectFullName(WorldFinder.GetObj()).c_str());
 				break;
 			}
 		}
