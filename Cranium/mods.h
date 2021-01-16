@@ -232,8 +232,15 @@ namespace Neoroyale
 
 	inline void start()
 	{
-		UFunctions::Travel(APOLLO_TERRAIN);
-		bIsStarted = !bIsStarted;
+		if (gVersion == XOR("15.20"))
+		{
+			UFunctions::Travel(APOLLO_TERRAIN_BASE);
+		}
+		else
+		{
+			UFunctions::Travel(APOLLO_TERRAIN);
+			bIsStarted = !bIsStarted;
+		}
 	}
 
 	inline void thread()
