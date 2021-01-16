@@ -91,6 +91,7 @@ namespace UFunctions
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
 	}
 
+
 	inline void Play(const wchar_t* AnimationPlayerFullName)
 	{
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
@@ -98,15 +99,6 @@ namespace UFunctions
 		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
 
 		ProcessEvent(Sequence, fn, nullptr);
-	}
-
-	inline void TravisEvent()
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /CycloneJerky/Gameplay/BP_Jerky_Loader.BP_Jerky_Loader_C:LoadJerkyLevel"));
-
-		const auto Level = FindObject<void*>(L"Level /CycloneJerky/Levels/JerkyLoaderLevel.JerkyLoaderLevel:PersistentLevel");
-
-		ProcessEvent(Level, fn, nullptr);
 	}
 }
 
@@ -232,8 +224,9 @@ struct Pawn
 
 namespace Neoroyale
 {
-	inline bool bIsInit = false;
-	inline bool bIsStarted = false;
+	inline bool bIsInit;
+	inline bool bIsStarted;
+	inline bool bHasBuilt;
 	inline bool bHasJumped;
 	inline Pawn* PlayerPawn;
 
@@ -259,6 +252,16 @@ namespace Neoroyale
 				}
 			}
 			else bHasJumped = false;
+
+			if (PlayerPawn && GetAsyncKeyState(VK_LBUTTON))
+			{
+				if (!bHasBuilt)
+				{
+					bHasBuilt = !bHasBuilt;
+					UFunctions::Summon(L"PBWA_M1_StairW_C");
+				}
+			}
+			else bHasBuilt = false;
 
 			if (GetAsyncKeyState(VK_F3))
 			{

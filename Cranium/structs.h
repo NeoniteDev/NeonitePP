@@ -131,6 +131,7 @@ struct FName
 	void ToString(FString& Out);
 };
 
+
 struct UClass;
 
 struct UObject
@@ -273,6 +274,7 @@ struct UCheatManager_BugItGo_Params
 	float Yaw;
 	float Roll;
 };
+
 
 struct FUObjectItem
 {
@@ -477,6 +479,16 @@ public:
 
 	int32_t ObjectIndex;
 	int32_t ObjectSerialNumber;
+};
+
+struct ULevelStreamingDynamic_LoadLevelInstance_Params
+{
+	UObject* WorldContextObject;
+	FString LevelName;
+	FVector Location;
+	FRotator Rotation;
+	bool bOutSuccess;
+	FString OptionalLevelNameOverride;
 };
 
 template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>

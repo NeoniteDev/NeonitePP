@@ -2,13 +2,12 @@
 #include "ue4.h"
 #include "mods.h"
 
-//#define LOGGING
+#define LOGGING
 
 inline bool bIsDebugCamera = false;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-
 	const auto nObj = GetObjectFirstName(pObj);
 	const auto nFunc = GetObjectFirstName(pFunc);
 
@@ -48,7 +47,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				MessageBoxA(nullptr,
 				            XOR(
-					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\ngalactus (only works on 14.60): Triggers galactus event\n\ntravis (only works on 12.41): Triggers Travis Scott event"),
+					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version."),
 				            XOR("Cranium CheatScript Commands"), MB_OK);
 			}
 			else if (ScriptNameW == XOR(L"dumpbps"))
@@ -59,14 +58,20 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				DumpGObjects();
 			}
-			else if (ScriptNameW == XOR(L"galactus"))
+			else if (ScriptNameW == XOR(L"event"))
 			{
-				UFunctions::Play(GALACTUS_EVENT);
-			}
-			else if (ScriptNameW == XOR(L"jerky"))
-			{
-				//UFunctions::Play(JERKY_EVENT);
-				UFunctions::TravisEvent();
+				if (gVersion == XOR("14.60"))
+				{
+					UFunctions::Play(GALACTUS_EVENT);
+				}
+				else if (gVersion == XOR("12.41"))
+				{
+					UFunctions::Play(JERKY_EVENT);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("Sorry the version you are using doesn't have any event we support."), XOR("Neonite++"), MB_OK);
+				}
 			}
 		}
 	}
@@ -92,7 +97,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());
 	}
 #endif
-	
+
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 
