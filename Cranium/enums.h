@@ -8,6 +8,7 @@
 #define APOLLO_PAPAYA_BASE XOR(L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase")
 
 #define GALACTUS_EVENT XOR(L"LevelSequencePlayer /Junior/Levels/Junior_Map.Junior_Map:PersistentLevel.Junior_Master_Rep_2.AnimationPlayer")
+#define JERKY_EVENT XOR(L"LevelSequencePlayer /CycloneJerky/Levels/JerkySequenceMap.JerkySequenceMap:PersistentLevel.Jerky.AnimationPlayer")
 
 
 //Memory

@@ -99,6 +99,15 @@ namespace UFunctions
 
 		ProcessEvent(Sequence, fn, nullptr);
 	}
+
+	inline void TravisEvent()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /CycloneJerky/Gameplay/BP_Jerky_Loader.BP_Jerky_Loader_C:LoadJerkyLevel"));
+
+		const auto Level = FindObject<void*>(L"Level /CycloneJerky/Levels/JerkyLoaderLevel.JerkyLoaderLevel:PersistentLevel");
+
+		ProcessEvent(Level, fn, nullptr);
+	}
 }
 
 namespace Console

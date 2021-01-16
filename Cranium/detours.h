@@ -63,10 +63,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				UFunctions::Play(GALACTUS_EVENT);
 			}
-			else if (ScriptNameW == XOR(L"test"))
+			else if (ScriptNameW == XOR(L"jerky"))
 			{
-				UFunctions::Travel(APOLLO_TERRAIN);
-				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
+				//UFunctions::Play(JERKY_EVENT);
+				UFunctions::TravisEvent();
 			}
 		}
 	}

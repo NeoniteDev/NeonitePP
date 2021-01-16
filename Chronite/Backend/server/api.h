@@ -5,6 +5,7 @@
 #include "../../Frontend/settings.h"
 
 #define GALACTUS_AES_KEY XOR("C60475E046D0F0FBCFE6DE6F9E040E0E:Wc6IzWuqnm7EHqcSx14i6KwXwl4+PmQq180ESMdR+08=")
+#define TRAVIS_AES_KEY XOR("8734362B2A2A8B0FBC9EDE6160627E1D:8ZsoLeTeezxjoIxnNfUrNf61XfqMEKfnyTb3u4o/X6g=")
 
 inline void initApi()
 {
@@ -82,6 +83,7 @@ inline void initApi()
 
 		//Support for galactus event
 		j.push_back(GALACTUS_AES_KEY);
+		j.push_back(TRAVIS_AES_KEY);
 		res.set_content(j.dump(), "application/json");
 	});
 
