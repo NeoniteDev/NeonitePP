@@ -173,20 +173,17 @@ struct Pawn
 {
 	void Possess()
 	{
-		UFunctions::Summon(L"Athena_PlayerController_C");
+		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
-		const auto PlayerController = FindObject<UObject*>(L"Athena_PlayerController_C /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.Athena_PlayerController_C_");
-
-
-		printf("\n[Possessed The Pawn Using]: %ls\n", GetObjectFullName(PlayerController).c_str());
-
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
 
 		AController_Possess_Params params;
 		params.InPawn = reinterpret_cast<UObject*>(this);
 
-		ProcessEvent(PlayerController, fn, &params);
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
 	void StartSkydiving(bool bFromBus)
@@ -288,7 +285,7 @@ namespace Neoroyale
 			UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
-			//PlayerPawn->StartSkydiving(true);
+			PlayerPawn->StartSkydiving(true);
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}
