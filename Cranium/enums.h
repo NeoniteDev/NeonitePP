@@ -60,12 +60,12 @@ namespace Patterns
 	//7.30
 
 	namespace bMarshmallow {
-		constexpr const char* GEngine = "\x48\x8B\x0D\x00\x00\x00\x00\x48\x8B\xD3\xE8\x00\x00\x00\x00\x84\xC0";
+		constexpr const char* GEngine = "\x48\x8B\xD3\x00\x00\x00\x00\x00\x48\x8B\x4C\x24\x40\x48\x89\x05\x00\x00\x00\x00\x48\x85\xC9";
 
 		constexpr const char* GObjects = "\x48\x8B\x05\x00\x00\x00\x00\x48\x8B\x0C\xC8\x48\x8D\x04\xD1\xEB\x06";
 
 		constexpr const char* GetObjectFullName =
-			"\x48\x89\x5C\x24\x10\x48\x89\x6C\x24\x18\x56\x57\x41\x56\x48\x83\xEC\x30\x48\x8B\xDA\x45\x33\xF6\x4C\x89\x32\x48\x8B\xF1\x4C\x89\x72\x08\x48\x8B\xCB\xBA\x80\x00\x00\x00";
+			"\\x40\x53\x48\x83\xEC\x20\x48\x8B\xD9\x48\x85\xD2\x75\x30\x33\xC0\x48\x89\x01\x48\xC7\x41\x00\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\x0B\x48\x8D\x15\x00\x00\x00\x00\x41\xB8\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x8B\xC3\x48\x83\xC4\x20\x5B\xC3\x48\x8B\x42\x18";
 	}
 }
 
@@ -96,6 +96,16 @@ namespace Masks
 		constexpr const char* GObjects = "xxx????xxxxxxxxxx";
 
 		constexpr const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+	}
+
+	namespace bMarshmallow {
+
+		constexpr const char* GEngine = "xxx?????xxxxxxxx????xxx";
+
+		constexpr const char* GObjects = "xxx????xxxxxxxxxx";
+
+		constexpr const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxx?????x????xxxxxx????xx????x????xxxxxxxxxxxxx";
+
 	}
 }
 
@@ -348,4 +358,25 @@ enum ELifetimeCondition
 	COND_SkipReplay = 13,
 	COND_Never = 15,
 	COND_Max = 16,
+};
+
+enum class EFortCustomPartType : uint8_t
+{
+	Head = 0,
+	Body = 1,
+	Hat = 2,
+	Backpack = 3,
+	Charm = 4,
+	Face = 5,
+	NumTypes = 6,
+	EFortCustomPartType_MAX = 7
+};
+
+enum class EFortCustomGender : uint8_t
+{
+	Invalid = 0,
+	Male = 1,
+	Female = 2,
+	Both = 3,
+	EFortCustomGender_MAX = 4
 };
