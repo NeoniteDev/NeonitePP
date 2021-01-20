@@ -225,6 +225,42 @@ struct UFunction : UStruct
 	void* Func;
 };
 
+class UCustomCharacterPart : UStruct
+{
+public:
+	unsigned char                                      UnknownData00[0x8];                                       // 0x0030(0x0008) MISSED OFFSET
+	TEnumAsByte<EFortCustomGender>                     GenderPermitted;                                          // 0x0038(0x0001) (Edit, BlueprintVisible, BlueprintReadOnly, ZeroConstructor, IsPlainOldData
+	TEnumAsByte<EFortCustomPartType>                   CharacterPartType;                                        // 0x003A(0x0001) (Edit, BlueprintVisible, BlueprintReadOnly, ZeroConstructor, IsPlainOldData)
+	unsigned char                                      UnknownData01[0x5];                                       // 0x003B(0x0005) MISSED OFFSET
+	bool                                               bGameplayRelevantCosmeticPart;                            // 0x0080(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	bool                                               bAttachToSocket;                                          // 0x0081(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	bool                                               bIgnorePart;                                              // 0x0082(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	unsigned char                                      UnknownData02[0x5];                                       // 0x0083(0x0005) MISSED OFFSET
+	unsigned char                                      UnknownData03[0x28];                                      // 0x0083(0x0028) UNKNOWN PROPERTY: SoftClassProperty FortniteGame.CustomCharacterPart.PartModifierBlueprint
+	class UCustomCharacterPartData* AdditionalData;                                           // 0x00B0(0x0008) (Edit, ExportObject, ZeroConstructor, EditConst, InstancedReference, IsPlainOldData)
+	unsigned char                                      UnknownData04[0x28];                                      // 0x00B8(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.DefaultMontageLookupTable
+	unsigned char                                      UnknownData05[0x28];                                      // 0x00E0(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.OverrideMontageLookupTable
+	unsigned char                                      UnknownData06[0x28];                                      // 0x0108(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.FrontendAnimMontageIdleOverride
+	float                                              FrontEndBackPreviewRotationOffset;                        // 0x0130(0x0004) (Edit, ZeroConstructor, IsPlainOldData)
+	unsigned char                                      UnknownData07[0x4];                                       // 0x0134(0x0004) MISSED OFFSET
+	unsigned char                                      UnknownData08[0x28];                                      // 0x0134(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.SkeletalMesh
+	unsigned char                                      UnknownData09[0x10];                                      // 0x0160(0x0010) UNKNOWN PROPERTY: ArrayProperty FortniteGame.CustomCharacterPart.MasterSkeletalMeshes
+	bool                                               bSinglePieceMesh;                                         // 0x0170(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	bool                                               bSupportsColorSwatches;                                   // 0x0171(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	bool                                               bAllowStaticRenderPath;                                   // 0x0172(0x0001) (Edit, ZeroConstructor, IsPlainOldData)
+	unsigned char                                      UnknownData10[0x5];                                       // 0x0173(0x0005) MISSED OFFSET
+	TArray<struct FCustomPartMaterialOverrideData>     MaterialOverrides;                                        // 0x0178(0x0010) (Edit, ZeroConstructor)
+	TArray<struct FCustomPartTextureParameter>         TextureParameters;                                        // 0x0188(0x0010) (Edit, ZeroConstructor)
+	TArray<struct FCustomPartScalarParameter>          ScalarParameters;                                         // 0x0198(0x0010) (Edit, ZeroConstructor)
+	TArray<struct FCustomPartVectorParameter>          VectorParameters;                                         // 0x01A8(0x0010) (Edit, ZeroConstructor)
+	TArray<class UFoleySoundLibrary*>                  FoleyLibraries;                                           // 0x01B8(0x0010) (Edit, ZeroConstructor)
+	int                                                MaterialOverrideFlags;                                    // 0x01C8(0x0004) (ZeroConstructor, IsPlainOldData)
+	unsigned char                                      UnknownData11[0x4];                                       // 0x01CC(0x0004) MISSED OFFSET
+	unsigned char                                      UnknownData12[0x28];                                      // 0x01CC(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.IdleEffect
+	unsigned char                                      UnknownData13[0x28];                                      // 0x01F8(0x0028) UNKNOWN PROPERTY: SoftObjectProperty FortniteGame.CustomCharacterPart.IdleEffectNiagara
+	struct FName                                       IdleFXSocketName;                                         // 0x0220(0x0008) (Edit, ZeroConstructor, DisableEditOnInstance, IsPlainOldData)
+	class UMarshalledVFX_AuthoredDataConfig* AuthoredData;                                             // 0x0228(0x0008) (Edit, ExportObject, ZeroConstructor, InstancedReference, NoClear, IsPlainOldData)
+};
 
 struct UCheatManager_Summon_Params
 {
@@ -275,6 +311,16 @@ struct UCheatManager_BugItGo_Params
 	float Roll;
 };
 
+struct AFortPlayerPawn_ServerChoosePart_Params
+{
+	TEnumAsByte<EFortCustomPartType>                   Part;                                                     // (Parm, ZeroConstructor, IsPlainOldData)
+	class UCustomCharacterPart* ChosenCharacterPart;                                      // (Parm, ZeroConstructor, IsPlainOldData)
+};
+
+struct AFortPlayerPawn_ServerChooseGender_Params
+{
+	TEnumAsByte<EFortCustomGender>                     Gender;                                                   // (Parm, ZeroConstructor, IsPlainOldData)
+};
 
 struct FUObjectItem
 {

@@ -2,7 +2,7 @@
 #include "ue4.h"
 #include "mods.h"
 
-#define LOGGING
+//#define LOGGING
 
 inline bool bIsDebugCamera = false;
 
@@ -67,6 +67,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				else if (gVersion == XOR("12.41"))
 				{
 					UFunctions::Play(JERKY_EVENT);
+				}
+				else if (gVersion == XOR("12.61"))
+				{
+					UFunctions::Play(DEVICE_EVENT);
 				}
 				else
 				{

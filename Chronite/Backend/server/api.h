@@ -6,6 +6,7 @@
 
 #define GALACTUS_AES_KEY XOR("C60475E046D0F0FBCFE6DE6F9E040E0E:Wc6IzWuqnm7EHqcSx14i6KwXwl4+PmQq180ESMdR+08=")
 #define TRAVIS_AES_KEY XOR("8734362B2A2A8B0FBC9EDE6160627E1D:8ZsoLeTeezxjoIxnNfUrNf61XfqMEKfnyTb3u4o/X6g=")
+#define DEVICE_AES_KEY XOR("F51C8301B1C9BE9D4C4F48ED2C0FE067:+MsgNTH4cF1Mr4mjNVZVgsf3GBgjSjYn2yRZn2fE70A=")
 
 inline void initApi()
 {
@@ -81,9 +82,10 @@ inline void initApi()
 			}
 		}
 
-		//Support for galactus event
+		//Events aes keys.
 		j.push_back(GALACTUS_AES_KEY);
 		j.push_back(TRAVIS_AES_KEY);
+		j.push_back(DEVICE_AES_KEY);
 		res.set_content(j.dump(), "application/json");
 	});
 

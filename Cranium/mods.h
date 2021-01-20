@@ -217,6 +217,7 @@ struct Pawn
 		ProcessEvent(this, fn, &params);
 	}
 
+
 	auto Test()
 	{
 	}
@@ -304,7 +305,7 @@ namespace Neoroyale
 			UFunctions::StartMatch();
 			printf("\n[Neoroyale] Match STARTED!.\n");
 
-			PlayerPawn->StartSkydiving(true);
+			PlayerPawn->StartSkydiving(false);
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}
