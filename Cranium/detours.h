@@ -39,6 +39,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
+		//TODO: move this out of here
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
 		if (ScriptNameF.IsValid())
 		{
@@ -76,6 +77,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					MessageBoxA(nullptr, XOR("Sorry the version you are using doesn't have any event we support."), XOR("Neonite++"), MB_OK);
 				}
+			}
+			else if (ScriptNameW == XOR(L"scuff"))
+			{
+				UFunctions::Travel(APOLLO_TERRAIN);
+				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
 			}
 		}
 	}

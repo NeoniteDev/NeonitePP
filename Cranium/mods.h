@@ -174,6 +174,23 @@ struct Pawn
 {
 	void Possess()
 	{
+		if (gVersion == XOR("15.21"))
+		{
+			UFunctions::Summon(L"Athena_PlayerController_C");
+			const auto PlayerController = FindObject<UObject*>(L"Athena_PlayerController_C /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.Athena_PlayerController_C_");
+
+			printf("\n[Possessed The Pawn Using]: %ls\n", GetObjectFullName(PlayerController).c_str());
+
+			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+
+			AController_Possess_Params params;
+
+			params.InPawn = reinterpret_cast<UObject*>(this);
+
+			ProcessEvent(PlayerController, fn, &params);
+			return;
+		}
+
 		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
@@ -233,7 +250,7 @@ namespace Neoroyale
 
 	inline void start()
 	{
-		if (gVersion == XOR("15.20"))
+		if (gVersion == XOR("15.21"))
 		{
 			UFunctions::Travel(APOLLO_TERRAIN_BASE);
 		}
@@ -299,11 +316,14 @@ namespace Neoroyale
 			PlayerPawn->Possess();
 			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 
-			UFunctions::ServerReadyToStartMatch();
-			printf("\n[Neoroyale] Server is ready to start match now!.\n");
+			if (gVersion != XOR("15.21"))
+			{
+				UFunctions::ServerReadyToStartMatch();
+				printf("\n[Neoroyale] Server is ready to start match now!.\n");
 
-			UFunctions::StartMatch();
-			printf("\n[Neoroyale] Match STARTED!.\n");
+				UFunctions::StartMatch();
+				printf("\n[Neoroyale] Match STARTED!.\n");
+			}
 
 			PlayerPawn->StartSkydiving(false);
 

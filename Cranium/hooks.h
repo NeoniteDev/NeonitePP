@@ -39,27 +39,22 @@ namespace Hooks
 		}
 
 		//Used for ProcessEvent Hooking.
-<<<<<<< HEAD
 		//Should work on everything
-		const auto ProcessEventAdd = Util::FindPattern(Patterns::ProcessEvent, Masks::ProcessEvent);
-=======
-		//Tested from 12.41 to latest
-		const auto ProcessEventAdd = Util::FindPattern(Patterns::bLatest::ProcessEvent, Masks::bLatest::ProcessEvent);
->>>>>>> e331e14137daa0a5db96f0f7cbae28fefdada673
+		const auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
 		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
 		//Used for Camera Hooking.
 		//Tested from 12.41 to latest
-		const auto GetViewPointAdd = Util::FindPattern(Patterns::bLatest::GetViewPoint, Masks::bLatest::GetViewPoint);
+		const auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
 
 		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
 		//Used for getting UObjects names.
 		//Tested from 12.41 to latest
-		const auto GONIAdd = Util::FindPattern(Patterns::bLatest::GONI, Masks::bLatest::GONI);
+		const auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
@@ -67,12 +62,8 @@ namespace Hooks
 		//Used for getting UObjects full names.
 		if (gVersion == "12.41" || gVersion == "12.61")
 		{
-<<<<<<< HEAD
 			//Tested only on 12.41 and 12.61.
-			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::GetObjectFullName2, Masks::GetObjectFullName2);
-=======
-			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bTravis::GetObjectFullName, Masks::bTravis::GetObjectFullName);
->>>>>>> e331e14137daa0a5db96f0f7cbae28fefdada673
+			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
 			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
@@ -80,14 +71,14 @@ namespace Hooks
 		else
 		{
 			//14.30^
-			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bLatest::GetObjectFullName, Masks::bLatest::GetObjectFullName);
+			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
 			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
 		}
 
 		//Used for getting FFields full names.
-		const auto GetFullNameAdd = Util::FindPattern(Patterns::bLatest::GetFullName, Masks::bLatest::GetFullName);
+		const auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
 		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
 
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
@@ -95,59 +86,25 @@ namespace Hooks
 
 		//Used to construct objects, mostly used for console stuff.
 		//Tested from 12.41 to latest
-		const auto SCOIAdd = Util::FindPattern(Patterns::bLatest::SCOI, Masks::bLatest::SCOI);
+		const auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
 
 		//Used for mostly everything.
-<<<<<<< HEAD
 		//Tested from 12.41 to latest
-		const auto GEngineAdd = Util::FindPattern(Patterns::GEngine, Masks::GEngine);
+		const auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
+		
 		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
-=======
-		if (gVersion == "12.41")
-		{
-			const auto GEngineAdd = Util::FindPattern(Patterns::bTravis::GEngine, Masks::bTravis::GEngine);
->>>>>>> e331e14137daa0a5db96f0f7cbae28fefdada673
 
-
-<<<<<<< HEAD
-		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		//Tested from 12.41 to latest
-		const auto GObjectsAdd = Util::FindPattern(Patterns::GObjects, Masks::GObjects);
-		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
-=======
-			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
-		}
-		else
-		{
-			//14.30^
-			const auto GEngineAdd = Util::FindPattern(Patterns::bLatest::GEngine, Masks::bLatest::GEngine);
-			VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
-
-			GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 22 + *reinterpret_cast<int32_t*>(GEngineAdd + 18));
-		}
 		
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		if (gVersion == "12.41")
-		{
-			const auto GObjectsAdd = Util::FindPattern(Patterns::bTravis::GObjects, Masks::bTravis::GObjects);
-			VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-			GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
-		}
-		else
-		{
-			//14.30^
-			const auto GObjectsAdd = Util::FindPattern(Patterns::bLatest::GObjects, Masks::bLatest::GObjects);
-			VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-			GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
-		}
-
->>>>>>> e331e14137daa0a5db96f0f7cbae28fefdada673
+		const auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
+		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+		
+		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
 		//Process Event Hooking.
 		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
