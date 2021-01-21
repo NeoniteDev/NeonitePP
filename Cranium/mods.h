@@ -234,6 +234,27 @@ struct Pawn
 		ProcessEvent(this, fn, &params);
 	}
 
+	auto SetSkeletalMesh()
+	{
+		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+		ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
+
+		const auto Mesh = FindObject<UObject*>(
+			XOR(L"SkeletalMesh /Game/Characters/Player/Male/Medium/Base/SK_M_MALE_Base.SK_M_MALE_Base")
+		);
+
+		if (Mesh)
+		{
+			USkinnedMeshComponent_SetSkeletalMesh_Params params;
+			params.NewMesh = Mesh;
+			params.bReinitPose = false;
+
+			ProcessEvent(MeshFinder.GetObj(), fn, &params);
+		}
+
+	}
 
 	auto Test()
 	{
@@ -323,6 +344,10 @@ namespace Neoroyale
 
 				UFunctions::StartMatch();
 				printf("\n[Neoroyale] Match STARTED!.\n");
+
+				PlayerPawn->SetSkeletalMesh();
+				
+				PlayerPawn->Test();
 			}
 
 			PlayerPawn->StartSkydiving(false);
