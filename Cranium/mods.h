@@ -253,11 +253,20 @@ struct Pawn
 
 			ProcessEvent(MeshFinder.GetObj(), fn, &params);
 		}
-
 	}
 
-	auto Test()
+	auto ShowSkin()
 	{
+		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
+
+		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
+
+		UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params params;
+		params.PlayerState = PlayerStateFinder.GetObj();
+
+		ProcessEvent(KismetLib, fn, &params);
 	}
 };
 
@@ -277,7 +286,7 @@ namespace Neoroyale
 		}
 		else
 		{
-			UFunctions::Travel(APOLLO_TERRAIN);
+			UFunctions::Travel(APOLLO_PAPAYA);
 			bIsStarted = !bIsStarted;
 		}
 	}
@@ -344,11 +353,11 @@ namespace Neoroyale
 
 				UFunctions::StartMatch();
 				printf("\n[Neoroyale] Match STARTED!.\n");
-
-				PlayerPawn->SetSkeletalMesh();
-				
-				PlayerPawn->Test();
 			}
+
+			//PlayerPawn->SetSkeletalMesh();
+
+			PlayerPawn->ShowSkin();
 
 			PlayerPawn->StartSkydiving(false);
 

@@ -280,6 +280,10 @@ struct USkinnedMeshComponent_SetSkeletalMesh_Params
 	bool bReinitPose;
 };
 
+struct UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params
+{
+	UObject* PlayerState;
+};
 
 struct FUObjectItem
 {
