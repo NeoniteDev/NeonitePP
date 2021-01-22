@@ -6,7 +6,7 @@
   <h3 align="center">Neonite++</h3>
 
   <p align="center">
-   Open source fortnite launcher, server and an internal mod.
+   NOT OPEN SOURCE fortnite launcher, server and an internal mod.
     <br>
     <a href="https://github.com/NeoniteDev/NeonitePP/releases"><strong>Downloads »</strong></a>
     <br>
