@@ -259,9 +259,9 @@ struct UCheatManager_CheatScript_Params
 	FString ScriptName;
 };
 
-struct AFortPlayerPawn_BeginSkydiving_Params
+struct AFortPlayerPawnAthena_TeleportToSkyDive_Params
 {
-	bool bFromBus;
+	float HeightAboveGround;
 };
 
 struct UCheatManager_BugItGo_Params
@@ -283,6 +283,32 @@ struct USkinnedMeshComponent_SetSkeletalMesh_Params
 struct UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params
 {
 	UObject* PlayerState;
+};
+
+struct FGuid
+{
+	int A;
+	int B;
+	int C;
+	int D;
+};
+
+struct UCharacterMovementComponent_SetMovementMode_Params
+{
+	TEnumAsByte<EMovementMode> NewMovementMode;
+	unsigned char NewCustomMode;
+};
+
+struct AFortPawn_EquipWeaponDefinition_Params
+{
+	UObject* WeaponData;
+	FGuid ItemEntryGuid;
+	UObject* ReturnValue;
+};
+
+struct AFortPlayerController_GivePlayerAmmo_Params
+{
+	int AmmoCount;
 };
 
 struct FUObjectItem
@@ -445,6 +471,7 @@ struct FQuat
 {
 	float W, X, Y, Z;
 };
+
 
 template <class OptionalType>
 struct TOptional

@@ -180,6 +180,7 @@ inline UObject* FindActor(std::wstring name)
 		{
 			if (GetObjectFullName(pActor).starts_with(name))
 			{
+				printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
 				return pActor;
 			}
 		}

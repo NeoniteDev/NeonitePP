@@ -22,6 +22,7 @@ namespace UFunctions
 		params.ClassName = ClassName;
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] %ls was summoned!.\n", ClassToSummon);
 	}
 
 	inline void DestroyAllHLODs()
@@ -74,6 +75,7 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] Server is ready to start match now!.\n");
 	}
 
 	//Read the name lol
@@ -89,6 +91,7 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] Match started!.\n");
 	}
 
 
@@ -118,7 +121,7 @@ namespace Console
 
 		UObject*& pcCheatManager = reinterpret_cast<UObject*&>(CheatManagerFinder.GetObj());
 
-		const auto cCheatManager = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortCheatManager"));
+		const auto cCheatManager = FindObject<UClass*>(XOR(L"Class /Script/Engine.CheatManager"));
 
 		if (!pcCheatManager && cCheatManager)
 		{
@@ -172,14 +175,12 @@ namespace Console
 //TODO: move this from here
 struct Pawn
 {
-	void Possess()
+	auto Possess()
 	{
 		if (gVersion == XOR("15.21"))
 		{
 			UFunctions::Summon(L"Athena_PlayerController_C");
 			const auto PlayerController = FindObject<UObject*>(L"Athena_PlayerController_C /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.Athena_PlayerController_C_");
-
-			printf("\n[Possessed The Pawn Using]: %ls\n", GetObjectFullName(PlayerController).c_str());
 
 			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
 
@@ -188,6 +189,7 @@ struct Pawn
 			params.InPawn = reinterpret_cast<UObject*>(this);
 
 			ProcessEvent(PlayerController, fn, &params);
+			printf("\n[Neoroyale] PlayerPawn was possessed using %ls!.\n", GetObjectFullName(PlayerController).c_str());
 			return;
 		}
 
@@ -202,19 +204,21 @@ struct Pawn
 		params.InPawn = reinterpret_cast<UObject*>(this);
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 	}
 
-	void StartSkydiving(bool bFromBus)
+	auto StartSkydiving(float height)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
 
-		AFortPlayerPawn_BeginSkydiving_Params params;
-		params.bFromBus = bFromBus;
+		AFortPlayerPawnAthena_TeleportToSkyDive_Params params;
+		params.HeightAboveGround = height;
 
 		ProcessEvent(this, fn, &params);
+		printf("\nSkydiving!, Redeploying at %fm.\n", height);
 	}
 
-	bool IsJumpProvidingForce()
+	auto IsJumpProvidingForce()
 	{
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
 
@@ -225,7 +229,7 @@ struct Pawn
 		return params.ReturnValue;
 	}
 
-	void Jump()
+	auto Jump()
 	{
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
 
@@ -267,6 +271,47 @@ struct Pawn
 		params.PlayerState = PlayerStateFinder.GetObj();
 
 		ProcessEvent(KismetLib, fn, &params);
+		printf("\nCharacter parts should be visiable now!.\n");
+	}
+
+	auto EquipWeapon(const wchar_t* weaponname, int guid)
+	{
+		FGuid GUID;
+		GUID.A = guid;
+		GUID.B = guid;
+		GUID.C = guid;
+		GUID.D = guid;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
+
+		const auto WeaponData = FindObject<UObject*>(weaponname);
+
+		if (WeaponData)
+		{
+			//weapon found lets equip it
+			AFortPawn_EquipWeaponDefinition_Params params;
+			params.WeaponData = WeaponData;
+			params.ItemEntryGuid = GUID;
+
+			ProcessEvent(this, fn, &params);
+		}
+	}
+
+	auto Fly(bool bIsFlying)
+	{
+		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+
+		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
+
+		UCharacterMovementComponent_SetMovementMode_Params params;
+
+		if (!bIsFlying) params.NewMovementMode = EMovementMode::MOVE_Flying;
+		else params.NewMovementMode = EMovementMode::MOVE_Walking;
+		params.NewCustomMode = 0;
+
+		ProcessEvent(CharMovementFinder.GetObj(), fn, &params);
 	}
 };
 
@@ -274,7 +319,6 @@ namespace Neoroyale
 {
 	inline bool bIsInit;
 	inline bool bIsStarted;
-	inline bool bHasBuilt;
 	inline bool bHasJumped;
 	inline Pawn* PlayerPawn;
 
@@ -286,7 +330,7 @@ namespace Neoroyale
 		}
 		else
 		{
-			UFunctions::Travel(APOLLO_PAPAYA);
+			UFunctions::Travel(APOLLO_TERRAIN);
 			bIsStarted = !bIsStarted;
 		}
 	}
@@ -308,16 +352,6 @@ namespace Neoroyale
 			}
 			else bHasJumped = false;
 
-			if (PlayerPawn && GetAsyncKeyState(VK_LBUTTON))
-			{
-				if (!bHasBuilt)
-				{
-					bHasBuilt = !bHasBuilt;
-					UFunctions::Summon(L"PBWA_M1_StairW_C");
-				}
-			}
-			else bHasBuilt = false;
-
 			if (GetAsyncKeyState(VK_F3))
 			{
 				UFunctions::Travel(FRONTEND);
@@ -335,31 +369,29 @@ namespace Neoroyale
 	inline void init()
 	{
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
-		printf("\n[Neoroyale] PlayerPawn was summoned!.\n");
 
 		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
 
 		if (PlayerPawn)
 		{
-			printf("\n[Neoroyale] PlayerPawn was found!.\n");
-
 			PlayerPawn->Possess();
-			printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
 
 			if (gVersion != XOR("15.21"))
 			{
 				UFunctions::ServerReadyToStartMatch();
-				printf("\n[Neoroyale] Server is ready to start match now!.\n");
 
 				UFunctions::StartMatch();
-				printf("\n[Neoroyale] Match STARTED!.\n");
 			}
 
 			//PlayerPawn->SetSkeletalMesh();
 
 			PlayerPawn->ShowSkin();
 
-			PlayerPawn->StartSkydiving(false);
+			PlayerPawn->StartSkydiving(300.0f);
+
+			PlayerPawn->EquipWeapon(
+				XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/WID_AshtonPack_Indigo.WID_AshtonPack_Indigo"),
+				0);
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}

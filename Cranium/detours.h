@@ -2,9 +2,10 @@
 #include "ue4.h"
 #include "mods.h"
 
-//#define LOGGING
+#define LOGGING
 
-inline bool bIsDebugCamera = false;
+inline bool bIsDebugCamera;
+inline bool bIsFlying;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -32,9 +33,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 	//Toggle our debug camera on "toggledebugcamera" command.
-	if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"FortCheatManager_")))
+	if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"CheatManager_")))
 	{
 		bIsDebugCamera = !bIsDebugCamera;
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
+	{
+		Neoroyale::PlayerPawn->Fly(bIsFlying);
+		bIsFlying = !bIsFlying;
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
@@ -83,6 +90,16 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				UFunctions::Travel(APOLLO_TERRAIN);
 				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
 			}
+			else if (ScriptNameW == XOR(L"skydiving"))
+			{
+				Neoroyale::PlayerPawn->StartSkydiving(100.0f);
+			}
+			else if (ScriptNameW.find(XOR(L"FortWeaponRangedItemDefinition ")) != std::wstring::npos)
+			{
+				Neoroyale::PlayerPawn->EquipWeapon(
+					ScriptNameW.c_str(),
+					0);
+			}
 		}
 	}
 
@@ -109,6 +126,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 #endif
 
 	return ProcessEvent(pObj, pFunc, pParams);
+}
+
+static void HandleCommand(const wchar_t*  command)
+{
+	
 }
 
 namespace CameraHook
