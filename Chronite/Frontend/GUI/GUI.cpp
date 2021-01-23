@@ -86,10 +86,6 @@ void ImGui::ShowLoader(bool* p_open)
 			}
 
 
-
-			if (strstr(gameDir, " ")) memset(gameDir, 0, sizeof(gameDir));
-			
-
 			if (Button("Stop Server"))
 			{
 				if (hServer != INVALID_HANDLE_VALUE)
@@ -108,7 +104,7 @@ void ImGui::ShowLoader(bool* p_open)
 
 			SameLine(GetWindowWidth() - 390);
 
-			InputTextWithHint(" ", "Fortnite Path (Optional)", gameDir, sizeof(gameDir), ImGuiInputTextFlags_CallbackCharFilter, FilterNoSpace);
+			InputTextWithHint(" ", "Fortnite Path (Optional)", gameDir, sizeof(gameDir));
 
 			SameLine(GetWindowWidth() - 100);
 
