@@ -119,6 +119,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"UpdateTime") &&
 		!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
 		!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
+		!wcsstr(nFunc.c_str(), L"IsCachedIsProjectileWeapon") &&
+		!wcsstr(nFunc.c_str(), L"LockOn") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
 		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());

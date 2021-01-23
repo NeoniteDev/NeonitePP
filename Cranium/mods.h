@@ -297,6 +297,20 @@ struct Pawn
 		}
 	}
 
+	auto GiveWeapon()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		ObjectFinder WorldInventory = PlayerControllerFinder.Find(XOR(L"WorldInventory"));
+		ObjectFinder InventoryFinder = WorldInventory.Find(XOR(L"Inventory"));
+		ObjectFinder ItemInstancesFinder = InventoryFinder.Find(XOR(L"ItemInstances"));
+
+		
+	}
+
 	auto Fly(bool bIsFlying)
 	{
 		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
