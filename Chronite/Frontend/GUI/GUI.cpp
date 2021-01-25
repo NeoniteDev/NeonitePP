@@ -237,6 +237,11 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosY(GetCursorPosY() + 5);
 
 		Text("Beat YT (@Beat-YT): Backend.");
+
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text("Irma (@omairma): Frontend, Internals.");
 		
 		EndTabItem();
 	}

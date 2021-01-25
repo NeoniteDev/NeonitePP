@@ -7,7 +7,7 @@ namespace UFunctions
 	//same as summon command in-game but from code.
 	inline void Summon(const wchar_t* ClassToSummon)
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -27,7 +27,7 @@ namespace UFunctions
 
 	inline void DestroyAllHLODs()
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -47,7 +47,7 @@ namespace UFunctions
 	//travel to a url
 	inline void Travel(const wchar_t* url)
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -65,7 +65,7 @@ namespace UFunctions
 	//Simulates the server telling the game that it's ready to start match
 	inline void ServerReadyToStartMatch()
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -81,7 +81,7 @@ namespace UFunctions
 	//Read the name lol
 	inline void StartMatch()
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
@@ -95,13 +95,64 @@ namespace UFunctions
 	}
 
 
-	inline void Play(const wchar_t* AnimationPlayerFullName)
+	inline void Play(const wchar_t* EventSequenceMap)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder NetworkManagerFinder = WorldFinder.Find(XOR(L"NetworkManager"));
+		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
 
-		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
+		//Loading the level instance in memory
+		const auto LoadLevelInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreamingDynamic:LoadLevelInstance"));
+		const auto LevelStreamingDynamic = FindObject<UObject*>(XOR(L"LevelStreamingDynamic /Script/Engine.Default__LevelStreamingDynamic"));
 
-		ProcessEvent(Sequence, fn, nullptr);
+		FRotator WorldRotation;
+		WorldRotation.Yaw = 0;
+		WorldRotation.Roll = 0;
+		WorldRotation.Pitch = 0;
+
+		ULevelStreamingDynamic_LoadLevelInstance_Params LoadLevelInstanceParams;
+		LoadLevelInstanceParams.WorldContextObject = WorldFinder.GetObj();
+		LoadLevelInstanceParams.LevelName = EventSequenceMap;
+		LoadLevelInstanceParams.Location = FVector(0, 0, 0);
+		LoadLevelInstanceParams.Rotation = WorldRotation;
+
+		ProcessEvent(LevelStreamingDynamic, LoadLevelInstance, &LoadLevelInstanceParams);
+		printf("\n[DEBUG] LEVEL INSTANCE WAS CREATED\n");
+		Sleep(5000);
+
+		//Using the game instance object to get it's FName
+		UObject* LevelInstance = LoadLevelInstanceParams.ReturnValue;
+
+		const auto GetWorldAssetPackageFName = FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreaming:GetWorldAssetPackageFName"));
+
+		ULevelStreaming_GetWorldAssetPackageFName_Params GetWorldAssetPackageFNameParams;
+		ProcessEvent(LevelInstance, GetWorldAssetPackageFName, &GetWorldAssetPackageFNameParams);
+		printf("\n[DEBUG] LEVEL FNAME\n");
+		
+		//We have the name now we call load stream level
+		FName MapName = GetWorldAssetPackageFNameParams.ReturnValue;
+
+		const auto LoadStreamLevel = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameplayStatics:LoadStreamLevel"));
+
+		UGameplayStatics_LoadStreamLevel_Params LoadStreamLevelParams;
+		LoadStreamLevelParams.WorldContextObject = WorldFinder.GetObj();
+		LoadStreamLevelParams.LevelName = MapName;
+		LoadStreamLevelParams.bMakeVisibleAfterLoad = true;
+		LoadStreamLevelParams.bShouldBlockOnLoad = false;
+
+		ProcessEvent(NetworkManagerFinder.GetObj(), LoadStreamLevel, &LoadStreamLevelParams);
+		printf("\n[DEBUG] LEVEL WAS STREAMED IN\n");
+		Sleep(5000);
+
+		//Level is streamed inside the map now we start the event sequence
+		const auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
+
+		const auto Sequence = FindObject<void*>(JERKY_EVENT_PLAYER);
+
+		ProcessEvent(Sequence, Play, nullptr);
+		printf("\n[DEBUG] EVENT STARTED\n");
 	}
 }
 
@@ -110,7 +161,7 @@ namespace Console
 	//constructs and assigns FortCheatManager to the main console.
 	inline bool CheatManager()
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		if (!LocalPlayer.GetObj()) return false;
@@ -146,7 +197,7 @@ namespace Console
 	//unlocks ue4 console with cheat manager
 	inline bool Unlock()
 	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder ConsoleClassFinder = EngineFinder.Find(XOR(L"ConsoleClass"));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder ViewportConsoleFinder = GameViewPortClientFinder.Find(XOR(L"ViewportConsole"));
@@ -177,23 +228,7 @@ struct Pawn
 {
 	auto Possess()
 	{
-		if (gVersion == XOR("15.21"))
-		{
-			UFunctions::Summon(L"Athena_PlayerController_C");
-			const auto PlayerController = FindObject<UObject*>(L"Athena_PlayerController_C /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.Athena_PlayerController_C_");
-
-			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
-
-			AController_Possess_Params params;
-
-			params.InPawn = reinterpret_cast<UObject*>(this);
-
-			ProcessEvent(PlayerController, fn, &params);
-			printf("\n[Neoroyale] PlayerPawn was possessed using %ls!.\n", GetObjectFullName(PlayerController).c_str());
-			return;
-		}
-
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -240,7 +275,7 @@ struct Pawn
 
 	auto SetSkeletalMesh()
 	{
-		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
 		ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
@@ -261,7 +296,7 @@ struct Pawn
 
 	auto ShowSkin()
 	{
-		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
 		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
@@ -274,7 +309,7 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
-	auto EquipWeapon(const wchar_t* weaponname, int guid)
+	auto EquipWeapon(const wchar_t* weaponname, const int guid)
 	{
 		FGuid GUID;
 		GUID.A = guid;
@@ -297,23 +332,9 @@ struct Pawn
 		}
 	}
 
-	auto GiveWeapon()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder WorldInventory = PlayerControllerFinder.Find(XOR(L"WorldInventory"));
-		ObjectFinder InventoryFinder = WorldInventory.Find(XOR(L"Inventory"));
-		ObjectFinder ItemInstancesFinder = InventoryFinder.Find(XOR(L"ItemInstances"));
-
-		
-	}
-
 	auto Fly(bool bIsFlying)
 	{
-		ObjectFinder PawnFinder = ObjectFinder::GetEngine(uintptr_t(this));
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
@@ -338,15 +359,8 @@ namespace Neoroyale
 
 	inline void start()
 	{
-		if (gVersion == XOR("15.21"))
-		{
-			UFunctions::Travel(APOLLO_TERRAIN_BASE);
-		}
-		else
-		{
-			UFunctions::Travel(APOLLO_TERRAIN);
-			bIsStarted = !bIsStarted;
-		}
+		UFunctions::Travel(APOLLO_TERRAIN);
+		bIsStarted = !bIsStarted;
 	}
 
 	inline void thread()
@@ -390,13 +404,6 @@ namespace Neoroyale
 		{
 			PlayerPawn->Possess();
 
-			if (gVersion != XOR("15.21"))
-			{
-				UFunctions::ServerReadyToStartMatch();
-
-				UFunctions::StartMatch();
-			}
-
 			//PlayerPawn->SetSkeletalMesh();
 
 			PlayerPawn->ShowSkin();
@@ -404,8 +411,13 @@ namespace Neoroyale
 			PlayerPawn->StartSkydiving(300.0f);
 
 			PlayerPawn->EquipWeapon(
-				XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/WID_AshtonPack_Indigo.WID_AshtonPack_Indigo"),
+				XOR(L"FortWeaponRangedItemDefinition /Game/Items/Weapons/Ranged/WIP/TestGod.TestGod"),
 				0);
+
+			UFunctions::StartMatch();
+
+			UFunctions::ServerReadyToStartMatch();
+
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}

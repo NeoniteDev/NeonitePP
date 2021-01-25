@@ -44,6 +44,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		bIsFlying = !bIsFlying;
 	}
 
+	if (wcsstr(nFunc.c_str(), XOR(L"Fly")))
+	{
+		Neoroyale::PlayerPawn->Fly(bIsFlying);
+		bIsFlying = !bIsFlying;
+	}
+
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here
@@ -70,15 +76,16 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (gVersion == XOR("14.60"))
 				{
-					UFunctions::Play(GALACTUS_EVENT);
+					//UFunctions::Play(GALACTUS_EVENT_MAP, GALACTUS_EVENT_PLAYER);
 				}
 				else if (gVersion == XOR("12.41"))
 				{
-					UFunctions::Play(JERKY_EVENT);
+					CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&UFunctions::Play), JERKY_EVENT_MAP, NULL, nullptr);
+					
 				}
 				else if (gVersion == XOR("12.61"))
 				{
-					UFunctions::Play(DEVICE_EVENT);
+					//UFunctions::Play(DEVICE_EVENT_MAP, JERKY_EVENT_PLAYER);
 				}
 				else
 				{
@@ -92,7 +99,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			}
 			else if (ScriptNameW == XOR(L"skydiving"))
 			{
-				Neoroyale::PlayerPawn->StartSkydiving(100.0f);
+				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
 			}
 			else if (ScriptNameW.find(XOR(L"FortWeaponRangedItemDefinition ")) != std::wstring::npos)
 			{
@@ -121,6 +128,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
 		!wcsstr(nFunc.c_str(), L"IsCachedIsProjectileWeapon") &&
 		!wcsstr(nFunc.c_str(), L"LockOn") &&
+		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
 		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());
@@ -130,9 +138,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 
-static void HandleCommand(const wchar_t*  command)
+static void HandleCommand(const wchar_t* command)
 {
-	
 }
 
 namespace CameraHook

@@ -306,10 +306,6 @@ struct AFortPawn_EquipWeaponDefinition_Params
 	UObject* ReturnValue;
 };
 
-struct AFortPlayerController_GivePlayerAmmo_Params
-{
-	int AmmoCount;
-};
 
 struct FUObjectItem
 {
@@ -525,6 +521,29 @@ struct ULevelStreamingDynamic_LoadLevelInstance_Params
 	FRotator Rotation;
 	bool bOutSuccess;
 	FString OptionalLevelNameOverride;
+	UObject* ReturnValue;
+};
+
+struct ULevelStreaming_GetWorldAssetPackageFName_Params
+{
+	FName ReturnValue;
+};
+
+struct FLatentActionInfo
+{
+	int Linkage;
+	int UUID;
+	FName ExecutionFunction;
+	UObject* CallbackTarget;
+};
+
+struct UGameplayStatics_LoadStreamLevel_Params
+{
+	UObject* WorldContextObject;
+	struct FName LevelName;
+	bool bMakeVisibleAfterLoad;
+	bool bShouldBlockOnLoad;
+	FLatentActionInfo LatentInfo;
 };
 
 template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>

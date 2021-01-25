@@ -7,9 +7,13 @@
 #define APOLLO_TERRAIN_BASE XOR(L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase")
 #define APOLLO_PAPAYA_BASE XOR(L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase")
 
-#define GALACTUS_EVENT XOR(L"LevelSequencePlayer /Junior/Levels/Junior_Map.Junior_Map:PersistentLevel.Junior_Master_Rep_2.AnimationPlayer")
-#define JERKY_EVENT XOR(L"LevelSequencePlayer /CycloneJerky/Levels/JerkySequenceMap.JerkySequenceMap:PersistentLevel.Jerky.AnimationPlayer")
-#define DEVICE_EVENT XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
+#define GALACTUS_EVENT_MAP XOR(L"Junior_Map")
+#define JERKY_EVENT_MAP XOR(L"JerkySequenceMap")
+#define DEVICE_EVENT_MAP XOR(L"FritterSequenceLevel")
+
+#define GALACTUS_EVENT_PLAYER XOR(L"LevelSequencePlayer /Junior/Levels/Junior_Map.Junior_Map:PersistentLevel.Junior_Master_Rep_2.AnimationPlayer")
+#define JERKY_EVENT_PLAYER XOR(L"LevelSequencePlayer /CycloneJerky/Levels/JerkySequenceMap.JerkySequenceMap:PersistentLevel.Jerky.AnimationPlayer")
+#define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
 
 
 //Memory

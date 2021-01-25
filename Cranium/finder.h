@@ -104,9 +104,9 @@ public:
 		return reinterpret_cast<UObject*&>(m_objectRef);
 	}
 
-	static ObjectFinder GetEngine(uintptr_t GEngine)
+	static ObjectFinder EntryPoint(uintptr_t EntryPointAddress)
 	{
-		return ObjectFinder{L"GameEngine", L"None", reinterpret_cast<GameObject*>(GEngine), reinterpret_cast<GameObject*&>(GEngine)};
+		return ObjectFinder{L"EntryPoint", L"None", reinterpret_cast<GameObject*>(EntryPointAddress), reinterpret_cast<GameObject*&>(EntryPointAddress)};
 	}
 
 	ObjectFinder Find(const std::wstring& objectToFind) const
@@ -161,7 +161,7 @@ public:
 
 inline UObject* FindActor(std::wstring name)
 {
-	ObjectFinder EngineFinder = ObjectFinder::GetEngine(uintptr_t(GEngine));
+	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 	ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
