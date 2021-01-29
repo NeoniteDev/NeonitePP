@@ -48,6 +48,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		Console::CheatManager();
 	}
 	
+	if (nFunc.find(L"SendClientHello") != std::string::npos ||
+		nFunc.find(L"SendPacketToServer") != std::string::npos ||
+		nFunc.find(L"SendPacketToClient") != std::string::npos) {
+
+		return NULL;
+	} // i gotta do something
+
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here
