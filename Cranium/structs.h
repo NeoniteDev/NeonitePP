@@ -306,6 +306,12 @@ struct AFortPawn_EquipWeaponDefinition_Params
 	UObject* ReturnValue;
 };
 
+class UCharacterMovementComponent
+{
+public:
+	char padding[0x150]; //Skipping some missed offsets and character owner.
+	float GravityScale;
+};
 
 struct FUObjectItem
 {

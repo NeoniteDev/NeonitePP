@@ -353,20 +353,17 @@ struct Pawn
 		ProcessEvent(CharMovementFinder.GetObj(), fn, &params);
 	}
 
-	auto InfiniteAmmo()
+	auto SetPawnGravityScale(float GravityScaleInput)
 	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
 
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		//bInfiniteAmmo is at 0x1E9C in the player controller class.
-		//REMINDER: i am a fucking idiot.
+		const auto CharacterMovementComponent = reinterpret_cast<UCharacterMovementComponent*>(CharMovementFinder.GetObj());
 
-		const auto bInfiniteAmmoPtr = uintptr_t(PlayerControllerFinder.GetObj()) + 0x1E9C;
-		
-		bool* bInfiniteAmmo = reinterpret_cast<bool*>(bInfiniteAmmoPtr);
-		*bInfiniteAmmo = true;
+		CharacterMovementComponent->GravityScale = GravityScaleInput;
+
+		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
 };
 
@@ -428,9 +425,9 @@ namespace Neoroyale
 
 			PlayerPawn->ShowSkin();
 
-			PlayerPawn->StartSkydiving(500.0f);
-
-			PlayerPawn->InfiniteAmmo();
+			PlayerPawn->StartSkydiving(0.f);
+			PlayerPawn->StartSkydiving(0.f);
+			PlayerPawn->StartSkydiving(1200.0f);
 
 			UFunctions::StartMatch();
 

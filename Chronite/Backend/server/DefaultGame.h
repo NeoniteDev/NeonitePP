@@ -84,6 +84,10 @@ bUploadAthenaStatsV2=false
 
 [/Script/FortniteGame.FortMatchmakingV2]
 bCustomKeyEnabled=false
+
+	
+[/Script/FortniteGame.FortPlayerController]
+bInfiniteAmmo=true
 )";
 
 	inline std::string name = "DefaultGame.ini";

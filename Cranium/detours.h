@@ -47,7 +47,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		Console::CheatManager();
 	}
-	
+
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here
@@ -108,8 +108,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			}
 			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")))
 			{
-				Neoroyale::PlayerPawn->InfiniteAmmo();
 				Neoroyale::PlayerPawn->EquipWeapon(ScriptNameW.c_str(), 0);
+			}
+			else if (ScriptNameW.starts_with(XOR(L"SetCharGravity")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				const auto newgav = std::stof(arg);
+
+				Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
 			}
 		}
 	}
