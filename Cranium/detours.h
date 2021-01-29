@@ -1,6 +1,7 @@
 #pragma once
 #include "ue4.h"
 #include "mods.h"
+#include "prod.h"
 
 #define LOGGING
 
@@ -12,44 +13,41 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	const auto nObj = GetObjectFirstName(pObj);
 	const auto nFunc = GetObjectFirstName(pFunc);
 
-	//If the game requested matchmaking we open the game mode
-	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+	if (!ProdMode)
 	{
-		Neoroyale::start();
-		gUrl.clear();
+		//If the game requested matchmaking we open the game mode
+		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+		{
+			Neoroyale::start();
+			gUrl.clear();
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
+		{
+			Neoroyale::init();
+		}
+
+		//Destroy all HLODs after the loading screen.
+		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
+		{
+			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+			Console::CheatManager();
+			UFunctions::DestroyAllHLODs();
+		}
+
+		//Toggle our fly function on "fly" command.
+		if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
+		{
+			Neoroyale::PlayerPawn->Fly(bIsFlying);
+			bIsFlying = !bIsFlying;
+		}
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
+	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
-		Neoroyale::init();
-	}
-
-	//Destroy all HLODs after the loading screen.
-	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
-	{
-		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
 		Console::CheatManager();
-		UFunctions::DestroyAllHLODs();
 	}
-
-	//Toggle our debug camera on "toggledebugcamera" command.
-	if (wcsstr(nFunc.c_str(), XOR(L"ToggleDebugCamera")) && nObj.starts_with(XOR(L"CheatManager_")))
-	{
-		bIsDebugCamera = !bIsDebugCamera;
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
-	{
-		Neoroyale::PlayerPawn->Fly(bIsFlying);
-		bIsFlying = !bIsFlying;
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"Fly")))
-	{
-		Neoroyale::PlayerPawn->Fly(bIsFlying);
-		bIsFlying = !bIsFlying;
-	}
-
+	
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here
@@ -76,16 +74,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (gVersion == XOR("14.60"))
 				{
-					//UFunctions::Play(GALACTUS_EVENT_MAP, GALACTUS_EVENT_PLAYER);
+					UFunctions::Play(GALACTUS_EVENT_MAP, GALACTUS_EVENT_PLAYER);
 				}
 				else if (gVersion == XOR("12.41"))
 				{
-					CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&UFunctions::Play), JERKY_EVENT_MAP, NULL, nullptr);
-					
+					UFunctions::Play(JERKY_EVENT_MAP, JERKY_EVENT_PLAYER);
 				}
 				else if (gVersion == XOR("12.61"))
 				{
-					//UFunctions::Play(DEVICE_EVENT_MAP, JERKY_EVENT_PLAYER);
+					UFunctions::Play(DEVICE_EVENT_MAP, DEVICE_EVENT_PLAYER);
 				}
 				else
 				{
@@ -97,15 +94,22 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				UFunctions::Travel(APOLLO_TERRAIN);
 				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
 			}
+			else if (ScriptNameW == XOR(L"debugcamera"))
+			{
+				bIsDebugCamera = !bIsDebugCamera;
+			}
 			else if (ScriptNameW == XOR(L"skydiving"))
 			{
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
 			}
-			else if (ScriptNameW.find(XOR(L"FortWeaponRangedItemDefinition ")) != std::wstring::npos)
+			else if (ScriptNameW == XOR(L"test"))
 			{
-				Neoroyale::PlayerPawn->EquipWeapon(
-					ScriptNameW.c_str(),
-					0);
+				Prod::Init();
+			}
+			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")))
+			{
+				Neoroyale::PlayerPawn->InfiniteAmmo();
+				Neoroyale::PlayerPawn->EquipWeapon(ScriptNameW.c_str(), 0);
 			}
 		}
 	}
@@ -136,10 +140,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 #endif
 
 	return ProcessEvent(pObj, pFunc, pParams);
-}
-
-static void HandleCommand(const wchar_t* command)
-{
 }
 
 namespace CameraHook

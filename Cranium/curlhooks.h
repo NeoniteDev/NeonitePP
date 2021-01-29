@@ -10,6 +10,10 @@ inline bool isReady = false;
 inline std::string gUrl;
 inline std::string gVersion;
 
+static bool ProdMode = true;
+static bool bIsProdMode;
+static bool bIsVersionFound;
+
 CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
 
@@ -23,8 +27,6 @@ CURLcode CurlSetOpt_(struct Curl_easy* data, CURLoption option, ...)
 	va_end(arg);
 	return result;
 }
-
-static bool bIsVersionFound = false;
 
 CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 {
@@ -46,13 +48,16 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		std::string url = va_arg(arg, char*);
 		gUrl = url;
 
-		if (url.find(XOR("token")) != std::string::npos) isReady = !isReady;
+		if (url.find(XOR("ClientQuest")) != std::string::npos) isReady = !isReady;
 
 #ifdef URL_HOST
-
-		//printf("LogURL: %s\n", url.c_str());
-		Uri uri = Uri::Parse(url);
-		url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+		
+		if(!ProdMode || url.find(XOR("cloudstorage")) != std::string::npos)
+		{
+			//printf("LogURL: %s\n", url.c_str());
+			Uri uri = Uri::Parse(url);
+			url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+		}
 
 #endif
 		result = CurlSetOpt_(data, tag, url.c_str());
@@ -75,6 +80,23 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 			list = list->next;
 		}
 	}
+	
+	/*
+	else if (tag == CURLOPT_HTTPHEADER && !ProdMode)
+	{
+		auto list = va_arg(arg, curl_slist*);;
+
+		while (list->next != nullptr && list->data)
+		{
+			std::string data = list->data;
+			if (data.starts_with("Authorization: bearer eg1"))
+			{
+				ProdMode = !ProdMode;
+			}
+			list = list->next;
+		}
+	}
+	*/
 
 	else
 	{

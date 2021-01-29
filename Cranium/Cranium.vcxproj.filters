@@ -49,6 +49,7 @@
     <ClInclude Include="finder.h" />
     <ClInclude Include="mods.h" />
     <ClInclude Include="ue4.h" />
+    <ClInclude Include="prod.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

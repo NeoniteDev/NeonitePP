@@ -95,9 +95,9 @@ namespace UFunctions
 	}
 
 
-	inline void Play(const wchar_t* EventSequenceMap)
+	inline void Play(const wchar_t* EventSequenceMap, const wchar_t* AnimationPlayerFullName)
 	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		/*ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder NetworkManagerFinder = WorldFinder.Find(XOR(L"NetworkManager"));
@@ -144,12 +144,12 @@ namespace UFunctions
 
 		ProcessEvent(NetworkManagerFinder.GetObj(), LoadStreamLevel, &LoadStreamLevelParams);
 		printf("\n[DEBUG] LEVEL WAS STREAMED IN\n");
-		Sleep(5000);
+		Sleep(5000);*/
 
 		//Level is streamed inside the map now we start the event sequence
 		const auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
 
-		const auto Sequence = FindObject<void*>(JERKY_EVENT_PLAYER);
+		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
 
 		ProcessEvent(Sequence, Play, nullptr);
 		printf("\n[DEBUG] EVENT STARTED\n");
@@ -323,12 +323,16 @@ struct Pawn
 
 		if (WeaponData)
 		{
-			//weapon found lets equip it
+			//weapon found equip it
 			AFortPawn_EquipWeaponDefinition_Params params;
 			params.WeaponData = WeaponData;
 			params.ItemEntryGuid = GUID;
 
 			ProcessEvent(this, fn, &params);
+		}
+		else
+		{
+			MessageBoxA(nullptr, XOR("This item doesn't exist!"), XOR("Cranium"), MB_OK);
 		}
 	}
 
@@ -347,6 +351,22 @@ struct Pawn
 		params.NewCustomMode = 0;
 
 		ProcessEvent(CharMovementFinder.GetObj(), fn, &params);
+	}
+
+	auto InfiniteAmmo()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		//bInfiniteAmmo is at 0x1E9C in the player controller class.
+		//REMINDER: i am a fucking idiot.
+
+		const auto bInfiniteAmmoPtr = uintptr_t(PlayerControllerFinder.GetObj()) + 0x1E9C;
+		
+		bool* bInfiniteAmmo = reinterpret_cast<bool*>(bInfiniteAmmoPtr);
+		*bInfiniteAmmo = true;
 	}
 };
 
@@ -408,16 +428,13 @@ namespace Neoroyale
 
 			PlayerPawn->ShowSkin();
 
-			PlayerPawn->StartSkydiving(300.0f);
+			PlayerPawn->StartSkydiving(500.0f);
 
-			PlayerPawn->EquipWeapon(
-				XOR(L"FortWeaponRangedItemDefinition /Game/Items/Weapons/Ranged/WIP/TestGod.TestGod"),
-				0);
+			PlayerPawn->InfiniteAmmo();
 
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
-
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}

@@ -11,6 +11,7 @@ namespace launcher
 {
 	inline void init()
 	{
+		std::string exchange = exchangeCode;
 		std::string altPath = gameDir;
 		std::string fnPath;
 
@@ -62,10 +63,19 @@ namespace launcher
 		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_EAC.exe";
 
 		std::ostringstream oss;
-		oss <<
-		" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -AUTH_LOGIN="
-		<< name
-		<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
+		if (exchange.empty())
+		{
+			oss <<
+			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -AUTH_LOGIN="
+			<< name
+			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
+		}
+		else
+		{
+			oss <<
+			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -epicportal -epiclocale=en-us -AUTH_PASSWORD="
+			<< exchange;
+		}
 		std::string s = oss.str();
 		char* args = new char[s.length() + 1];
 		std::copy(s.c_str(), s.c_str() + s.length() + 1, args);

@@ -71,20 +71,6 @@ R"(
 [/Script/FortniteGame.FortGameInstance]
 bBattleRoyaleMatchmakingEnabled=true
 bCreativeModeProfileEnabled=true
-!FrontEndPlaylistData=ClearArray
-+FrontEndPlaylistData=(PlaylistName=Playlist_DefaultDuo, PlaylistAccess=(bEnabled=false))
-+FrontEndPlaylistData=(PlaylistName=Playlist_DefaultSquad, PlaylistAccess=(bEnabled=false))
-+FrontEndPlaylistData=(PlaylistName=Playlist_Respawn_24, PlaylistAccess=(bEnabled=false))
-+FrontEndPlaylistData=(PlaylistName=Playlist_Playground, PlaylistAccess=(bEnabled=false))
-+FrontEndPlaylistData=(PlaylistName=Playlist_PlaygroundV2, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownAlt_Solo, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownAlt_Duos, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownAlt_Trios, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_Solo, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_Duos , PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_Trios, PlaylistAccess=(bEnabled=false, bForcePlaylistOff=true))
-+FrontEndPlaylistData=(PlaylistName=Playlist_DefaultSolo, PlaylistAccess=(bEnabled=true, bIsDefaultPlaylist=true, bDisplayAsLimitedTime=false, DisplayPriority=0, CategoryIndex=0))
-+FrontEndPlaylistData=(PlaylistName=Playlist_Papaya, PlaylistAccess=(bEnabled=false, bIsDefaultPlaylist=true, bDisplayAsLimitedTime=false, DisplayPriority=0, CategoryIndex=1))
 
 [/Script/FortniteGame.FortGlobals]
 bAthenaLeaderboardFrontEndEnabled=false

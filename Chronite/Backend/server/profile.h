@@ -143,6 +143,27 @@ inline void initProfile()
 
 			         break;
 		         }
+		         case util::str2int("SetItemFavoriteStatus"):
+		         {
+			         auto body = json::parse(req.body);
+			         auto targetItemid = static_cast<std::string>(body["targetItemId"]);
+
+			         console.AddLog(profileData["items"][targetItemid]["attributes"]["favorite"].get<std::string>().c_str());
+			         profileData["items"][targetItemid]["attributes"]["favorite"] = body["bFavorite"];
+			         break;
+		         }
+		         case util::str2int("SetItemFavoriteStatusBatch"):
+		         {
+			         auto body = json::parse(req.body);
+
+			         for (auto i = 0; i < body["itemIds"].size(); i++)
+			         {
+				         const auto itemIds = body["itemIds"][i];
+				         const auto itemId = itemIds.get<std::string>();
+				         profileData["items"][itemId]["attributes"]["favorite"] = body["itemFavStatus"][i].get<bool>();
+			         }
+			         break;
+		         }
 		         }
 
 		         if (response["profileChanges"].size() > 0)

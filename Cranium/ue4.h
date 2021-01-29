@@ -96,7 +96,6 @@ static T FindObject(wchar_t const* name)
 		{
 			return reinterpret_cast<T>(object);
 		}
-
 	}
 	return nullptr;
 }
@@ -107,54 +106,45 @@ inline bool DumpIDs()
 
 	//TODO: Better way.
 	//THIS FUCKING IS SO BAD CODED BUT IDK WHAT ELSE TO DO
-	UClass* CID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition"));
-	UClass* BID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition"));
-	UClass* PCID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition"));
-	UClass* EID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition"));
-	UClass* DID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaDanceItemDefinition"));
-	UClass* PID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition"));
-	UClass* GID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaGliderItemDefinition"));
-	UClass* SDID = FindObject<UClass*>(XOR(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition"));
-	UClass* TID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaToyItemDefinition"));
-	UClass* IWD = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition"));
-	UClass* LSID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition"));
-	UClass* MPID = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition"));
-	for (auto array : GObjs->ObjectArray->FUObject)
+
+	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
-		if (array == nullptr) continue;
-		auto fuObject = array;
-		for (DWORD i = 0x0; i < GObjs->NumElements && fuObject->Object; i++, fuObject++)
+		const auto object = GObjs->GetByIndex(i);
+		if (object == nullptr)
 		{
-			auto object = fuObject->Object;
-			if (object->IsA(CID) ||
-				object->IsA(BID) ||
-				object->IsA(PCID) ||
-				object->IsA(EID) ||
-				object->IsA(DID) ||
-				object->IsA(PID) ||
-				object->IsA(GID) ||
-				object->IsA(SDID) ||
-				object->IsA(TID) ||
-				object->IsA(IWD) ||
-				object->IsA(LSID) ||
-				object->IsA(MPID))
+			continue;
+		}
+
+		if (GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaDanceItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaGliderItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaToyItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition") ||
+			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition"))
+		{
+			auto id = GetObjectFirstName(object);
+			auto def = GetObjectFirstName(object->Class);
+
+			printf("\nlast try:%ls\n", GetObjectFullName(object).c_str());
+
+			std::wstring r = L"ItemDefinition";
+
+			//handle wraps
+			if (GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition")) r = L"Definition";
+
+			std::wstring::size_type i = def.find(r);
+			if (i != std::string::npos)
 			{
-				auto id = GetObjectFirstName(object);
-				auto def = GetObjectFirstName(object->Class);
-
-				std::wstring r = L"ItemDefinition";
-
-				//handle wraps
-				if (object->IsA(IWD)) r = L"Definition";
-
-				std::wstring::size_type i = def.find(r);
-				if (i != std::string::npos)
-				{
-					def.erase(i, r.length());
-				}
-				if (id.starts_with(XOR(L"Default__"))) break;
-				log << def << ":" << id << L"\n";
+				def.erase(i, r.length());
 			}
+			if (id.starts_with(XOR(L"Default__"))) break;
+			log << def << ":" << id << L"\n";
 		}
 	}
 	log.flush(); //make sure it outputted everything.

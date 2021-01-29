@@ -23,7 +23,7 @@ void dllMain()
 	{
 		if (isReady)
 		{
-			if (Hooks::Misc(gVersion) && Console::Unlock()) //&& DumpIDs()) 
+			if (Hooks::Misc(gVersion) && Console::Unlock() && DumpIDs())
 			{
 				break;
 			}

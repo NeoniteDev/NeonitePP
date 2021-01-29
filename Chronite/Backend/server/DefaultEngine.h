@@ -3,7 +3,7 @@
 namespace DefaultEngine
 {
 	inline std::string ini =
-R"(
+	R"(
 [ConsoleVariables]
 Store.EnableCatabaScreen=0
 Store.EnableCatabaHighlights=0
@@ -36,9 +36,18 @@ ModuleName=FortnitePatchCheck
 bCheckPlatformOSSForUpdate=false
 bCheckOSSForUpdate=false
 
+[OnlineSubsystemMcp.Xmpp]
+bUseSSL=false
+ServerPort=443
+
+[OnlineSubsystemMcp.Xmpp Prod]
+bUseSSL=false
+ServerAddr="ws://xmpp-service-prod.ol.epicgames.com"
+Domain=prod.ol.epicgames.com
+	
 [/Script/Qos.QosRegionManager]
 !RegionDefinitions=ClearArray
-+RegionDefinitions=(DisplayName=NSLOCTEXT("MMRegion", "Neonite", "Neonite"), RegionId="NAW", bEnabled=true, bVisible=true, bAutoAssignable=true)
++RegionDefinitions=(DisplayName=NSLOCTEXT("MMRegion", "Neonite", "Neonite"), RegionId="EU", bEnabled=true, bVisible=true, bAutoAssignable=true)
 )";
 
 	inline std::string name = "DefaultEngine.ini";

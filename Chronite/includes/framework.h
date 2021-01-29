@@ -29,9 +29,6 @@
 #include "../includes/termcolor/termcolor.hpp"
 #include "../includes/DiscordSDK/discord_rpc.h"
 #include "../includes/DiscordSDK/discord_register.h"
-#include "../../xorstr.hpp"
-
-#define XOR(STR) xorstr(STR).crypt_get()
 
 #include <chrono>
 #include <stdio.h>
@@ -50,3 +47,5 @@
 #include <tchar.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+
+#define XOR(STR) STR
