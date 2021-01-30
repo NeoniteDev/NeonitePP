@@ -59,7 +59,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				MessageBoxA(nullptr,
 				            XOR(
-					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version."),
+					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version.\n\ndebugcamera: toggle custom debug camera (works in lobby).\n\nskydive: start skydiving and deploy at 500m above ground.\n\nFortWeapon: full weapon name to equip it (works with pickaxes too).\n\nSetCharGravity: change the gravity scale..\n\nFortPlaylistAthena: full FortPlaylistAthena path to change to the playlist you dropping in.\n\n"),
 				            XOR("Cranium CheatScript Commands"), MB_OK);
 			}
 			else if (ScriptNameW == XOR(L"dumpbps"))
@@ -89,22 +89,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					MessageBoxA(nullptr, XOR("Sorry the version you are using doesn't have any event we support."), XOR("Neonite++"), MB_OK);
 				}
 			}
-			else if (ScriptNameW == XOR(L"scuff"))
-			{
-				UFunctions::Travel(APOLLO_TERRAIN);
-				Neoroyale::bIsStarted = !Neoroyale::bIsStarted;
-			}
 			else if (ScriptNameW == XOR(L"debugcamera"))
 			{
 				bIsDebugCamera = !bIsDebugCamera;
 			}
-			else if (ScriptNameW == XOR(L"skydiving"))
+			else if (ScriptNameW == XOR(L"skydive"))
 			{
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
-			}
-			else if (ScriptNameW == XOR(L"test"))
-			{
-				Prod::Init();
 			}
 			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")))
 			{
@@ -117,6 +108,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				const auto newgav = std::stof(arg);
 
 				Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
+			}
+			else if(ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
+			{
+				PlaylistName = ScriptNameW.c_str();
 			}
 		}
 	}

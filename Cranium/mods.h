@@ -223,6 +223,8 @@ namespace Console
 	}
 }
 
+const wchar_t* PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Fill/Playlist_Fill_Solo.Playlist_Fill_Solo");
+
 //TODO: move this from here
 struct Pawn
 {
@@ -365,6 +367,45 @@ struct Pawn
 
 		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
+
+	auto SetPlaylist()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+
+		const auto Playlist = FindObject<UObject*>(PlaylistName);
+		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
+
+		GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
+		GameState->CurrentPlaylistInfo.OverridePlaylist = Playlist;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
+
+		Empty_Params params;
+
+		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	}
+
+	auto SetGamePhase()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+
+		const auto GameState = reinterpret_cast<GameStateForGamePhase*>(GameStateFinder.GetObj());
+
+		GameState->GamePhase = EAthenaGamePhase::Aircraft;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
+
+		AFortGameStateAthena_OnRep_GamePhase_Params params;
+		params.OldGamePhase = EAthenaGamePhase::Setup;
+
+		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	}
 };
 
 namespace Neoroyale
@@ -384,6 +425,7 @@ namespace Neoroyale
 	{
 		while (true)
 		{
+			
 			if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
 			{
 				if (!bHasJumped)
@@ -429,6 +471,10 @@ namespace Neoroyale
 			PlayerPawn->StartSkydiving(0.f);
 			PlayerPawn->StartSkydiving(1200.0f);
 
+			PlayerPawn->SetPlaylist();
+
+			PlayerPawn->SetGamePhase();
+			
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();

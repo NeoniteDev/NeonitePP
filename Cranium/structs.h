@@ -313,6 +313,33 @@ public:
 	float GravityScale;
 };
 
+struct FPlaylistPropertyArray
+{
+	char padding[0x0120];
+	UObject* BasePlaylist;
+	UObject* OverridePlaylist;
+};
+
+struct AFortGameStateAthena_OnRep_GamePhase_Params
+{
+	EAthenaGamePhase OldGamePhase;
+};
+
+class GameStateForGamePhase
+{
+public:
+	char padding[0x1E78];
+	EAthenaGamePhase GamePhase;
+};
+
+class GameStateForPlaylist
+{
+public:
+	char padding[0x1E98];
+	FPlaylistPropertyArray CurrentPlaylistInfo;
+};
+
+
 struct FUObjectItem
 {
 	UObject* Object;
