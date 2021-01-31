@@ -223,7 +223,7 @@ namespace Console
 	}
 }
 
-const wchar_t* PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Fill/Playlist_Fill_Solo.Playlist_Fill_Solo");
+inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Papaya/Playlist_PapayaSmall.Playlist_PapayaSmall");
 
 //TODO: move this from here
 struct Pawn
@@ -375,7 +375,7 @@ struct Pawn
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
 
-		const auto Playlist = FindObject<UObject*>(PlaylistName);
+		const auto Playlist = FindObject<UObject*>(PlaylistName.c_str());
 		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
 
 		GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
@@ -397,7 +397,7 @@ struct Pawn
 
 		const auto GameState = reinterpret_cast<GameStateForGamePhase*>(GameStateFinder.GetObj());
 
-		GameState->GamePhase = EAthenaGamePhase::Aircraft;
+		GameState->GamePhase = EAthenaGamePhase::None;
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
 
@@ -455,6 +455,11 @@ namespace Neoroyale
 
 	inline void init()
 	{
+		
+		Console::CheatManager();
+
+		UFunctions::DestroyAllHLODs();
+		
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 
 		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));

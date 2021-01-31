@@ -50,6 +50,35 @@
     <ClInclude Include="mods.h" />
     <ClInclude Include="ue4.h" />
     <ClInclude Include="prod.h" />
+    <ClInclude Include="hwid.h" />
+    <ClInclude Include="cryptolens\ActivateError.hpp" />
+    <ClInclude Include="cryptolens\ActivationData.hpp" />
+    <ClInclude Include="cryptolens\api.hpp" />
+    <ClInclude Include="cryptolens\base64.hpp" />
+    <ClInclude Include="cryptolens\basic_Cryptolens.hpp" />
+    <ClInclude Include="cryptolens\basic_Error.hpp" />
+    <ClInclude Include="cryptolens\basic_SKM.hpp" />
+    <ClInclude Include="cryptolens\Configuration_Unix.hpp" />
+    <ClInclude Include="cryptolens\Configuration_Windows.hpp" />
+    <ClInclude Include="cryptolens\core.hpp" />
+    <ClInclude Include="cryptolens\cryptolens_internals.hpp" />
+    <ClInclude Include="cryptolens\Customer.hpp" />
+    <ClInclude Include="cryptolens\DataObject.hpp" />
+    <ClInclude Include="cryptolens\Error.hpp" />
+    <ClInclude Include="cryptolens\LicenseKey.hpp" />
+    <ClInclude Include="cryptolens\LicenseKeyChecker.hpp" />
+    <ClInclude Include="cryptolens\LicenseKeyInformation.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_caching.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_COM.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_static.hpp" />
+    <ClInclude Include="cryptolens\RawLicenseKey.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_curl.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_v20190401_to_v20180502.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_WinHTTP.hpp" />
+    <ClInclude Include="cryptolens\ResponseParser_ArduinoJson5.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_CryptoAPI.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_OpenSSL.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">
@@ -69,5 +98,8 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>Common</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="cryptolens\Cryptolens.lib" />
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 #include "ue4.h"
 #include "mods.h"
 #include "prod.h"
+#include "hwid.h"
 
 #define LOGGING
 
@@ -18,8 +19,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			Neoroyale::start();
 			gUrl.clear();
+			if (HWID::Validate())
+			{
+				Neoroyale::start();
+			}
+			else
+			{
+				MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
+			}
 		}
 
 		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
@@ -31,8 +39,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 		{
 			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
-			Console::CheatManager();
-			UFunctions::DestroyAllHLODs();
 		}
 
 		//Toggle our fly function on "fly" command.
@@ -61,6 +67,24 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				            XOR(
 					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version.\n\ndebugcamera: toggle custom debug camera (works in lobby).\n\nskydive: start skydiving and deploy at 500m above ground.\n\nFortWeapon: full weapon name to equip it (works with pickaxes too).\n\nSetCharGravity: change the gravity scale..\n\nFortPlaylistAthena: full FortPlaylistAthena path to change to the playlist you dropping in.\n\n"),
 				            XOR("Cranium CheatScript Commands"), MB_OK);
+			}
+			else if (ScriptNameW.starts_with(XOR(L"activate")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					if (HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
+					{
+					}
+					else
+					{
+						MessageBoxA(nullptr, XOR("Couldn't process your activation code!."), XOR("Cranium HWID System"), MB_OK);
+					}
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("Please input your activation key!."), XOR("Cranium HWID System"), MB_OK);
+				}
 			}
 			else if (ScriptNameW == XOR(L"dumpbps"))
 			{
@@ -109,7 +133,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 				Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
 			}
-			else if(ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
+			else if (ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
 			{
 				PlaylistName = ScriptNameW.c_str();
 			}

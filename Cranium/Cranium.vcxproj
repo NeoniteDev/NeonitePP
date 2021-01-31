@@ -74,6 +74,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Cranium\cryptolens</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Cryptolens.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -96,10 +99,40 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Cryptolens.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Cranium\cryptolens</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="cryptolens\ActivateError.hpp" />
+    <ClInclude Include="cryptolens\ActivationData.hpp" />
+    <ClInclude Include="cryptolens\api.hpp" />
+    <ClInclude Include="cryptolens\base64.hpp" />
+    <ClInclude Include="cryptolens\basic_Cryptolens.hpp" />
+    <ClInclude Include="cryptolens\basic_Error.hpp" />
+    <ClInclude Include="cryptolens\basic_SKM.hpp" />
+    <ClInclude Include="cryptolens\Configuration_Unix.hpp" />
+    <ClInclude Include="cryptolens\Configuration_Windows.hpp" />
+    <ClInclude Include="cryptolens\core.hpp" />
+    <ClInclude Include="cryptolens\cryptolens_internals.hpp" />
+    <ClInclude Include="cryptolens\Customer.hpp" />
+    <ClInclude Include="cryptolens\DataObject.hpp" />
+    <ClInclude Include="cryptolens\Error.hpp" />
+    <ClInclude Include="cryptolens\LicenseKey.hpp" />
+    <ClInclude Include="cryptolens\LicenseKeyChecker.hpp" />
+    <ClInclude Include="cryptolens\LicenseKeyInformation.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_caching.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_COM.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_static.hpp" />
+    <ClInclude Include="cryptolens\RawLicenseKey.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_curl.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_v20190401_to_v20180502.hpp" />
+    <ClInclude Include="cryptolens\RequestHandler_WinHTTP.hpp" />
+    <ClInclude Include="cryptolens\ResponseParser_ArduinoJson5.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_CryptoAPI.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_OpenSSL.hpp" />
+    <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp" />
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlhooks.h" />
     <ClInclude Include="curlver.h" />
@@ -108,6 +141,7 @@
     <ClInclude Include="finder.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="hooks.h" />
+    <ClInclude Include="hwid.h" />
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="mods.h" />
     <ClInclude Include="pch.h" />
@@ -126,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="cryptolens\Cryptolens.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

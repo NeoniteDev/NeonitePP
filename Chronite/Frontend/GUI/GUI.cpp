@@ -140,9 +140,9 @@ void ImGui::ShowLoader(bool* p_open)
 
 			SameLine(GetWindowWidth() - 465);
 
-			EndTabItem();
+			//EndTabItem();
 			
-			InputTextWithHint(" ", "Exchange Code (Enables ProdMode)", exchangeCode, sizeof(exchangeCode));
+			//InputTextWithHint(" ", "Exchange Code (Enables ProdMode)", exchangeCode, sizeof(exchangeCode));
 
 			SameLine(GetWindowWidth() - 100);
 

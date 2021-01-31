@@ -1,0 +1,63 @@
+#pragma once
+
+#if __cplusplus < 201703L
+
+#include "../cryptolens/imports/optional-lite/optional.hpp"
+
+namespace cryptolens_io {
+
+namespace v20190401 {
+
+template<typename T>
+using optional = ::nonstd::optional<T>;
+
+using ::nonstd::make_optional;
+using ::nonstd::nullopt;
+
+} // namespace v20190401
+
+} // namespace cryptolens_io
+
+#else
+
+#include <optional>
+
+namespace cryptolens_io {
+
+namespace v20190401 {
+
+template<typename T>
+using optional = std::optional<T>;
+
+using std::make_optional;
+using std::nullopt;
+
+} // namespace v20190401
+
+} // namespace cryptolens_io
+
+#endif
+
+namespace cryptolens_io {
+
+namespace latest {
+
+template<typename T>
+using optional = ::cryptolens_io::v20190401::optional<T>;
+
+using ::cryptolens_io::v20190401::make_optional;
+using ::cryptolens_io::v20190401::nullopt;
+
+} // namespace latest
+
+namespace v20180502 {
+
+template<typename T>
+using optional = ::cryptolens_io::v20190401::optional<T>;
+
+using ::cryptolens_io::v20190401::make_optional;
+using ::cryptolens_io::v20190401::nullopt;
+
+} // namespace v20180502
+
+} // namespace cryptolens_io
