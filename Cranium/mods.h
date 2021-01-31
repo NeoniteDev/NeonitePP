@@ -416,6 +416,11 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
+	struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
+	{
+		UObject* ReturnValue;
+	};
+
 	auto EquipWeapon(const wchar_t* weaponname, const int guid)
 	{
 		FGuid GUID;
@@ -426,10 +431,26 @@ struct Pawn
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
 
-		const auto WeaponData = FindObject<UObject*>(weaponname);
+		auto WeaponData = FindObject<UObject*>(weaponname);
 
 		if (WeaponData)
 		{
+			std::wstring objectName = GetObjectFullName(WeaponData);
+
+			if (objectName.starts_with(L"AthenaGadget"))
+			{
+				const auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+
+				UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
+
+				ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
+
+				if (prm_ReturnValue.ReturnValue)
+				{
+					WeaponData = prm_ReturnValue.ReturnValue;
+				}
+			}
+
 			//weapon found equip it
 			AFortPawn_EquipWeaponDefinition_Params params;
 			params.WeaponData = WeaponData;
@@ -443,7 +464,7 @@ struct Pawn
 		}
 	}
 
-	auto Fly(bool bIsFlying)
+	auto SetMovementMode(TEnumAsByte<EMovementMode> NewMode, unsigned char CustomMode)
 	{
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
 
@@ -453,11 +474,20 @@ struct Pawn
 
 		UCharacterMovementComponent_SetMovementMode_Params params;
 
-		if (!bIsFlying) params.NewMovementMode = EMovementMode::MOVE_Flying;
-		else params.NewMovementMode = EMovementMode::MOVE_Walking;
-		params.NewCustomMode = 0;
+		params.NewMovementMode = NewMode;
+		params.NewCustomMode = CustomMode;
 
 		ProcessEvent(CharMovementFinder.GetObj(), fn, &params);
+	}
+
+	auto Fly(bool bIsFlying)
+	{
+		TEnumAsByte<EMovementMode> NewMode;
+
+		if (!bIsFlying) NewMode = EMovementMode::MOVE_Flying;
+		NewMode = EMovementMode::MOVE_Walking;
+
+		SetMovementMode(NewMode, 0);
 	}
 
 	auto SetPawnGravityScale(float GravityScaleInput)
@@ -472,6 +502,7 @@ struct Pawn
 
 		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
+
 };
 
 namespace Neoroyale

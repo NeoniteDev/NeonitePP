@@ -422,36 +422,7 @@ struct GObjects
 	}
 };
 
-struct UConsole;
-
-struct UCheatManager
-{
-	class ADebugCameraController* DebugCameraControllerRef;
-	class UClass* DebugCameraControllerClass;
-	unsigned char UnknownData00[0x40];
-};
-
-struct UGameViewportClient
-{
-	CHAR unknown1[0x40];
-	UConsole* ViewportConsole;
-	TArray<struct FDebugDisplayProperty> DebugProperties;
-	unsigned char UnknownData01[0x10];
-	int MaxSplitscreenPlayers;
-	unsigned char UnknownData02[0xC];
-	class UWorld* World;
-	class UGameInstance* GameInstance;
-	unsigned char UnknownData03[0x2B8];
-};
-
-struct UEngine
-{
-	CHAR unknown1[0xF8];
-	UClass* ConsoleClass;
-	CHAR unknown2[0x688];
-	UGameViewportClient* GameViewportClient;
-};
-
+struct UEngine;
 
 struct FVector
 {
@@ -501,11 +472,6 @@ struct FQuat
 	float W, X, Y, Z;
 };
 
-
-template <class OptionalType>
-struct TOptional
-{
-};
 
 struct FTransform
 {

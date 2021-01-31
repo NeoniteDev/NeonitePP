@@ -188,6 +188,18 @@ enum class EAthenaGamePhase : uint8_t
 	EAthenaGamePhase_MAX = 7
 };
 
+enum class EFortMovementStyle : uint8_t
+{
+	Running = 0,
+	Walking = 1,
+	Charging = 2,
+	Sprinting = 3,
+	PersonalVehicle = 4,
+	Flying = 5,
+	Tethered = 6,
+	EFortMovementStyle_MAX = 7
+};
+
 enum class EMouseCursor : uint8_t
 {
 	None = 0,
