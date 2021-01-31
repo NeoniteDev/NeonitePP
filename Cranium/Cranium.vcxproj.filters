@@ -51,34 +51,90 @@
     <ClInclude Include="ue4.h" />
     <ClInclude Include="prod.h" />
     <ClInclude Include="hwid.h" />
-    <ClInclude Include="cryptolens\ActivateError.hpp" />
-    <ClInclude Include="cryptolens\ActivationData.hpp" />
-    <ClInclude Include="cryptolens\api.hpp" />
-    <ClInclude Include="cryptolens\base64.hpp" />
-    <ClInclude Include="cryptolens\basic_Cryptolens.hpp" />
-    <ClInclude Include="cryptolens\basic_Error.hpp" />
-    <ClInclude Include="cryptolens\basic_SKM.hpp" />
-    <ClInclude Include="cryptolens\Configuration_Unix.hpp" />
-    <ClInclude Include="cryptolens\Configuration_Windows.hpp" />
-    <ClInclude Include="cryptolens\core.hpp" />
-    <ClInclude Include="cryptolens\cryptolens_internals.hpp" />
-    <ClInclude Include="cryptolens\Customer.hpp" />
-    <ClInclude Include="cryptolens\DataObject.hpp" />
-    <ClInclude Include="cryptolens\Error.hpp" />
-    <ClInclude Include="cryptolens\LicenseKey.hpp" />
-    <ClInclude Include="cryptolens\LicenseKeyChecker.hpp" />
-    <ClInclude Include="cryptolens\LicenseKeyInformation.hpp" />
-    <ClInclude Include="cryptolens\MachineCodeComputer_caching.hpp" />
-    <ClInclude Include="cryptolens\MachineCodeComputer_COM.hpp" />
-    <ClInclude Include="cryptolens\MachineCodeComputer_static.hpp" />
-    <ClInclude Include="cryptolens\RawLicenseKey.hpp" />
-    <ClInclude Include="cryptolens\RequestHandler_curl.hpp" />
-    <ClInclude Include="cryptolens\RequestHandler_v20190401_to_v20180502.hpp" />
-    <ClInclude Include="cryptolens\RequestHandler_WinHTTP.hpp" />
-    <ClInclude Include="cryptolens\ResponseParser_ArduinoJson5.hpp" />
-    <ClInclude Include="cryptolens\SignatureVerifier_CryptoAPI.hpp" />
-    <ClInclude Include="cryptolens\SignatureVerifier_OpenSSL.hpp" />
-    <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp" />
+    <ClInclude Include="cryptolens\MachineCodeComputer_static.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\MachineCodeComputer_COM.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\MachineCodeComputer_caching.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\LicenseKeyInformation.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\LicenseKeyChecker.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\LicenseKey.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\Error.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\DataObject.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\Customer.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\cryptolens_internals.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\core.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\Configuration_Windows.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\Configuration_Unix.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\basic_SKM.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\basic_Error.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\basic_Cryptolens.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\base64.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\api.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\ActivationData.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\ActivateError.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\RawLicenseKey.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\RequestHandler_v20190401_to_v20180502.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\RequestHandler_curl.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\RequestHandler_WinHTTP.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\SignatureVerifier_OpenSSL.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\ResponseParser_ArduinoJson5.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\SignatureVerifier_CryptoAPI.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp">
+      <Filter>Auth Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">
@@ -93,6 +149,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{8c068a28-37ee-417d-8ec3-19c6bce1a944}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Auth Library">
+      <UniqueIdentifier>{94efe90e-a46a-4235-a796-88c761ae3163}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -100,6 +159,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="cryptolens\Cryptolens.lib" />
+    <Library Include="cryptolens\Cryptolens.lib">
+      <Filter>Auth Library</Filter>
+    </Library>
   </ItemGroup>
 </Project>
