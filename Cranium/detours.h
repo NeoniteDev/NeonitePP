@@ -117,11 +117,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				bIsDebugCamera = !bIsDebugCamera;
 			}
-			else if (ScriptNameW == XOR(L"skydive"))
+			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
 			{
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
 			}
-			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")))
+			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")) || ScriptNameW.starts_with(XOR(L"AthenaGadget")))
 			{
 				Neoroyale::PlayerPawn->EquipWeapon(ScriptNameW.c_str(), 0);
 			}

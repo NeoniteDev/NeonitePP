@@ -222,6 +222,11 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
+		Text(XOR("Taj (@AthenaBigBoi): Internal, General."));
+
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
 		Text("Nyamimi (@nyameows): Internals, General.");
 
 		SetCursorPosX(GetCursorPosX() + 50);

@@ -1,6 +1,8 @@
 #pragma once
 #include "finder.h"
 
+inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Papaya/Playlist_PapayaSmall.Playlist_PapayaSmall");
+
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
 {
@@ -94,6 +96,111 @@ namespace UFunctions
 		printf("\n[Neoroyale] Match started!.\n");
 	}
 
+	inline void SetPlaylist()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+
+		const auto Playlist = FindObject<UObject*>(PlaylistName.c_str());
+		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
+
+		GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
+		GameState->CurrentPlaylistInfo.OverridePlaylist = Playlist;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
+
+		Empty_Params params;
+
+		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	}
+
+	inline void SetGamePhase()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+
+		const auto GameState = reinterpret_cast<GameStateForGamePhase*>(GameStateFinder.GetObj());
+
+		GameState->GamePhase = EAthenaGamePhase::None;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
+
+		AFortGameStateAthena_OnRep_GamePhase_Params params;
+		params.OldGamePhase = EAthenaGamePhase::Setup;
+
+		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	}
+
+	/*
+	inline void AddItemToInventory(AFortInventory* ParentInventory, UObject* ItemToAdd, int ItemCount, FGuid withGUID)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortInventory:HandleInventoryLocalUpdate"));
+
+		Empty_Params params;
+
+		ProcessEvent(Inventory, fn, &params);
+
+        //This will be used to edit it's entries to set it's GUID
+        UFortWorldItem* WorldItemInstance;
+        
+		//This is the instance to be later used in for the Updated Item List. New WorldItems get added to this...
+		TArray<UFortItem*> InventoryItemInstances;
+
+		ParentInventory->HandleInventoryLocalUpdate();
+
+        struct FFortItemEntry TempItemEntry;
+
+		TArray<struct FFortItemEntry> Replicated_Entries;
+
+        TempItemEntry.Count = 1;
+		TempItemEntry.ItemDefiniton = ItemToAdd;
+		TempItemEntry.Durability = 3232.0000;
+		TempItemEntry.LoadedAmmo = 32;
+		TempItemEntry.ItemGUID = withGUID;
+
+
+        //Add the New Item Entry to the Replicated Entries custom variable which is to be later used in setting the ReplicatedEntries in the Inventory Structure...
+		Replicated_Entries.Add(TempItemEntry);
+
+        //Create a new FortItem which is to be casted to FortWorldItem later on so the Entry can be set for the GUID,Count,Level,Durability and etc...
+		WorldItemInstance = static_cast<UFortWorldItem*>(ItemToAdd->CreateTemporaryItemInstanceBP(ItemCount, 3));
+        
+		//Set the World Item's Count...
+        WorldItemInstance -> ItemEntry.Count = 1;
+
+        //Set the GUID of the WorldItem, I don't know if you could generate a random GUID by calling a function... we might have to do this manually
+		WorldItemInstance -> ItemEntry.ItemGUID = withGUID;       
+
+        //Add our new FortWorldItem to tne InventoryItemInstances variable which will then be used as the ItemInstances for the updated ItemList of the Inventory...
+        InventoryItemInstances.Add(WorldItemInstance);
+
+       //Adds the FortWorldItem that we had created and set GUID and count to the the ItemInstances Array in the Inventory structure in the Parent Inventory.
+		ParentInventory -> Inventory.ItemInstances.Add(WorldItemInstance); 
+
+		//Create a new struct to be later set as the Variable InventoryItemInstances
+		struct FFortItemList UpdatedItemList;
+		//which is then is later used to be the new ItemList for the inventory
+        
+		//Finish updating the replicated entries by setting it to our newly updated one.
+		UpdatedItemList.ReplicatedEntries = ReplicatedEntries;
+
+		//Set the ItemInstances list to the newly created one.
+		UpdatedItemList.ItemInstances = InventoryItemInstances;
+         
+        //Finish setting the Inventory struct (which is a FFortItemList) to our update ItemList;
+		ParentInventory -> Inventory = UpdatedItemList;
+
+        ParentInventory ->HandleInventoryLocalUpdate();
+		ParentInventory ->ClientForceWorldInventoryUpdate();
+		AFortPlayerState* PawnPlayerState -> static_cast<AFortPlayerState*>(Pawn->PlayerState);
+		PawnPlayerState -> OnRep_AccumulatedItems();
+		PawnPlayerState -> OnRep_QuickbarEquippedItems();
+
+	}*/
 
 	inline void Play(const wchar_t* EventSequenceMap, const wchar_t* AnimationPlayerFullName)
 	{
@@ -222,8 +329,6 @@ namespace Console
 		return true;
 	}
 }
-
-inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Papaya/Playlist_PapayaSmall.Playlist_PapayaSmall");
 
 //TODO: move this from here
 struct Pawn
@@ -367,45 +472,6 @@ struct Pawn
 
 		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
-
-	auto SetPlaylist()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
-
-		const auto Playlist = FindObject<UObject*>(PlaylistName.c_str());
-		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
-
-		GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
-		GameState->CurrentPlaylistInfo.OverridePlaylist = Playlist;
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
-
-		Empty_Params params;
-
-		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
-	}
-
-	auto SetGamePhase()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
-
-		const auto GameState = reinterpret_cast<GameStateForGamePhase*>(GameStateFinder.GetObj());
-
-		GameState->GamePhase = EAthenaGamePhase::None;
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
-
-		AFortGameStateAthena_OnRep_GamePhase_Params params;
-		params.OldGamePhase = EAthenaGamePhase::Setup;
-
-		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
-	}
 };
 
 namespace Neoroyale
@@ -425,7 +491,6 @@ namespace Neoroyale
 	{
 		while (true)
 		{
-			
 			if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
 			{
 				if (!bHasJumped)
@@ -455,11 +520,10 @@ namespace Neoroyale
 
 	inline void init()
 	{
-		
 		Console::CheatManager();
 
 		UFunctions::DestroyAllHLODs();
-		
+
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 
 		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
@@ -474,12 +538,12 @@ namespace Neoroyale
 
 			PlayerPawn->StartSkydiving(0.f);
 			PlayerPawn->StartSkydiving(0.f);
-			PlayerPawn->StartSkydiving(1200.0f);
+			PlayerPawn->StartSkydiving(2000.0f);
 
-			PlayerPawn->SetPlaylist();
+			UFunctions::SetPlaylist();
 
-			PlayerPawn->SetGamePhase();
-			
+			UFunctions::SetGamePhase();
+
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
