@@ -54,6 +54,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		Console::CheatManager();
 	}
 
+	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
+	{
+		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/Prototype/WID_FireExtinguisher_Spray.WID_FireExtinguisher_Spray"), 0);
+	}
+
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here

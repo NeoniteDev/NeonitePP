@@ -339,6 +339,10 @@ public:
 	FPlaylistPropertyArray CurrentPlaylistInfo;
 };
 
+struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
+{
+	UObject* ReturnValue;
+};
 
 struct FUObjectItem
 {
@@ -472,7 +476,6 @@ struct FQuat
 	float W, X, Y, Z;
 };
 
-
 struct FTransform
 {
 	FQuat Rotation;
@@ -494,22 +497,6 @@ struct FMinimalViewInfo
 	unsigned char bUseFieldOfViewForLOD : 1;
 	unsigned char PreviousViewTransform[0x3];
 	TEnumAsByte<ECameraProjectionMode> ProjectionMode;
-};
-
-struct FWeakObjectPtr
-{
-public:
-	bool SerialNumbersMatch(FUObjectItem* ObjectItem) const
-	{
-		return ObjectItem->SerialNumber == ObjectSerialNumber;
-	}
-
-	bool IsValid() const;
-
-	UObject* Get() const;
-
-	int32_t ObjectIndex;
-	int32_t ObjectSerialNumber;
 };
 
 struct ULevelStreamingDynamic_LoadLevelInstance_Params
@@ -545,27 +532,7 @@ struct UGameplayStatics_LoadStreamLevel_Params
 	FLatentActionInfo LatentInfo;
 };
 
-template <class T, class TWeakObjectPtrBase = FWeakObjectPtr>
-struct TWeakObjectPtr : private TWeakObjectPtrBase
+struct AActor_K2_GetActorLocation_Params
 {
-public:
-	T* Get() const
-	{
-		return static_cast<T*>(TWeakObjectPtrBase::Get());
-	}
-
-	T& operator*() const
-	{
-		return *Get();
-	}
-
-	T* operator->() const
-	{
-		return Get();
-	}
-
-	bool IsValid() const
-	{
-		return TWeakObjectPtrBase::IsValid();
-	}
+	FVector ReturnValue;
 };

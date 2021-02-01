@@ -1,7 +1,7 @@
 #pragma once
 #include "finder.h"
 
-inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Papaya/Playlist_PapayaSmall.Playlist_PapayaSmall");
+inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab");
 
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
@@ -416,11 +416,6 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
-	struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
-	{
-		UObject* ReturnValue;
-	};
-
 	auto EquipWeapon(const wchar_t* weaponname, const int guid)
 	{
 		FGuid GUID;
@@ -503,6 +498,16 @@ struct Pawn
 		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
 
+	auto GetLocation() -> FVector
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+
+		AActor_K2_GetActorLocation_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
 };
 
 namespace Neoroyale
