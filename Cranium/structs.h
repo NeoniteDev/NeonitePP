@@ -254,6 +254,11 @@ struct Empty_Params
 {
 };
 
+struct APlayerController_ClientReturnToMainMenu_Params
+{
+	FString ReturnReason;
+};
+
 struct UCheatManager_CheatScript_Params
 {
 	FString ScriptName;

@@ -1,7 +1,7 @@
 #pragma once
 #include "finder.h"
 
-inline std::wstring PlaylistName = XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab");
+inline UObject* gPlaylist;
 
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
@@ -96,6 +96,21 @@ namespace UFunctions
 		printf("\n[Neoroyale] Match started!.\n");
 	}
 
+	inline void EndMatch()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:EndMatch"));
+
+		Empty_Params params;
+
+		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] Match Ended!.\n");
+	}
+
 	inline void SetPlaylist()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -103,11 +118,10 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
 
-		const auto Playlist = FindObject<UObject*>(PlaylistName.c_str());
 		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
 
-		GameState->CurrentPlaylistInfo.BasePlaylist = Playlist;
-		GameState->CurrentPlaylistInfo.OverridePlaylist = Playlist;
+		GameState->CurrentPlaylistInfo.BasePlaylist = gPlaylist;
+		GameState->CurrentPlaylistInfo.OverridePlaylist = gPlaylist;
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
 
@@ -508,6 +522,22 @@ struct Pawn
 
 		return params.ReturnValue;
 	}
+	
+	auto ReturnToLobby()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+		
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:ClientReturnToMainMenu"));
+
+		APlayerController_ClientReturnToMainMenu_Params params;
+		FString reason = XOR(L"User wanted to return to lobby");
+		params.ReturnReason = reason;
+
+		ProcessEvent(PlayerControllerFinder.GetObj() , fn, &params);
+	}
 };
 
 namespace Neoroyale
@@ -517,9 +547,9 @@ namespace Neoroyale
 	inline bool bHasJumped;
 	inline Pawn* PlayerPawn;
 
-	inline void start()
+	inline void start(const wchar_t* MapToPlayOn)
 	{
-		UFunctions::Travel(APOLLO_TERRAIN);
+		UFunctions::Travel(MapToPlayOn);
 		bIsStarted = !bIsStarted;
 	}
 

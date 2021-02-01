@@ -82,7 +82,7 @@ inline std::wstring GetFieldClassName(FField* obj)
 
 //Find any entity inside the UGlobalObjects array aka. GObjects.
 template <typename T>
-static T FindObject(wchar_t const* name)
+static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false)
 {
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
@@ -92,9 +92,27 @@ static T FindObject(wchar_t const* name)
 			continue;
 		}
 
-		if (GetObjectFullName(object).starts_with(name))
+		auto objectFullName = GetObjectFullName(object);
+
+		if (to_lower)
 		{
-			return reinterpret_cast<T>(object);
+			std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
+			               [](const unsigned char c) { return std::tolower(c); });
+		}
+
+		if (!ends_with)
+		{
+			if (objectFullName.starts_with(name))
+			{
+				return reinterpret_cast<T>(object);
+			}
+		}
+		else
+		{
+			if (objectFullName.ends_with(name))
+			{
+				return reinterpret_cast<T>(object);
+			}
 		}
 	}
 	return nullptr;

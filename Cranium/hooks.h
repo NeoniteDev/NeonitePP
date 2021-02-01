@@ -60,7 +60,7 @@ namespace Hooks
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
 		//Used for getting UObjects full names.
-		if (gVersion == "12.41" || gVersion == "12.50" || gVersion == "12.61")
+		if (gVersion == "12.41" || gVersion == "12.50" || gVersion == "12.61" || gVersion == "13.00")
 		{
 			//Tested only on 12.41 and 12.61.
 			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);

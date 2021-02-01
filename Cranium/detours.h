@@ -19,10 +19,37 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
+			printf("\n\n[Neoroyale] Start!");
+
+			//TODO: clean this mess;
+			std::string url = gUrl;
 			gUrl.clear();
+			std::string query = url.erase(0, url.find("%3A") + 1);
+			query.erase(url.find("&"), url.size());
+			query.erase(0, url.find("playlist"));
+			std::string PlaylistName = query + "." + query;
+			const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
+
+			const auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+			auto Map = APOLLO_TERRAIN;
+
+			if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
+			{
+				Map = APOLLO_PAPAYA;
+			}
+
+			if (Playlist && !gPlaylist)
+			{
+				gPlaylist = Playlist;
+			}
+			else if (!Playlist && !gPlaylist)
+			{
+				gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			}
+
 			if (HWID::Validate())
 			{
-				Neoroyale::start();
+				Neoroyale::start(Map);
 			}
 			else
 			{
@@ -32,6 +59,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
 		{
+			printf("\n[Neoroyale] Init!\n");
 			Neoroyale::init();
 		}
 
@@ -140,7 +168,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			}
 			else if (ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
 			{
-				PlaylistName = ScriptNameW.c_str();
+				const auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
+				if (Playlist)
+				{
+					gPlaylist = Playlist;
+				}
+				else
+				{
+					MessageBoxA(nullptr, "Couldn't find the requested playlist!.", "Cranium", MB_OK);
+				}
 			}
 		}
 	}
