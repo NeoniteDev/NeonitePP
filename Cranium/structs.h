@@ -330,20 +330,6 @@ struct AFortGameStateAthena_OnRep_GamePhase_Params
 	EAthenaGamePhase OldGamePhase;
 };
 
-class GameStateForGamePhase
-{
-public:
-	char padding[0x1E78];
-	EAthenaGamePhase GamePhase;
-};
-
-class GameStateForPlaylist
-{
-public:
-	char padding[0x1E98];
-	FPlaylistPropertyArray CurrentPlaylistInfo;
-};
-
 struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
 {
 	UObject* ReturnValue;

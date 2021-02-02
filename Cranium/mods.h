@@ -118,10 +118,12 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
 
-		const auto GameState = reinterpret_cast<GameStateForPlaylist*>(GameStateFinder.GetObj());
+		const auto CurrentPlaylistInfoOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"CurrentPlaylistInfo"));
 
-		GameState->CurrentPlaylistInfo.BasePlaylist = gPlaylist;
-		GameState->CurrentPlaylistInfo.OverridePlaylist = gPlaylist;
+		const auto CurrentPlaylistInfo = reinterpret_cast<FPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(GameStateFinder.GetObj()) + CurrentPlaylistInfoOffset);
+
+		CurrentPlaylistInfo->BasePlaylist = gPlaylist;
+		CurrentPlaylistInfo->OverridePlaylist = gPlaylist;
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
 
@@ -137,9 +139,11 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
 
-		const auto GameState = reinterpret_cast<GameStateForGamePhase*>(GameStateFinder.GetObj());
+		const auto GamePhaseOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"GamePhase"));
 
-		GameState->GamePhase = EAthenaGamePhase::None;
+		EAthenaGamePhase* GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(GameStateFinder.GetObj()) + GamePhaseOffset);
+		
+		*GamePhase = EAthenaGamePhase::None;
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
 
@@ -494,7 +498,7 @@ struct Pawn
 		TEnumAsByte<EMovementMode> NewMode;
 
 		if (!bIsFlying) NewMode = EMovementMode::MOVE_Flying;
-		NewMode = EMovementMode::MOVE_Walking;
+		else NewMode = EMovementMode::MOVE_Walking;
 
 		SetMovementMode(NewMode, 0);
 	}
@@ -522,21 +526,21 @@ struct Pawn
 
 		return params.ReturnValue;
 	}
-	
+
 	auto ReturnToLobby()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-		
+
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:ClientReturnToMainMenu"));
 
 		APlayerController_ClientReturnToMainMenu_Params params;
 		FString reason = XOR(L"User wanted to return to lobby");
 		params.ReturnReason = reason;
 
-		ProcessEvent(PlayerControllerFinder.GetObj() , fn, &params);
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 };
 

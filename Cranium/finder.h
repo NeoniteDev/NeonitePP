@@ -61,6 +61,8 @@ class ObjectFinder
 
 		const auto firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
 
+		//printf("\n firstPropertyName: %ls \n", firstPropertyName.c_str());
+
 		if (firstPropertyName == childName)
 		{
 			return inObject;
@@ -69,6 +71,9 @@ class ObjectFinder
 		while (next)
 		{
 			std::wstring nextName = GetFirstName(reinterpret_cast<FField*>(next));
+
+			//printf("\n nextName: %ls \n", nextName.c_str());
+
 			if (childName == nextName)
 			{
 				propertyObject = next;
@@ -85,6 +90,7 @@ class ObjectFinder
 
 	GameObject*& resolveValuePointer(GameObject* bastePtr, GameObject* prop) const
 	{
+		//printf("\nObject: %ls, Offset: %x\n", GetObjectFirstName(reinterpret_cast<UObject*>(m_object)).c_str(), prop->GetOffsetInternal());
 		return *reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal());
 	}
 
@@ -112,6 +118,23 @@ public:
 	ObjectFinder Find(const std::wstring& objectToFind) const
 	{
 		return FindChildObject(objectToFind);
+	}
+
+	static auto FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
+	{
+		const auto Class = FindObject<UClass*>(classToFind.c_str());
+
+		if (Class)
+		{
+			GameObject* property = InternalFindChildInObject(reinterpret_cast<GameObject*>(Class->ChildProperties), objectToFind);
+			if (property)
+			{
+				//printf("[ObjectFinder] Found %ls at 0x%x", objectToFind.c_str(), property->GetOffsetInternal());
+				return property->GetOffsetInternal();
+			}
+		}
+
+		return 0;
 	}
 
 	ObjectFinder FindChildObject(const std::wstring& objectToFind) const
