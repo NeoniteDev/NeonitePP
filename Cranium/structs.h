@@ -250,6 +250,26 @@ struct ACharacter_IsJumpProvidingForce_Params
 	bool ReturnValue;
 };
 
+struct ACharacter_IsSkydiving_Params
+{
+	bool ReturnValue;
+};
+
+struct ACharacter_IsParachuteOpen_Params
+{
+	bool ReturnValue;
+};
+
+struct ACharacter_IsParachuteForcedOpen_Params
+{
+	bool ReturnValue;
+};
+
+struct ACharacter_IsInAircraft_Params
+{
+	bool ReturnValue;
+};
+
 struct Empty_Params
 {
 };

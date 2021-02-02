@@ -389,6 +389,39 @@ struct Pawn
 		return params.ReturnValue;
 	}
 
+	auto IsSkydiving()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
+
+		ACharacter_IsSkydiving_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
+	auto IsParachuteOpen()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
+
+		ACharacter_IsParachuteOpen_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
+	auto IsParachuteForcedOpen()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
+
+		ACharacter_IsParachuteForcedOpen_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
 	auto Jump()
 	{
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
@@ -557,6 +590,19 @@ namespace Neoroyale
 		bIsStarted = !bIsStarted;
 	}
 
+	auto IsInAircraft()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
+		ACharacter_IsInAircraft_Params params;
+
+		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+		return params.ReturnValue;
+	}
+
 	inline void thread()
 	{
 		while (true)
@@ -566,9 +612,30 @@ namespace Neoroyale
 				if (!bHasJumped)
 				{
 					bHasJumped = !bHasJumped;
-					if (!PlayerPawn->IsJumpProvidingForce())
+					if (IsInAircraft()) 
 					{
-						PlayerPawn->Jump();
+						UFunctions::Summon(L"PlayerPawn_Athena_C");
+						PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
+
+						if (PlayerPawn)
+						{
+							PlayerPawn->Possess();
+							PlayerPawn->ShowSkin();
+						}
+					}
+					else
+					{
+						// NOTE: (irma) This doesn't work. Uncomment if you want to stand in the air.
+						/*if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) {
+							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 2L);
+						}
+						else if (PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) {
+							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 3L);
+						}
+						else*/ if (!PlayerPawn->IsJumpProvidingForce())
+						{
+							PlayerPawn->Jump();
+						}
 					}
 				}
 			}
@@ -586,7 +653,6 @@ namespace Neoroyale
 			Sleep(1000 / 60);
 		}
 	}
-
 
 	inline void init()
 	{
