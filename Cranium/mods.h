@@ -575,6 +575,15 @@ struct Pawn
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
+
+	auto OnRep_IsParachuteOpen(bool previousState) {
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:OnRep_IsParachuteOpen"));
+
+		ACharacter_OnRep_IsParachuteOpen_Params params;
+		params.bPreviousState = previousState;
+
+		ProcessEvent(this, fn, &params);
+	}
 };
 
 namespace Neoroyale
@@ -625,14 +634,22 @@ namespace Neoroyale
 					}
 					else
 					{
-						// NOTE: (irma) This doesn't work. Uncomment if you want to stand in the air.
-						/*if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) {
-							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 2L);
+						// Glide
+						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) 
+						{
+							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 3);
+							PlayerPawn->OnRep_IsParachuteOpen(false);
 						}
-						else if (PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) {
-							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 3L);
+
+						// Skydive
+						else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+						{
+							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 4);
+							PlayerPawn->OnRep_IsParachuteOpen(true);
 						}
-						else*/ if (!PlayerPawn->IsJumpProvidingForce())
+
+						// Jump
+						else if (!PlayerPawn->IsJumpProvidingForce())
 						{
 							PlayerPawn->Jump();
 						}
@@ -671,10 +688,6 @@ namespace Neoroyale
 			//PlayerPawn->SetSkeletalMesh();
 
 			PlayerPawn->ShowSkin();
-
-			PlayerPawn->StartSkydiving(0.f);
-			PlayerPawn->StartSkydiving(0.f);
-			PlayerPawn->StartSkydiving(2000.0f);
 
 			UFunctions::SetPlaylist();
 

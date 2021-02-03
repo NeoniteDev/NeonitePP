@@ -274,6 +274,19 @@ struct Empty_Params
 {
 };
 
+struct K2_OnMovementModeChanged_Params
+{
+	char PrevMovementMode;
+	char NewMovementMode;
+	char PrevCustomMode;
+	char NewCustomMode;
+};
+
+struct ACharacter_OnRep_IsParachuteOpen_Params
+{
+	bool bPreviousState;
+};
+
 struct APlayerController_ClientReturnToMainMenu_Params
 {
 	FString ReturnReason;
