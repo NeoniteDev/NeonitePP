@@ -689,6 +689,7 @@ namespace Neoroyale
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 
 		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
+		auto PlaylistName = GetObjectFirstName(gPlaylist);
 
 		if (PlayerPawn)
 		{
@@ -701,7 +702,11 @@ namespace Neoroyale
 
 			PlayerPawn->ToggleInfiniteAmmo();
 
-			UFunctions::TeleportToSpawn();
+			if (PlaylistName.find(XOR(L"papaya")) == std::string::npos ||
+				PlaylistName.find(XOR(L"battlelab")) == std::string::npos)
+			{
+				UFunctions::TeleportToSpawn();
+			}
 
 			if (gVersion != "12.41")
 			{
