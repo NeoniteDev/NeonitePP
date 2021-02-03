@@ -96,21 +96,6 @@ namespace UFunctions
 		printf("\n[Neoroyale] Match started!.\n");
 	}
 
-	inline void EndMatch()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:EndMatch"));
-
-		Empty_Params params;
-
-		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
-		printf("\n[Neoroyale] Match Ended!.\n");
-	}
-
 	inline void SetPlaylist()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -142,7 +127,7 @@ namespace UFunctions
 		const auto GamePhaseOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"GamePhase"));
 
 		EAthenaGamePhase* GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(GameStateFinder.GetObj()) + GamePhaseOffset);
-		
+
 		*GamePhase = EAthenaGamePhase::None;
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
@@ -549,31 +534,22 @@ struct Pawn
 		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
 	}
 
-	auto GetLocation() -> FVector
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
 
-		AActor_K2_GetActorLocation_Params params;
-
-		ProcessEvent(this, fn, &params);
-
-		return params.ReturnValue;
-	}
-
-	auto ReturnToLobby()
+	static auto ToggleInfiniteAmmo()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:ClientReturnToMainMenu"));
+		const auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
-		APlayerController_ClientReturnToMainMenu_Params params;
-		FString reason = XOR(L"User wanted to return to lobby");
-		params.ReturnReason = reason;
+		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
+		// the offset has 8 bits, bools are only one bit as it's only 0\1 so we have a struct with 8 bools to be able to edit that specific bool
+		const auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(PlayerControllerFinder.GetObj()) + bEnableVoiceChatPTTOffset);
 
-		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+		PlayerControllerBools->bInfiniteAmmo = true;
+		PlayerControllerBools->bInfiniteMagazine = true;
 	}
 
 	auto OnRep_IsParachuteOpen(bool previousState) {
@@ -621,7 +597,7 @@ namespace Neoroyale
 				if (!bHasJumped)
 				{
 					bHasJumped = !bHasJumped;
-					if (IsInAircraft()) 
+					if (IsInAircraft())
 					{
 						UFunctions::Summon(L"PlayerPawn_Athena_C");
 						PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
@@ -689,9 +665,14 @@ namespace Neoroyale
 
 			PlayerPawn->ShowSkin();
 
-			UFunctions::SetPlaylist();
+			PlayerPawn->ToggleInfiniteAmmo();
 
-			UFunctions::SetGamePhase();
+			if (gVersion != "12.41")
+			{
+				UFunctions::SetPlaylist();
+
+				UFunctions::SetGamePhase();
+			}
 
 			UFunctions::StartMatch();
 
