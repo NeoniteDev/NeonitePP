@@ -27,6 +27,28 @@ namespace UFunctions
 		printf("\n[Neoroyale] %ls was summoned!.\n", ClassToSummon);
 	}
 
+	inline void TeleportToSpawn()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+
+		UCheatManager_BugItGo_Params params;
+		params.X = -156128.36;
+		params.Y = -159492.78;
+		params.Z = -2996.30;
+		params.Pitch = 0;
+		params.Yaw = 0;
+		params.Roll = 0;
+
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	}
+
 	inline void DestroyAllHLODs()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -452,6 +474,17 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
+	auto GetLocation() -> FVector
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+
+		AActor_K2_GetActorLocation_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
 	auto EquipWeapon(const wchar_t* weaponname, const int guid)
 	{
 		FGuid GUID;
@@ -659,6 +692,7 @@ namespace Neoroyale
 
 		if (PlayerPawn)
 		{
+
 			PlayerPawn->Possess();
 
 			//PlayerPawn->SetSkeletalMesh();
@@ -666,6 +700,8 @@ namespace Neoroyale
 			PlayerPawn->ShowSkin();
 
 			PlayerPawn->ToggleInfiniteAmmo();
+
+			UFunctions::TeleportToSpawn();
 
 			if (gVersion != "12.41")
 			{

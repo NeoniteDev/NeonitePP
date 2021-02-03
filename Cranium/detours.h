@@ -150,6 +150,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				bIsDebugCamera = !bIsDebugCamera;
 			}
+			else if (ScriptNameW == XOR(L"posk"))
+			{
+				FVector Location = Neoroyale::PlayerPawn->GetLocation();
+				printf("X = %.2f\n", Location.X);
+				printf("Y = %.2f\n", Location.Y);
+				printf("Z = %.2f\n", Location.Z);
+			}
 			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
 			{
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
