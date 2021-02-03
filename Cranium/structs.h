@@ -345,6 +345,18 @@ struct FPlaylistPropertyArray
 	UObject* OverridePlaylist;
 };
 
+struct PlayerControllerBoolsForInfiniteAmmo
+{
+	bool bEnableVoiceChatPTT : 1;
+	bool bVoiceChatPTTTransmit : 1;
+	bool bInfiniteAmmo : 1;
+	bool bInfiniteMagazine : 1;
+	bool bNoCoolDown : 1;
+	bool bInfiniteDurability : 1;
+	bool bUsePickers : 1;
+	bool bPickerOpen : 1;
+};
+
 struct AFortGameStateAthena_OnRep_GamePhase_Params
 {
 	EAthenaGamePhase OldGamePhase;
