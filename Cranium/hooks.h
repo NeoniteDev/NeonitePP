@@ -106,6 +106,20 @@ namespace Hooks
 		
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+		const auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
+		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
+
+		///< Author @nyamimi
+		
+		DWORD dwProtection;
+		VirtualProtect(reinterpret_cast<void*>(AbilityPatchAdd), 16, PAGE_EXECUTE_READWRITE, &dwProtection);
+
+		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
+		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
+
+		DWORD dwTemp;
+		VirtualProtect(reinterpret_cast<void*>(AbilityPatchAdd), 16, dwProtection, &dwTemp);
+
 		//Process Event Hooking.
 		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
 		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));

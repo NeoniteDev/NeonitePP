@@ -50,6 +50,8 @@ namespace Patterns
 
 		constexpr const char* GetViewPoint =
 		"\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x41\x8B\xF0\x48\x8B\x49\x30\x48\x8B\xFA\xE8\x00\x00\x00\x00\xBA\x00\x00\x00\x00\x48\x8B\xC8";
+
+		constexpr const char* AbilityPatch = "\xC0\x0F\x84\x00\x02\x00\x00\x0F\x2F\xF7\x0F\x86\x00\x00\x00\x00";
 	}
 
 
@@ -93,6 +95,7 @@ namespace Masks
 		constexpr const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
 		constexpr const char* GetFullName = "xxxx?xxxx?xxxxxxxxx?x????xx";
 		constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
+		constexpr const char* AbilityPatch = "xxx?xxxxxxxx??xx";
 	}
 
 	namespace Oldies

@@ -613,6 +613,7 @@ struct Pawn
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 		return params.ReturnValue;
 	}
+
 };
 
 namespace Neoroyale
@@ -620,7 +621,6 @@ namespace Neoroyale
 	inline bool bIsInit;
 	inline bool bIsStarted;
 	inline bool bHasJumped;
-	inline bool bHasDeployedBefore;
 	inline Pawn* PlayerPawn;
 
 	inline void start(const wchar_t* MapToPlayOn)
@@ -652,7 +652,7 @@ namespace Neoroyale
 					else
 					{
 						// Glide
-						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen() && !bHasDeployedBefore)
+						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
 						{
 							PlayerPawn->ForceOpenParachute();
 						}
@@ -707,8 +707,10 @@ namespace Neoroyale
 
 			PlayerPawn->ToggleInfiniteAmmo();
 
-			if (!PlaylistName.ends_with(XOR(L"Playlist_Papaya")) ||
-				!PlaylistName.ends_with(XOR(L"Playlist_BattleLab")))
+			printf("\n[DEBUG] Playlist: %ls\n", PlaylistName.c_str());
+
+			if (wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) ||
+				wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
 			{
 				UFunctions::TeleportToSpawn();
 			}

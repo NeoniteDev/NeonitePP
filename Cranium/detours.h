@@ -90,12 +90,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		//TODO: move this out of here
-		
+
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
 		if (ScriptNameF.IsValid())
 		{
 			std::wstring ScriptNameW = ScriptNameF.ToWString();
-			
+
 			if (wcsstr(ScriptNameW.c_str(), XOR(L"help")))
 			{
 				MessageBoxA(nullptr,
@@ -103,7 +103,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version.\n\ndebugcamera: toggle custom debug camera (works in lobby).\n\nskydive: start skydiving and deploy at 500m above ground.\n\nFortWeapon: full weapon name to equip it (works with pickaxes too).\n\nSetCharGravity: change the gravity scale..\n\nFortPlaylistAthena: full FortPlaylistAthena path to change to the playlist you dropping in.\n\n"),
 				            XOR("Cranium CheatScript Commands"), MB_OK);
 			}
-			
+
 			else if (ScriptNameW.starts_with(XOR(L"activate")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
@@ -122,17 +122,17 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					MessageBoxA(nullptr, XOR("Please input your activation key!."), XOR("Cranium HWID System"), MB_OK);
 				}
 			}
-			
+
 			else if (ScriptNameW == XOR(L"dumpbps"))
 			{
 				DumpBPs();
 			}
-			
+
 			else if (ScriptNameW == XOR(L"dump"))
 			{
 				DumpGObjects();
 			}
-			
+
 			else if (ScriptNameW == XOR(L"event"))
 			{
 				if (gVersion == XOR("14.60"))
@@ -152,22 +152,22 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					MessageBoxA(nullptr, XOR("Sorry the version you are using doesn't have any event we support."), XOR("Neonite++"), MB_OK);
 				}
 			}
-			
+
 			else if (ScriptNameW == XOR(L"debugcamera"))
 			{
 				bIsDebugCamera = !bIsDebugCamera;
 			}
-			
+
 			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
 			{
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
 			}
-			
+
 			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")) || ScriptNameW.starts_with(XOR(L"AthenaGadget")))
 			{
 				Neoroyale::PlayerPawn->EquipWeapon(ScriptNameW.c_str(), 0);
 			}
-			
+
 			else if (ScriptNameW.starts_with(XOR(L"SetCharGravity")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
@@ -176,7 +176,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 				Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
 			}
-			
+
 			else if (ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
 			{
 				const auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());

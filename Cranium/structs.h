@@ -274,6 +274,7 @@ struct Empty_Params
 {
 };
 
+
 struct K2_OnMovementModeChanged_Params
 {
 	char PrevMovementMode;
@@ -555,4 +556,3 @@ struct UGameplayStatics_LoadStreamLevel_Params
 	bool bShouldBlockOnLoad;
 	FLatentActionInfo LatentInfo;
 };
-
