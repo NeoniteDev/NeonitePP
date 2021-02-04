@@ -592,6 +592,15 @@ struct Pawn
 		//this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 
+	auto ForceOpenParachute()
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
+
+		Empty_Params params;
+
+		ProcessEvent(this, fn, &params);
+	}
+
 	auto IsInAircraft()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -645,8 +654,7 @@ namespace Neoroyale
 						// Glide
 						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen() && !bHasDeployedBefore)
 						{
-							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 3);
-							bHasDeployedBefore = !bHasDeployedBefore;
+							PlayerPawn->ForceOpenParachute();
 						}
 
 							// Skydive
