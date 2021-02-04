@@ -282,14 +282,9 @@ struct K2_OnMovementModeChanged_Params
 	char NewCustomMode;
 };
 
-struct ACharacter_OnRep_IsParachuteOpen_Params
+struct AFortPlayerPawn_BeginSkydiving_Params
 {
-	bool bPreviousState;
-};
-
-struct APlayerController_ClientReturnToMainMenu_Params
-{
-	FString ReturnReason;
+	bool bFromBus;
 };
 
 struct UCheatManager_CheatScript_Params
@@ -342,13 +337,6 @@ struct AFortPawn_EquipWeaponDefinition_Params
 	UObject* WeaponData;
 	FGuid ItemEntryGuid;
 	UObject* ReturnValue;
-};
-
-class UCharacterMovementComponent
-{
-public:
-	char padding[0x150]; //Skipping some missed offsets and character owner.
-	float GravityScale;
 };
 
 struct FPlaylistPropertyArray
@@ -568,7 +556,3 @@ struct UGameplayStatics_LoadStreamLevel_Params
 	FLatentActionInfo LatentInfo;
 };
 
-struct AActor_K2_GetActorLocation_Params
-{
-	FVector ReturnValue;
-};

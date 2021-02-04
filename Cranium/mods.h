@@ -474,17 +474,6 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
-	auto GetLocation() -> FVector
-	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
-
-		AActor_K2_GetActorLocation_Params params;
-
-		ProcessEvent(this, fn, &params);
-
-		return params.ReturnValue;
-	}
-
 	auto EquipWeapon(const wchar_t* weaponname, const int guid)
 	{
 		FGuid GUID;
@@ -560,13 +549,12 @@ struct Pawn
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		const auto CharacterMovementComponent = reinterpret_cast<UCharacterMovementComponent*>(CharMovementFinder.GetObj());
+		const auto GravityScaleOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/Engine.CharacterMovementComponent"), XOR(L"GravityScale"));
 
-		CharacterMovementComponent->GravityScale = GravityScaleInput;
+		float* GravityScale = reinterpret_cast<float*>(reinterpret_cast<uintptr_t>(CharMovementFinder.GetObj()) + GravityScaleOffset);
 
-		printf("\n[Neoroyale] Character's Gravity scale was set to %f\n", GravityScaleInput);
+		*GravityScale = GravityScaleInput;
 	}
-
 
 	static auto ToggleInfiniteAmmo()
 	{
@@ -585,27 +573,23 @@ struct Pawn
 		PlayerControllerBools->bInfiniteMagazine = true;
 	}
 
-	auto OnRep_IsParachuteOpen(bool previousState) {
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:OnRep_IsParachuteOpen"));
+	auto Skydive()
+	{
+		if (this->IsSkydiving())
+		{
+			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
 
-		ACharacter_OnRep_IsParachuteOpen_Params params;
-		params.bPreviousState = previousState;
+			ProcessEvent(this, fn, nullptr);
+		}
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+
+		AFortPlayerPawn_BeginSkydiving_Params params;
+		params.bFromBus = true;
 
 		ProcessEvent(this, fn, &params);
-	}
-};
 
-namespace Neoroyale
-{
-	inline bool bIsInit;
-	inline bool bIsStarted;
-	inline bool bHasJumped;
-	inline Pawn* PlayerPawn;
-
-	inline void start(const wchar_t* MapToPlayOn)
-	{
-		UFunctions::Travel(MapToPlayOn);
-		bIsStarted = !bIsStarted;
+		//this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 
 	auto IsInAircraft()
@@ -620,6 +604,21 @@ namespace Neoroyale
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 		return params.ReturnValue;
 	}
+};
+
+namespace Neoroyale
+{
+	inline bool bIsInit;
+	inline bool bIsStarted;
+	inline bool bHasJumped;
+	inline bool bHasDeployedBefore;
+	inline Pawn* PlayerPawn;
+
+	inline void start(const wchar_t* MapToPlayOn)
+	{
+		UFunctions::Travel(MapToPlayOn);
+		bIsStarted = !bIsStarted;
+	}
 
 	inline void thread()
 	{
@@ -630,7 +629,7 @@ namespace Neoroyale
 				if (!bHasJumped)
 				{
 					bHasJumped = !bHasJumped;
-					if (IsInAircraft())
+					if (PlayerPawn->IsInAircraft())
 					{
 						UFunctions::Summon(L"PlayerPawn_Athena_C");
 						PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
@@ -644,20 +643,19 @@ namespace Neoroyale
 					else
 					{
 						// Glide
-						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen()) 
+						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen() && !bHasDeployedBefore)
 						{
 							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 3);
-							PlayerPawn->OnRep_IsParachuteOpen(false);
+							bHasDeployedBefore = !bHasDeployedBefore;
 						}
 
-						// Skydive
+							// Skydive
 						else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
 						{
-							PlayerPawn->SetMovementMode(EMovementMode::MOVE_Custom, 4);
-							PlayerPawn->OnRep_IsParachuteOpen(true);
+							PlayerPawn->Skydive();
 						}
 
-						// Jump
+							// Jump
 						else if (!PlayerPawn->IsJumpProvidingForce())
 						{
 							PlayerPawn->Jump();
@@ -693,7 +691,6 @@ namespace Neoroyale
 
 		if (PlayerPawn)
 		{
-
 			PlayerPawn->Possess();
 
 			//PlayerPawn->SetSkeletalMesh();
@@ -702,8 +699,8 @@ namespace Neoroyale
 
 			PlayerPawn->ToggleInfiniteAmmo();
 
-			if (PlaylistName.find(XOR(L"papaya")) == std::string::npos ||
-				PlaylistName.find(XOR(L"battlelab")) == std::string::npos)
+			if (!PlaylistName.ends_with(XOR(L"Playlist_Papaya")) ||
+				!PlaylistName.ends_with(XOR(L"Playlist_BattleLab")))
 			{
 				UFunctions::TeleportToSpawn();
 			}

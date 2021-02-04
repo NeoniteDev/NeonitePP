@@ -30,7 +30,6 @@ bBattleRoyaleMatchmakingEnabled=true
 +FrontEndPlaylistData=(PlaylistName=Playlist_Showdown_BlueFlatline_FFA, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Showdown_BlueFlatline_1v1, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownAlt_BlueFlatline_1v1, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_Playground, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Blitz_Solo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Snipers_Solo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 	)"
@@ -62,9 +61,6 @@ bBattleRoyaleMatchmakingEnabled=true
 
 	R"(
 +FrontEndPlaylistData=(PlaylistName=Playlist_BattleLab, PlaylistAccess=(bEnabled=true, bIsDefaultPlaylist=true, bDisplayAsLimitedTime=false, DisplayPriority=0, CategoryIndex=0))
-+FrontEndPlaylistData=(PlaylistName=Playlist_BattleLab_Fortnitemares_MedFog, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_BattleLab_Fortnitemares_MinFog, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_BattleLab_Fortnitemares_MaxFog, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Infiltration_Hydro, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Infiltration_SandyShores, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Infiltration_Lighthouse, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
