@@ -7,6 +7,12 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <d3d11.h>
+#include <dxgi.h>
+#include "gui/kiero.h"
+#include "gui/imgui/imgui.h"
+#include "gui/imgui/imgui_impl_win32.h"
+#include "gui/imgui/imgui_impl_dx11.h"
 
 //disabled until we find a good xor lib
 #define XOR(STR) STR

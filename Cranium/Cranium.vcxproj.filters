@@ -3,6 +3,12 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="gui\ImGui\imgui.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="gui\kiero.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -134,6 +140,18 @@
     <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp">
       <Filter>Auth Library</Filter>
     </ClInclude>
+    <ClInclude Include="pawn.h" />
+    <ClInclude Include="neoroyale.h" />
+    <ClInclude Include="gui\ImGui\imconfig.h" />
+    <ClInclude Include="gui\ImGui\imgui.h" />
+    <ClInclude Include="gui\ImGui\imgui_internal.h" />
+    <ClInclude Include="gui\gui.h" />
+    <ClInclude Include="gui\kiero.h" />
+    <ClInclude Include="gui\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="gui\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="gui\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="gui\ImGui\imstb_textedit.h" />
+    <ClInclude Include="gui\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

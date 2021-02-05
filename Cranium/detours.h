@@ -1,6 +1,6 @@
 #pragma once
 #include "ue4.h"
-#include "mods.h"
+#include "neoroyale.h"
 #include "hwid.h"
 
 #define LOGGING
@@ -19,6 +19,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
+			
 			printf("\n\n[Neoroyale] Start!");
 
 			//TODO: clean this mess;

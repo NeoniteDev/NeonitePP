@@ -61,7 +61,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -81,7 +81,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -140,10 +140,22 @@
     <ClInclude Include="enums.h" />
     <ClInclude Include="finder.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="gui\gui.h" />
+    <ClInclude Include="gui\ImGui\imconfig.h" />
+    <ClInclude Include="gui\ImGui\imgui.h" />
+    <ClInclude Include="gui\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="gui\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="gui\ImGui\imgui_internal.h" />
+    <ClInclude Include="gui\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="gui\ImGui\imstb_textedit.h" />
+    <ClInclude Include="gui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="gui\kiero.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hwid.h" />
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="mods.h" />
+    <ClInclude Include="neoroyale.h" />
+    <ClInclude Include="pawn.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="structs.h" />
@@ -155,6 +167,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="gui\ImGui\imgui.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="gui\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="gui\kiero.cpp" />
     <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
