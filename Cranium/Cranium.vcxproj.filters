@@ -3,12 +3,24 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="gui\ImGui\imgui.cpp" />
-    <ClCompile Include="gui\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="gui\kiero.cpp" />
-    <ClCompile Include="gui\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="gui\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="gui\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="gui\kiero.cpp">
+      <Filter>Rendering\Kiero</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\ImGui\imgui_widgets.cpp">
+      <Filter>Rendering\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Rendering\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\ImGui\imgui_draw.cpp">
+      <Filter>Rendering\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\ImGui\imgui_impl_win32.cpp">
+      <Filter>Rendering\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\ImGui\imgui.cpp">
+      <Filter>Rendering\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -142,16 +154,36 @@
     </ClInclude>
     <ClInclude Include="pawn.h" />
     <ClInclude Include="neoroyale.h" />
-    <ClInclude Include="gui\ImGui\imconfig.h" />
-    <ClInclude Include="gui\ImGui\imgui.h" />
-    <ClInclude Include="gui\ImGui\imgui_internal.h" />
-    <ClInclude Include="gui\gui.h" />
-    <ClInclude Include="gui\kiero.h" />
-    <ClInclude Include="gui\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="gui\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="gui\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="gui\ImGui\imstb_textedit.h" />
-    <ClInclude Include="gui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="gui\kiero.h">
+      <Filter>Rendering\Kiero</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imstb_truetype.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imstb_textedit.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imstb_rectpack.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imgui_internal.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imgui_impl_dx11.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imgui.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imgui_impl_win32.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\ImGui\imconfig.h">
+      <Filter>Rendering\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">
@@ -168,6 +200,15 @@
     </Filter>
     <Filter Include="Auth Library">
       <UniqueIdentifier>{94efe90e-a46a-4235-a796-88c761ae3163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{e9cd9fb1-3c81-4538-b50c-a588ad8fd525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Kiero">
+      <UniqueIdentifier>{38af17fc-804b-4bd1-b81c-a3c994052d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\ImGui">
+      <UniqueIdentifier>{4f2eb4c3-d3f2-4594-9dc9-1fad499762d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
