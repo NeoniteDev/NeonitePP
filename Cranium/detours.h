@@ -1,13 +1,13 @@
 #pragma once
 #include "ue4.h"
 #include "mods.h"
-#include "prod.h"
 #include "hwid.h"
 
 #define LOGGING
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
+static UObject* CurrentWeapon;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -82,9 +82,18 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		Console::CheatManager();
 	}
 
+	if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
+	{
+		auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
+
+		auto NewWeapon = params->NewWeapon;
+
+		CurrentWeapon = NewWeapon;
+	}
+
 	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
-		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/Prototype/WID_FireExtinguisher_Spray.WID_FireExtinguisher_Spray"), 0);
+		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/Prototype/WID_FireExtinguisher_Spray.WID_FireExtinguisher_Spray"), rand());
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
@@ -163,18 +172,148 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"FortWeapon")) || ScriptNameW.starts_with(XOR(L"AthenaGadget")))
+			else if (ScriptNameW == XOR(L"respawn"))
 			{
-				Neoroyale::PlayerPawn->EquipWeapon(ScriptNameW.c_str(), 0);
+				Neoroyale::Respawn();
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"SetCharGravity")))
+			else if (ScriptNameW == XOR(L"tejsakldasst"))
+			{
+				if (!Util::IsBadReadPtr(CurrentWeapon))
+				{
+					const auto FortniteAutomation = FindObject<UObject*>(XOR(L"FortniteAutomationBlueprintLibrary /Script/FortniteGame.Default__FortniteAutomationBlueprintLibrary"));
+
+					const auto ApplyItemWrapToActor = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortniteAutomationBlueprintLibrary:ApplyItemWrapToActor"));
+
+					const auto testwrap = FindObject<UObject*>(XOR(L"AthenaItemWrapDefinition /Game/Athena/Items/Cosmetics/ItemWraps/Wrap_323_HalfFull.Wrap_323_HalfFull"));
+
+					UFortniteAutomationBlueprintLibrary_ApplyItemWrapToActor_Params params;
+					params.wrap = testwrap;
+					params.Actor = CurrentWeapon;
+					params.MaterialType = EItemWrapMaterialType::WeaponWrap;
+
+					ProcessEvent(FortniteAutomation, ApplyItemWrapToActor, &params);
+
+					const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortWeapon:OnRep_ReplicatedCosmeticOverrideWeaponData"));
+
+					ProcessEvent(CurrentWeapon, fn, nullptr);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("Why are you applying wrap without equipping a weapon :weirdchamp:"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"equip")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 
-				const auto newgav = std::stof(arg);
+				if (!arg.empty())
+				{
+					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
+					{
+						if (!Util::IsBadReadPtr(CurrentWeapon))
+						{
+							const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
-				Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
+							ProcessEvent(CurrentWeapon, fn, nullptr);
+
+							CurrentWeapon = nullptr;
+						}
+
+
+						auto name = arg + L"." + arg;
+						Neoroyale::PlayerPawn->EquipWeapon(name.c_str(), rand());
+					}
+					else
+					{
+						MessageBoxA(nullptr, XOR("This command only works with WIDs and AGIDs."), XOR("Cranium"), MB_OK);
+					}
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetMaxHealth(newgav);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetMaxShield(newgav);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetHealth(newgav);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setshield")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetShield(newgav);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
+				}
+				else
+				{
+					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+				}
 			}
 
 			else if (ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))

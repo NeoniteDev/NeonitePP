@@ -84,6 +84,13 @@ namespace Hooks
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
 
 
+		//Used to free the memory for names.
+		const auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
+		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
+
+		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
+		
+
 		//Used to construct objects, mostly used for console stuff.
 		//Tested from 12.41 to latest
 		const auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
@@ -96,21 +103,22 @@ namespace Hooks
 		//Tested from 12.41 to latest
 		const auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
-		
+
 		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
 
-		
+
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
 		const auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-		
+
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
+
 
 		const auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
 
-		///< Author @nyamimi
-		
+		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
+		//Author: @nyamimi
 		DWORD dwProtection;
 		VirtualProtect(reinterpret_cast<void*>(AbilityPatchAdd), 16, PAGE_EXECUTE_READWRITE, &dwProtection);
 

@@ -180,34 +180,65 @@ public:
 			return ObjectFinder(objectToFind, type, valuePtr, valuePtrRef);
 		}
 	}
-};
 
-inline UObject* FindActor(std::wstring name)
-{
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-	ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
-
-	const DWORD AActors = 0x98;
-
-	for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
+	static UObject* FindActor(std::wstring name)
 	{
-		const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
 
-		const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+		const DWORD AActors = 0x98;
 
-		//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
-
-		if (pActor != nullptr)
+		for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
 		{
-			if (GetObjectFullName(pActor).starts_with(name))
+			const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+
+			const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+
+			if (pActor != nullptr)
 			{
-				printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
-				return pActor;
+				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
+
+				if (GetObjectFullName(pActor).starts_with(name))
+				{
+					printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
+					return pActor;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
+	static void DestroyActor(std::wstring name)
+	{
+		ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
+
+		const DWORD AActors = 0x98;
+
+		for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
+		{
+			const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+
+			const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+
+
+			if (pActor != nullptr)
+			{
+				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
+
+				if (GetObjectFullName(pActor).starts_with(name))
+				{
+					const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+
+					ProcessEvent(pActor, fn, nullptr);
+					printf("\n[Neoroyale] %ls was destroyed!.\n", name.c_str());
+				}
 			}
 		}
 	}
-
-	return nullptr;
-}
+};

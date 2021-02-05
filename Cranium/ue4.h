@@ -5,6 +5,7 @@ inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
 inline FString (*GetObjectNameInternal)(PVOID);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
+inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline UEngine* GEngine;
 inline UObject* (*StaticConstructObject)(
@@ -19,6 +20,12 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
+//Frees the memory for the name
+inline void Free(void* buffer)
+{
+	FreeInternal(buffer);
+}
+
 //Returns the very first name of the object (E.G: BP_PlayButton).
 inline std::wstring GetObjectFirstName(UObject* object)
 {
@@ -27,6 +34,8 @@ inline std::wstring GetObjectFirstName(UObject* object)
 
 	std::wstring name(internalName.ToWString());
 
+	Free((void*)internalName.ToWString());
+	
 	return name;
 }
 
@@ -43,7 +52,9 @@ inline std::wstring GetFirstName(FField* object)
 		token = objectNameW.substr(0, objectNameW.find_first_of(L":"));
 		objectNameW = objectNameW.substr(objectNameW.find_first_of(L":") + 1);
 	}
-
+	
+	Free((void*)s.ToWString());
+	
 	return objectNameW;
 }
 
@@ -56,8 +67,10 @@ inline std::wstring GetObjectName(UObject* object)
 		FString internalName = GetObjectNameInternal(object);
 		if (!internalName.ToWString()) break;
 		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
+		
+		Free((void*)internalName.ToWString());
 	}
-
+	
 	return name;
 }
 
@@ -67,6 +80,9 @@ inline std::wstring GetObjectFullName(UObject* object)
 	FString s;
 	GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
 	std::wstring objectNameW = s.ToWString();
+	
+	Free((void*)s.ToWString());
+	
 	return objectNameW;
 }
 
@@ -77,6 +93,9 @@ inline std::wstring GetFieldClassName(FField* obj)
 	GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
 	const std::wstring objectName = s.ToWString();
 	auto className = Util::sSplit(objectName, L" ");
+	
+	Free((void*)s.ToWString());
+	
 	return className;
 }
 
@@ -116,57 +135,6 @@ static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower =
 		}
 	}
 	return nullptr;
-}
-
-inline bool DumpIDs()
-{
-	std::wofstream log(XOR(L"ids.config"), std::ios::trunc);
-
-	//TODO: Better way.
-	//THIS FUCKING IS SO BAD CODED BUT IDK WHAT ELSE TO DO
-
-	for (auto i = 0x0; i < GObjs->NumElements; ++i)
-	{
-		const auto object = GObjs->GetByIndex(i);
-		if (object == nullptr)
-		{
-			continue;
-		}
-
-		if (GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaCharacterItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaBackpackItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaPetCarrierItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaEmojiItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaDanceItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaPickaxeItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaGliderItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortiteGame.AthenaSkyDiveContrailItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaToyItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaLoadingScreenItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaMusicPackItemDefinition") ||
-			GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition"))
-		{
-			auto id = GetObjectFirstName(object);
-			auto def = GetObjectFirstName(object->Class);
-
-			printf("\nlast try:%ls\n", GetObjectFullName(object).c_str());
-
-			std::wstring r = L"ItemDefinition";
-
-			//handle wraps
-			if (GetObjectFullName(object->Class) == XOR(L"Class /Script/FortniteGame.AthenaItemWrapDefinition")) r = L"Definition";
-
-			std::wstring::size_type i = def.find(r);
-			if (i != std::string::npos)
-			{
-				def.erase(i, r.length());
-			}
-			if (id.starts_with(XOR(L"Default__"))) break;
-			log << def << ":" << id << L"\n";
-		}
-	}
-	log.flush(); //make sure it outputted everything.
-	return true;
 }
 
 inline void DumpGObjects()

@@ -340,6 +340,39 @@ struct AFortPawn_EquipWeaponDefinition_Params
 	UObject* ReturnValue;
 };
 
+struct AFortPawn_OnWeaponEquipped_Params
+{
+	UObject* NewWeapon;
+	UObject* PrevWeapon;
+};
+
+struct UFortniteAutomationBlueprintLibrary_ApplyItemWrapToActor_Params
+{
+	UObject* wrap;
+	UObject* Actor;
+	EItemWrapMaterialType MaterialType;
+};
+
+struct AFortPawn_SetHealth_Params
+{
+	float NewHealthVal;
+};
+
+struct AFortPawn_SetShield_Params
+{
+	float NewShieldValue;
+};
+
+struct AFortPawn_SetMaxShield_Params
+{
+	float NewValue;
+};
+
+struct AFortPawn_SetMaxHealth_Params
+{
+	float NewHealthVal;
+};
+
 struct FPlaylistPropertyArray
 {
 	char padding[0x0120];

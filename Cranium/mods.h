@@ -484,7 +484,7 @@ struct Pawn
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
 
-		auto WeaponData = FindObject<UObject*>(weaponname);
+		auto WeaponData = FindObject<UObject*>(weaponname, true);
 
 		if (WeaponData)
 		{
@@ -510,6 +510,8 @@ struct Pawn
 			params.ItemEntryGuid = GUID;
 
 			ProcessEvent(this, fn, &params);
+
+			return params.ReturnValue;
 		}
 		else
 		{
@@ -554,6 +556,50 @@ struct Pawn
 		float* GravityScale = reinterpret_cast<float*>(reinterpret_cast<uintptr_t>(CharMovementFinder.GetObj()) + GravityScaleOffset);
 
 		*GravityScale = GravityScaleInput;
+	}
+	
+	auto SetHealth(float SetHealthInput)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetHealth"));
+
+		AFortPawn_SetHealth_Params params;
+
+		params.NewHealthVal = SetHealthInput;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	auto SetShield(float SetShieldInput)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetShield"));
+
+		AFortPawn_SetShield_Params params;
+
+		params.NewShieldValue = SetShieldInput;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	auto SetMaxHealth(float SetMaxHealthInput)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxHealth"));
+
+		AFortPawn_SetMaxHealth_Params params;
+
+		params.NewHealthVal = SetMaxHealthInput;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+	auto SetMaxShield(float SetMaxShieldInput)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxShield"));
+
+		AFortPawn_SetMaxShield_Params params;
+
+		params.NewValue = SetMaxShieldInput;
+
+		ProcessEvent(this, fn, &params);
 	}
 
 	static auto ToggleInfiniteAmmo()
@@ -613,7 +659,6 @@ struct Pawn
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 		return params.ReturnValue;
 	}
-
 };
 
 namespace Neoroyale
@@ -621,12 +666,28 @@ namespace Neoroyale
 	inline bool bIsInit;
 	inline bool bIsStarted;
 	inline bool bHasJumped;
+	inline bool bHasDeployed;
 	inline Pawn* PlayerPawn;
 
 	inline void start(const wchar_t* MapToPlayOn)
 	{
 		UFunctions::Travel(MapToPlayOn);
 		bIsStarted = !bIsStarted;
+	}
+
+	inline auto Respawn()
+	{
+		if (PlayerPawn)
+		{
+			UFunctions::Summon(L"PlayerPawn_Athena_C");
+			PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
+
+			if (PlayerPawn)
+			{
+				PlayerPawn->Possess();
+				PlayerPawn->ShowSkin();
+			}
+		}
 	}
 
 	inline void thread()
@@ -640,21 +701,15 @@ namespace Neoroyale
 					bHasJumped = !bHasJumped;
 					if (PlayerPawn->IsInAircraft())
 					{
-						UFunctions::Summon(L"PlayerPawn_Athena_C");
-						PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
-
-						if (PlayerPawn)
-						{
-							PlayerPawn->Possess();
-							PlayerPawn->ShowSkin();
-						}
+						Respawn();
 					}
 					else
 					{
 						// Glide
-						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen() && !bHasDeployed)
 						{
 							PlayerPawn->ForceOpenParachute();
+							bHasDeployed = !bHasDeployed;
 						}
 
 							// Skydive
@@ -682,7 +737,7 @@ namespace Neoroyale
 				break;
 			}
 
-			Sleep(1000 / 60);
+			Sleep(1000 / 30);
 		}
 	}
 
@@ -694,7 +749,7 @@ namespace Neoroyale
 
 		UFunctions::Summon(L"PlayerPawn_Athena_C");
 
-		PlayerPawn = reinterpret_cast<Pawn*>(FindActor(L"PlayerPawn_Athena_C"));
+		PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
 		auto PlaylistName = GetObjectFirstName(gPlaylist);
 
 		if (PlayerPawn)
@@ -709,8 +764,8 @@ namespace Neoroyale
 
 			printf("\n[DEBUG] Playlist: %ls\n", PlaylistName.c_str());
 
-			if (wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) ||
-				wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
+			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
+				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
 			{
 				UFunctions::TeleportToSpawn();
 			}

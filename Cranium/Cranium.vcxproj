@@ -145,7 +145,6 @@
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="mods.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="prod.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="system.h" />

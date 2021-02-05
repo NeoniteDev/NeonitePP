@@ -50,7 +50,7 @@ public:
 
 	static __forceinline std::wstring sSplit(std::wstring s, std::wstring delimiter)
 	{
-		size_t pos = 0;
+		size_t pos;
 		std::wstring token;
 		while ((pos = s.find(delimiter)) != std::string::npos)
 		{
@@ -58,5 +58,19 @@ public:
 			return token;
 		}
 		return token;
+	}
+
+	static __forceinline bool IsBadReadPtr(void* p)
+	{
+		MEMORY_BASIC_INFORMATION mbi;
+		if (VirtualQuery(p, &mbi, sizeof(mbi)))
+		{
+			DWORD mask = (PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY);
+			bool b = !(mbi.Protect & mask);
+			if (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) b = true;
+
+			return b;
+		}
+		return true;
 	}
 };

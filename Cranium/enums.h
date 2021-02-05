@@ -52,6 +52,8 @@ namespace Patterns
 		"\x48\x89\x5C\x24\x00\x48\x89\x74\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x41\x8B\xF0\x48\x8B\x49\x30\x48\x8B\xFA\xE8\x00\x00\x00\x00\xBA\x00\x00\x00\x00\x48\x8B\xC8";
 
 		constexpr const char* AbilityPatch = "\xC0\x0F\x84\x00\x02\x00\x00\x0F\x2F\xF7\x0F\x86\x00\x00\x00\x00";
+
+		constexpr const char* FreeInternal = "\x48\x85\xC9\x74\x2E\x53\x48\x83\xEC\x20\x48\x8B\xD9\x48\x8B\x0D\x00\x00\x00\x00\x48\x85\xC9\x75\x0C";
 	}
 
 
@@ -96,6 +98,7 @@ namespace Masks
 		constexpr const char* GetFullName = "xxxx?xxxx?xxxxxxxxx?x????xx";
 		constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
 		constexpr const char* AbilityPatch = "xxx?xxxxxxxx??xx";
+		constexpr const char* FreeInternal = "xxxxxxxxxxxxxxxx????xxxxx";
 	}
 
 	namespace Oldies
@@ -189,6 +192,14 @@ enum class EAthenaGamePhase : uint8_t
 	EndGame = 5,
 	Count = 6,
 	EAthenaGamePhase_MAX = 7
+};
+
+enum class EItemWrapMaterialType : uint8_t
+{
+	WeaponWrap = 0,
+	VehicleWrap_Opaque = 1,
+	VehicleWrap_Masked = 2,
+	EItemWrapMaterialType_MAX = 3
 };
 
 enum class EFortMovementStyle : uint8_t

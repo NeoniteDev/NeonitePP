@@ -49,7 +49,6 @@
     <ClInclude Include="finder.h" />
     <ClInclude Include="mods.h" />
     <ClInclude Include="ue4.h" />
-    <ClInclude Include="prod.h" />
     <ClInclude Include="hwid.h" />
     <ClInclude Include="cryptolens\MachineCodeComputer_static.hpp">
       <Filter>Auth Library</Filter>
