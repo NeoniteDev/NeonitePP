@@ -373,6 +373,16 @@ struct AFortPawn_SetMaxHealth_Params
 	float NewHealthVal;
 };
 
+struct AFortPawn_SetMovementSpeedMultiplier_Params
+{
+	float NewMovementSpeedVal;
+};
+
+struct AGameMode_Say_Params
+{
+	struct FString Msg;
+};
+
 struct FPlaylistPropertyArray
 {
 	char padding[0x0120];

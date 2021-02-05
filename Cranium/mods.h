@@ -286,6 +286,22 @@ namespace UFunctions
 		ProcessEvent(Sequence, Play, nullptr);
 		printf("\n[DEBUG] EVENT STARTED\n");
 	}
+
+	inline void ConsoleLog(std::wstring message)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:Say"));
+
+		const FString Msg = message.c_str();
+		AGameMode_Say_Params params;
+		params.Msg = Msg;
+
+		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+	}
 }
 
 namespace Console
@@ -598,6 +614,18 @@ struct Pawn
 		AFortPawn_SetMaxShield_Params params;
 
 		params.NewValue = SetMaxShieldInput;
+
+		ProcessEvent(this, fn, &params);
+	}
+
+
+	auto SetMovementSpeed(float SetMovementSpeedInput)
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMovementSpeed"));
+
+		AFortPawn_SetMovementSpeedMultiplier_Params params;
+
+		params.NewMovementSpeedVal = SetMovementSpeedInput;
 
 		ProcessEvent(this, fn, &params);
 	}

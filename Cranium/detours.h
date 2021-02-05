@@ -107,10 +107,29 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (wcsstr(ScriptNameW.c_str(), XOR(L"help")))
 			{
-				MessageBoxA(nullptr,
-				            XOR(
-					            "dump: Dumps all fornite GObjects\n\ndumpbps: Dumps all fornite Blueprints\n\nevent: Triggers whatever event in your version.\n\ndebugcamera: toggle custom debug camera (works in lobby).\n\nskydive: start skydiving and deploy at 500m above ground.\n\nFortWeapon: full weapon name to equip it (works with pickaxes too).\n\nSetCharGravity: change the gravity scale..\n\nFortPlaylistAthena: full FortPlaylistAthena path to change to the playlist you dropping in.\n\n"),
-				            XOR("Cranium CheatScript Commands"), MB_OK);
+				UFunctions::ConsoleLog(
+					XOR(
+						LR"(
+Custom Cheatscript Commands
+---------------------------
+
+cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
+cheatscript debugcamera - Toggles a custom version of the debug camera.
+cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
+cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
+cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
+cheatscript setplaylist <Playlist> - Overrides the current playlist.
+cheatscript respawn - Respawns the player (duh)
+cheatscript sethealth <NewHealthFloat> - Changes your health value.
+cheatscript setshield <NewShieldFloat> - Changes your shield value.
+cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
+cheatscript dump - Dumps a list of all GObjects.
+cheatscript dumpbps - Dumps all blueprints.
+fly - Toggles flying.
+enablecheats - Enables cheatmanager.
+)"));
 			}
 
 			else if (ScriptNameW.starts_with(XOR(L"activate")))
@@ -123,12 +142,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					}
 					else
 					{
-						MessageBoxA(nullptr, XOR("Couldn't process your activation code!."), XOR("Cranium HWID System"), MB_OK);
+						UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
 					}
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("Please input your activation key!."), XOR("Cranium HWID System"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"Please input your activation key!."));
 				}
 			}
 
@@ -158,7 +177,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("Sorry the version you are using doesn't have any event we support."), XOR("Neonite++"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 				}
 			}
 
@@ -200,7 +219,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("Why are you applying wrap without equipping a weapon :weirdchamp:"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"Why are you applying wrap without equipping a weapon :weirdchamp:"));
 				}
 			}
 
@@ -227,12 +246,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					}
 					else
 					{
-						MessageBoxA(nullptr, XOR("This command only works with WIDs and AGIDs."), XOR("Cranium"), MB_OK);
+						UFunctions::ConsoleLog(XOR(L"This command only works with WIDs and AGIDs."));
 					}
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
@@ -248,7 +267,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
@@ -264,7 +283,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
@@ -280,7 +299,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
@@ -296,7 +315,23 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setspeed")) || ScriptNameW.starts_with(XOR(L"speed")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+
+					Neoroyale::PlayerPawn->SetMovementSpeed(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
@@ -312,20 +347,29 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					MessageBoxA(nullptr, XOR("This command requires an argument"), XOR("Cranium"), MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"FortPlaylistAthena")))
+			else if (ScriptNameW.starts_with(XOR(L"setplaylist")))
 			{
-				const auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
-				if (Playlist)
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
 				{
-					gPlaylist = Playlist;
+					const auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
+					if (Playlist)
+					{
+						gPlaylist = Playlist;
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"Couldn't find the requested playlist!."));
+					}
 				}
 				else
 				{
-					MessageBoxA(nullptr, "Couldn't find the requested playlist!.", "Cranium", MB_OK);
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
 		}
