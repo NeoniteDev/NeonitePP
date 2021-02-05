@@ -712,13 +712,13 @@ namespace Neoroyale
 							bHasDeployed = !bHasDeployed;
 						}
 
-							// Skydive
+						// Skydive
 						else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
 						{
 							PlayerPawn->Skydive();
 						}
 
-							// Jump
+						// Jump
 						else if (!PlayerPawn->IsJumpProvidingForce())
 						{
 							PlayerPawn->Jump();
