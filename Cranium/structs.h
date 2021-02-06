@@ -599,3 +599,9 @@ struct UGameplayStatics_LoadStreamLevel_Params
 	bool bShouldBlockOnLoad;
 	FLatentActionInfo LatentInfo;
 };
+
+struct UFortKismetLibrary_SetTimeOfDay_Params
+{
+	class UObject* WorldContextObject;                                       // (Parm, ZeroConstructor, IsPlainOldData)
+	float                                              TimeOfDay;                                                // (Parm, ZeroConstructor, IsPlainOldData)
+};

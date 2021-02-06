@@ -144,7 +144,7 @@ struct Pawn
 
 				UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
-				ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
+				ProcessEventQueue(WeaponData, FUN_weapondef, &prm_ReturnValue);
 
 				if (prm_ReturnValue.ReturnValue)
 				{
@@ -157,7 +157,7 @@ struct Pawn
 			params.WeaponData = WeaponData;
 			params.ItemEntryGuid = GUID;
 
-			ProcessEvent(this, fn, &params);
+			ProcessEventQueue(this, fn, &params);
 
 			MessageBoxW(nullptr, objectName.c_str(), L"TEST", MB_OK);
 		}

@@ -28,6 +28,23 @@ namespace UFunctions
 		printf("\n[Neoroyale] %ls was summoned!.\n", ClassToSummon);
 	}
 
+
+	auto SetTimeOfDay(float Time)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+
+		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:SetTimeOfDay"));
+
+		UFortKismetLibrary_SetTimeOfDay_Params params;
+		params.WorldContextObject = WorldFinder.GetObj();
+		params.TimeOfDay = Time;
+
+		ProcessEvent(KismetLib, fn, &params);
+	}
+
 	inline void TeleportToSpawn()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));

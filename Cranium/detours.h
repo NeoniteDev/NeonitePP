@@ -7,10 +7,22 @@
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
-
+inline void* ParametersQueue;
+inline void* ObjectQueue;
+inline void* FunctionQueue;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
+	if (ObjectQueue && FunctionQueue && ParametersQueue) {
+		if (!Util::IsBadReadPtr(ObjectQueue) && !Util::IsBadReadPtr(FunctionQueue) && !Util::IsBadReadPtr(ParametersQueue)) {
+			ProcessEvent(ObjectQueue, FunctionQueue, ParametersQueue);
+
+			FunctionQueue = nullptr;
+			ParametersQueue = nullptr;
+			ObjectQueue = nullptr;
+		}
+	}
+
 	const auto nObj = GetObjectFirstName(pObj);
 	const auto nFunc = GetObjectFirstName(pFunc);
 
@@ -317,4 +329,12 @@ inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE s
 	}
 
 	return CurrentViewPoint;
+}
+
+
+
+inline void ProcessEventQueue(void* pObj, void* pFunc, void* pParams) {
+	ObjectQueue = pObj;
+	ParametersQueue = pParams;
+	FunctionQueue = pFunc;
 }

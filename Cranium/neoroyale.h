@@ -19,6 +19,7 @@ namespace Neoroyale
 	{
 		if (PlayerPawn)
 		{
+			UFunctions::DestoryActor(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
 			UFunctions::Summon(L"PlayerPawn_Athena_C");
 			PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
 
