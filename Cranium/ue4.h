@@ -20,10 +20,6 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
-inline void* ParametersQueue;
-inline void* ObjectQueue;
-inline void* FunctionQueue;
-
 //Frees the memory for the name
 inline void Free(void* buffer)
 {
@@ -39,7 +35,7 @@ inline std::wstring GetObjectFirstName(UObject* object)
 	std::wstring name(internalName.ToWString());
 
 	Free((void*)internalName.ToWString());
-	
+
 	return name;
 }
 
@@ -56,9 +52,9 @@ inline std::wstring GetFirstName(FField* object)
 		token = objectNameW.substr(0, objectNameW.find_first_of(L":"));
 		objectNameW = objectNameW.substr(objectNameW.find_first_of(L":") + 1);
 	}
-	
+
 	Free((void*)s.ToWString());
-	
+
 	return objectNameW;
 }
 
@@ -71,17 +67,11 @@ inline std::wstring GetObjectName(UObject* object)
 		FString internalName = GetObjectNameInternal(object);
 		if (!internalName.ToWString()) break;
 		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
-		
+
 		Free((void*)internalName.ToWString());
 	}
-	
-	return name;
-}
 
-inline void ProcessEventQueue(void* pObj, void* pFunc, void* pParams) {
-	ObjectQueue = pObj;
-	ParametersQueue = pParams;
-	FunctionQueue = pFunc;
+	return name;
 }
 
 //Return FULL Object name including it's type.
@@ -90,9 +80,9 @@ inline std::wstring GetObjectFullName(UObject* object)
 	FString s;
 	GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
 	std::wstring objectNameW = s.ToWString();
-	
+
 	Free((void*)s.ToWString());
-	
+
 	return objectNameW;
 }
 
@@ -103,9 +93,9 @@ inline std::wstring GetFieldClassName(FField* obj)
 	GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
 	const std::wstring objectName = s.ToWString();
 	auto className = Util::sSplit(objectName, L" ");
-	
+
 	Free((void*)s.ToWString());
-	
+
 	return className;
 }
 

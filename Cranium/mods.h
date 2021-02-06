@@ -28,7 +28,6 @@ namespace UFunctions
 		printf("\n[Neoroyale] %ls was summoned!.\n", ClassToSummon);
 	}
 
-
 	auto SetTimeOfDay(float Time)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));

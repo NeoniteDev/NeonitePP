@@ -1,7 +1,7 @@
 #pragma once
 
 struct Pawn
-{	
+{
 	auto Possess()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -144,7 +144,7 @@ struct Pawn
 
 				UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
-				ProcessEventQueue(WeaponData, FUN_weapondef, &prm_ReturnValue);
+				ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
 
 				if (prm_ReturnValue.ReturnValue)
 				{
@@ -157,9 +157,7 @@ struct Pawn
 			params.WeaponData = WeaponData;
 			params.ItemEntryGuid = GUID;
 
-			ProcessEventQueue(this, fn, &params);
-
-			MessageBoxW(nullptr, objectName.c_str(), L"TEST", MB_OK);
+			ProcessEvent(this, fn, &params);
 		}
 		else
 		{
@@ -278,6 +276,25 @@ struct Pawn
 		PlayerControllerBools->bInfiniteMagazine = true;
 	}
 
+	auto ExecuteConsoleCommand(const wchar_t* command)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		const auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
+
+		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
+		params.WorldContextObject = WorldFinder.GetObj();
+		params.Command = command;
+		params.SpecificPlayer = PlayerControllerFinder.GetObj();
+
+		ProcessEvent(KismetSysLib, fn, &params);
+	}
+
 	auto Skydive()
 	{
 		if (this->IsSkydiving())
@@ -317,5 +334,29 @@ struct Pawn
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 		return params.ReturnValue;
+	}
+
+
+	auto ShowPickaxe()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		const auto CosmeticLoadoutPCOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"CosmeticLoadoutPC"));
+
+		const auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(PlayerControllerFinder.GetObj()) + CosmeticLoadoutPCOffset);
+
+		if (!Util::IsBadReadPtr(CosmeticLoadoutPC))
+		{
+			const auto PickaxeFinder = ObjectFinder::EntryPoint(uintptr_t(CosmeticLoadoutPC->Pickaxe));
+
+			const auto WeaponDefFinder = PickaxeFinder.Find(XOR(L"WeaponDefinition"));
+
+			const auto Weapon = GetObjectFirstName(WeaponDefFinder.GetObj());
+
+			const std::wstring Command = L"cheatscript equip " + Weapon;
+			this->ExecuteConsoleCommand(Command.c_str());
+		}
 	}
 };

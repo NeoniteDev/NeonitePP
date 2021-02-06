@@ -602,6 +602,43 @@ struct UGameplayStatics_LoadStreamLevel_Params
 
 struct UFortKismetLibrary_SetTimeOfDay_Params
 {
-	class UObject* WorldContextObject;                                       // (Parm, ZeroConstructor, IsPlainOldData)
-	float                                              TimeOfDay;                                                // (Parm, ZeroConstructor, IsPlainOldData)
+	UObject* WorldContextObject;
+	float TimeOfDay;
+};
+
+struct UKismetSystemLibrary_ExecuteConsoleCommand_Params
+{
+	UObject* WorldContextObject;
+	FString Command;
+	UObject* SpecificPlayer;
+};
+
+struct FFortAthenaLoadout
+{
+	FString BannerIconId;
+	FString BannerColorId;
+	UObject* SkyDiveContrail;
+	UObject* Glider;
+	UObject* Pickaxe;
+	bool bIsDefaultCharacter;
+	unsigned char UnknownData00[0x7];
+	UObject* Character;
+	TArray<UObject*> CharacterVariantChannels;
+	bool bForceUpdateVariants;
+	unsigned char UnknownData01[0x7];
+	UObject* Hat;
+	UObject* Backpack;
+	UObject* LoadingScreen;
+	UObject* BattleBus;
+	UObject* VehicleDecoration;
+	UObject* CallingCard;
+	UObject* MapMarker;
+	TArray<UObject*> Dances;
+	UObject* VictoryPose;
+	UObject* MusicPack;
+	UObject* ItemWrapOverride;
+	TArray<UObject*> ItemWraps;
+	UObject* CharmOverride;
+	TArray<UObject*> Charms;
+	UObject* PetSkin;
 };

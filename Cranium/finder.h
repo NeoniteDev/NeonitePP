@@ -183,7 +183,7 @@ public:
 
 	static UObject* FindActor(std::wstring name)
 	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));

@@ -8,17 +8,12 @@
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
 
-
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	if (ObjectQueue && FunctionQueue && ParametersQueue) {
-		if (!Util::IsBadReadPtr(ObjectQueue) && !Util::IsBadReadPtr(FunctionQueue) && !Util::IsBadReadPtr(ParametersQueue)) {
-			ProcessEvent(ObjectQueue, FunctionQueue, ParametersQueue);
-
-			FunctionQueue = nullptr;
-			ParametersQueue = nullptr;
-			ObjectQueue = nullptr;
-		}
+	if (!WeaponQueue.empty())
+	{
+		Neoroyale::PlayerPawn->EquipWeapon(WeaponQueue.c_str());
+		WeaponQueue.clear();
 	}
 
 	const auto nObj = GetObjectFirstName(pObj);
@@ -29,7 +24,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			
 			printf("\n\n[Neoroyale] Start!");
 
 			//TODO: clean this mess;
@@ -101,10 +95,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
 		{
-			const auto DestroyActor = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
-
-			ProcessEvent(OldWeapon, DestroyActor, nullptr);
-
+			UFunctions::DestoryActor(OldWeapon);
 			OldWeapon = nullptr;
 		}
 	}
@@ -270,6 +261,7 @@ enablecheats - Enables cheatmanager.
 
 	return ProcessEvent(pObj, pFunc, pParams);
 }
+
 namespace CameraHook
 {
 	inline float Speed = 0.1;

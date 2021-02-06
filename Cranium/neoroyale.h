@@ -1,6 +1,8 @@
 #pragma once
 #include "mods.h"
 
+inline std::wstring WeaponQueue;
+
 namespace Neoroyale
 {
 	inline bool bIsInit;
@@ -19,7 +21,11 @@ namespace Neoroyale
 	{
 		if (PlayerPawn)
 		{
-			UFunctions::DestoryActor(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
+			auto oldPawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+			if (oldPawn)
+			{
+				UFunctions::DestoryActor(oldPawn);
+			}
 			UFunctions::Summon(L"PlayerPawn_Athena_C");
 			PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
 
@@ -33,7 +39,6 @@ namespace Neoroyale
 
 	inline void thread()
 	{
-		
 		while (true)
 		{
 			if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
@@ -54,13 +59,13 @@ namespace Neoroyale
 							bHasDeployed = !bHasDeployed;
 						}
 
-						// Skydive
+							// Skydive
 						else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
 						{
 							PlayerPawn->Skydive();
 						}
 
-						// Jump
+							// Jump
 						else if (!PlayerPawn->IsJumpProvidingForce())
 						{
 							PlayerPawn->Jump();
@@ -102,9 +107,9 @@ namespace Neoroyale
 
 			PlayerPawn->ShowSkin();
 
-			PlayerPawn->ToggleInfiniteAmmo();
+			PlayerPawn->ShowPickaxe();
 
-			printf("\n[DEBUG] Playlist: %ls\n", PlaylistName.c_str());
+			PlayerPawn->ToggleInfiniteAmmo();
 
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))

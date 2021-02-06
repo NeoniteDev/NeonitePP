@@ -144,147 +144,149 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 			if (BeginTabBar("Neonite"), ImGuiTabBarFlags_AutoSelectNewTabs)
 			{
-				if (BeginTabItem("World"))
+				if (PlayerPawn)
 				{
-
-					/*const char* TODMs[] = { 
-						"TODM_Disabled_C",
-						"TODM_BR_C",
-						"TODM_BR_Halloween_C",
-						"TODM_BR_S7_C",
-						"TODM_BR_S7_W_C",
-						"TODM_BR_S8_C",
-						"TODM_BR_S8Hot_C",
-						"TODM_BR_S8_Child_C",
-						"TODM_Disabled_C",
-						"TODM_PG_PS_Capture_C",
-						"TODM_Papaya_C",
-						"TODM_BR_floorislava_V01_C",
-						"TODM_BR_s11_Fortnitemares_v2_C",
-						"TODM_BR_s11_STATIC_SKYLIGHT_C",
-						"TODM_BR_s13_FogOfWar_v2_C",
-						"TODM_BR_s14_C",
-						"TODM_BR_s14_Fortnitemares_C",
-						"TODM_BR_s14_Fortnitemares_Thick_C",
-						"TODM_BR_s14_Fortnitemares_Thin_C",
-						"TODM_Creative_C",
-						"TODM_STW_Parent_C",
-						"TODM_24_Fall_C",
-						"TODM_24_Fall_Storm_C",
-						"TODM_STW_Arid-WtS_R99_C",
-						"TODM_STW_Arid-WtS_R99_V2_C",
-						"TODM_STW_Arid-WtS_WW_C",
-						"TODM_STW_Arid-WtS_WW_V3_C",
-						"TODM_STW_Arid-WtS_WW_V4_C",
-						"TODM_STW_Arid_WtS_WW_V2_C",
-						"TODM_STW_Dudebro_C",
-						"TODM_STW_Onboarding_C",
-						"TODM_STW_Temperate-FtS_C",
-						"TODM_STW_TRV_C",
-						"TODM_STW_TRV_SW_BF_C",
-						"TODM_STW_TRV_SW_DF_C",
-						"TODM_STW_TRV_SW_LF_C",
-						"TODM_STW_TRV_SW_TF_C",
-						"TODM_STW_Winter-Endless_C",
-						"TODM_STW_Winter-Survival_C",
-						"TODM_STW_Winter_2018_C" 
-					};
-
-					/*static int currentTODM = 0;
-					static int TODM = 0;
-					ImGui::Combo("TODM", &TODM, TODMs, IM_ARRAYSIZE(TODMs));
-					if (currentTODM != TODM)
+					if (BeginTabItem("World"))
 					{
-						UFunctions::Summon(TODMs[TODM].c_str());
-					}*/
+						/*const char* TODMs[] = { 
+							"TODM_Disabled_C",
+							"TODM_BR_C",
+							"TODM_BR_Halloween_C",
+							"TODM_BR_S7_C",
+							"TODM_BR_S7_W_C",
+							"TODM_BR_S8_C",
+							"TODM_BR_S8Hot_C",
+							"TODM_BR_S8_Child_C",
+							"TODM_Disabled_C",
+							"TODM_PG_PS_Capture_C",
+							"TODM_Papaya_C",
+							"TODM_BR_floorislava_V01_C",
+							"TODM_BR_s11_Fortnitemares_v2_C",
+							"TODM_BR_s11_STATIC_SKYLIGHT_C",
+							"TODM_BR_s13_FogOfWar_v2_C",
+							"TODM_BR_s14_C",
+							"TODM_BR_s14_Fortnitemares_C",
+							"TODM_BR_s14_Fortnitemares_Thick_C",
+							"TODM_BR_s14_Fortnitemares_Thin_C",
+							"TODM_Creative_C",
+							"TODM_STW_Parent_C",
+							"TODM_24_Fall_C",
+							"TODM_24_Fall_Storm_C",
+							"TODM_STW_Arid-WtS_R99_C",
+							"TODM_STW_Arid-WtS_R99_V2_C",
+							"TODM_STW_Arid-WtS_WW_C",
+							"TODM_STW_Arid-WtS_WW_V3_C",
+							"TODM_STW_Arid-WtS_WW_V4_C",
+							"TODM_STW_Arid_WtS_WW_V2_C",
+							"TODM_STW_Dudebro_C",
+							"TODM_STW_Onboarding_C",
+							"TODM_STW_Temperate-FtS_C",
+							"TODM_STW_TRV_C",
+							"TODM_STW_TRV_SW_BF_C",
+							"TODM_STW_TRV_SW_DF_C",
+							"TODM_STW_TRV_SW_LF_C",
+							"TODM_STW_TRV_SW_TF_C",
+							"TODM_STW_Winter-Endless_C",
+							"TODM_STW_Winter-Survival_C",
+							"TODM_STW_Winter_2018_C" 
+						};
+	
+						/*static int currentTODM = 0;
+						static int TODM = 0;
+						ImGui::Combo("TODM", &TODM, TODMs, IM_ARRAYSIZE(TODMs));
+						if (currentTODM != TODM)
+						{
+							UFunctions::Summon(TODMs[TODM].c_str());
+						}*/
 
-					/*const char* items[] = { 
-						"TODM_Disabled_C",
-						"TODM_BR_C",
-						"TODM_BR_Halloween_C",
-						"TODM_BR_S7_C",
-						"TODM_BR_S7_W_C",
-						"TODM_BR_S8_C",
-						"TODM_BR_S8Hot_C",
-						"TODM_BR_S8_Child_C",
-						"TODM_Disabled_C",
-						"TODM_PG_PS_Capture_C",
-						"TODM_Papaya_C",
-						"TODM_BR_floorislava_V01_C",
-						"TODM_BR_s11_Fortnitemares_v2_C",
-						"TODM_BR_s11_STATIC_SKYLIGHT_C",
-						"TODM_BR_s13_FogOfWar_v2_C",
-						"TODM_BR_s14_C",
-						"TODM_BR_s14_Fortnitemares_C",
-						"TODM_BR_s14_Fortnitemares_Thick_C",
-						"TODM_BR_s14_Fortnitemares_Thin_C",
-						"TODM_Creative_C",
-						"TODM_STW_Parent_C",
-						"TODM_24_Fall_C",
-						"TODM_24_Fall_Storm_C",
-						"TODM_STW_Arid-WtS_R99_C",
-						"TODM_STW_Arid-WtS_R99_V2_C",
-						"TODM_STW_Arid-WtS_WW_C",
-						"TODM_STW_Arid-WtS_WW_V3_C",
-						"TODM_STW_Arid-WtS_WW_V4_C",
-						"TODM_STW_Arid_WtS_WW_V2_C",
-						"TODM_STW_Dudebro_C",
-						"TODM_STW_Onboarding_C",
-						"TODM_STW_Temperate-FtS_C",
-						"TODM_STW_TRV_C",
-						"TODM_STW_TRV_SW_BF_C",
-						"TODM_STW_TRV_SW_DF_C",
-						"TODM_STW_TRV_SW_LF_C",
-						"TODM_STW_TRV_SW_TF_C",
-						"TODM_STW_Winter-Endless_C",
-						"TODM_STW_Winter-Survival_C",
-						"TODM_STW_Winter_2018_C" 
-					};
-					static int item_current = 0;
-					static int currentitem_current = 0;
-					ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
+						/*const char* items[] = { 
+							"TODM_Disabled_C",
+							"TODM_BR_C",
+							"TODM_BR_Halloween_C",
+							"TODM_BR_S7_C",
+							"TODM_BR_S7_W_C",
+							"TODM_BR_S8_C",
+							"TODM_BR_S8Hot_C",
+							"TODM_BR_S8_Child_C",
+							"TODM_Disabled_C",
+							"TODM_PG_PS_Capture_C",
+							"TODM_Papaya_C",
+							"TODM_BR_floorislava_V01_C",
+							"TODM_BR_s11_Fortnitemares_v2_C",
+							"TODM_BR_s11_STATIC_SKYLIGHT_C",
+							"TODM_BR_s13_FogOfWar_v2_C",
+							"TODM_BR_s14_C",
+							"TODM_BR_s14_Fortnitemares_C",
+							"TODM_BR_s14_Fortnitemares_Thick_C",
+							"TODM_BR_s14_Fortnitemares_Thin_C",
+							"TODM_Creative_C",
+							"TODM_STW_Parent_C",
+							"TODM_24_Fall_C",
+							"TODM_24_Fall_Storm_C",
+							"TODM_STW_Arid-WtS_R99_C",
+							"TODM_STW_Arid-WtS_R99_V2_C",
+							"TODM_STW_Arid-WtS_WW_C",
+							"TODM_STW_Arid-WtS_WW_V3_C",
+							"TODM_STW_Arid-WtS_WW_V4_C",
+							"TODM_STW_Arid_WtS_WW_V2_C",
+							"TODM_STW_Dudebro_C",
+							"TODM_STW_Onboarding_C",
+							"TODM_STW_Temperate-FtS_C",
+							"TODM_STW_TRV_C",
+							"TODM_STW_TRV_SW_BF_C",
+							"TODM_STW_TRV_SW_DF_C",
+							"TODM_STW_TRV_SW_LF_C",
+							"TODM_STW_TRV_SW_TF_C",
+							"TODM_STW_Winter-Endless_C",
+							"TODM_STW_Winter-Survival_C",
+							"TODM_STW_Winter_2018_C" 
+						};
+						static int item_current = 0;
+						static int currentitem_current = 0;
+						ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
+	
+						if (currentitem_current != item_current)
+						{
+							std::string TODMstr(items[item_current]);
+							std::wstring TODMName(TODMstr.begin(), TODMstr.end());
+							UFunctions::Summon(TODMName.c_str());
+							currentitem_current = item_current;
+						}
+	
+						std::string TODMstr2(items[item_current]);
+						Text("Current TODM: %s", TODMstr2.c_str());*/
 
-					if (currentitem_current != item_current)
-					{
-						std::string TODMstr(items[item_current]);
-						std::wstring TODMName(TODMstr.begin(), TODMstr.end());
-						UFunctions::Summon(TODMName.c_str());
-						currentitem_current = item_current;
-					}
+						if (Button("Summon Husk"))
+						{
+							UFunctions::Summon(L"HUSKPAWN_C");
+						}
 
-					std::string TODMstr2(items[item_current]);
-					Text("Current TODM: %s", TODMstr2.c_str());*/
+						SameLine();
 
-					if (Button("Summon Husk")) {
-						UFunctions::Summon(L"HUSKPAWN_C");
-					}
+						if (Button("Summon Smasher"))
+						{
+							UFunctions::Summon(L"SMASHERPAWN_C");
+						}
 
-					SameLine();
+						SameLine();
 
-					if (Button("Summon Smasher")) {
-						UFunctions::Summon(L"SMASHERPAWN_C");
-					}
+						if (Button("Summon Storm King"))
+						{
+							UFunctions::Summon(L"DUDEBRO_Pawn_C");
+						}
 
-					SameLine();
 
-					if (Button("Summon Storm King")) {
-						UFunctions::Summon(L"DUDEBRO_Pawn_C");
-					}
-						
+						static int timeOfDay = 1;
+						static int currentTimeOfDay = 1;
 
-					static int timeOfDay = 1;
-					static int currentTimeOfDay = 1;
+						if (currentTimeOfDay != timeOfDay)
+						{
+							UFunctions::SetTimeOfDay(timeOfDay);
+							currentTimeOfDay = timeOfDay;
+						}
+						SliderInt("Time Of Day", &timeOfDay, 1.000f, 24.000f, "%.01f");
 
-					if (currentTimeOfDay != timeOfDay)
-					{
-						UFunctions::SetTimeOfDay(timeOfDay);
-						currentTimeOfDay = timeOfDay;
-					}
-					SliderInt("Time Of Day", &timeOfDay, 1.000f, 24.000f, "%.01f");
-
-					if (PlayerPawn)
-					{
-						if (Button("Teleport to Bus Island"))
+						if (Button("Teleport to Spawn Island"))
 						{
 							UFunctions::TeleportToSpawn();
 						}
@@ -322,12 +324,9 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							UFunctions::TeleportToCoords(X, Y, Z);
 						}
 						EndChild();
+
+						EndTabItem();
 					}
-					else
-					{
-						Text("There is no Pawn owned by NeoRoyale system! Get in a match and retry.");
-					}
-					EndTabItem();
 				}
 
 				if (PlayerPawn)
@@ -367,19 +366,31 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						static int currentMaxShield = 100;
 						static float currentSpeed = 1;
 						static int currentGravityScale = 1;
+						static int currentFov = 80;
 						static int health = 100;
 						static int shield = 100;
 						static int maxHealth = 100;
 						static int maxShield = 100;
 						static float speed = 1;
 						static int gravityScale = 1;
+						static int fov = 80;
+
+						if (currentFov != fov)
+						{
+							std::wstring command(L"fov " + std::to_wstring(fov));
+							PlayerPawn->ExecuteConsoleCommand(command.c_str());
+							currentFov = fov;
+						}
+						SliderInt("Fov", &fov, 20, 200, "%.03f");
+
+						NewLine();
 
 						if (currentGravityScale != gravityScale)
 						{
 							PlayerPawn->SetPawnGravityScale(gravityScale);
 							currentGravityScale = gravityScale;
 						}
-						SliderInt("Gravity Scale Percent", &gravityScale, -5.001f, 5.000f, "%.01f");
+						SliderInt("Gravity Scale", &gravityScale, -5.001f, 5.000f, "%.01f");
 
 						NewLine();
 
@@ -388,7 +399,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							PlayerPawn->SetMovementSpeed(speed);
 							currentSpeed = speed;
 						}
-						SliderFloat("Speed Percent", &speed, 1.0f, 5.0f, "%.1f", 10.000001f);
+						SliderFloat("Speed Multiplier", &speed, 1.0f, 5.0f, "%.1f", 10.000001f);
 
 						NewLine();
 
@@ -415,7 +426,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							PlayerPawn->SetMaxHealth(maxHealth);
 							currentMaxHealth = maxHealth;
 						}
-						SliderInt("Max Health Percent", &maxHealth, 1, 10000000, "%.3f");
+						SliderInt("Max Health", &maxHealth, 1, 10000000, "%.3f");
 
 						NewLine();
 
@@ -424,29 +435,31 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							PlayerPawn->SetMaxShield(maxShield);
 							currentMaxShield = maxShield;
 						}
-						SliderInt("Max Shield Percent", &maxShield, 1, 10000000, "%.3f");
+						SliderInt("Max Shield", &maxShield, 1, 10000000, "%.3f");
 
 
 						EndTabItem();
 					}
 				}
 
-				static char weapon[MAX_PATH];
-
-				if (BeginTabItem("Cheats"))
+				if (PlayerPawn)
 				{
-					InputTextWithHint("Weapon ID", "WID/AGID", weapon, sizeof(weapon));
+					static char weapon[1024];
 
-					if (Button("Equip Weapon"))
+					if (BeginTabItem("Cheats"))
 					{
-						std::string weaponS = weapon;
-						std::wstring weaponW(weaponS.begin(), weaponS.end());
-						PlayerPawn->EquipWeapon(weaponW.c_str());
+						InputTextWithHint("Weapon ID", "WID/AGID", weapon, sizeof(weapon));
+
+						if (Button("Equip Weapon"))
+						{
+							std::string weaponS = weapon;
+							std::wstring weaponW(weaponS.begin(), weaponS.end());
+							WeaponQueue = weaponW;
+						}
+
+						EndTabItem();
 					}
-
-					EndTabItem();
 				}
-
 				if (BeginTabItem("Credits"))
 				{
 					SetCursorPosX(GetCursorPosX() + 50);
