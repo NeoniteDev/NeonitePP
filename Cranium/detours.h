@@ -164,19 +164,30 @@ enablecheats - Enables cheatmanager.
 				DumpGObjects();
 			}
 
+			else if (ScriptNameW == XOR(L"test"))
+			{
+				const auto Playlist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Fill/Playlist_Fill_Solo.Playlist_Fill_Solo"));
+
+				const auto TimeOfDayManageroOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlaylist"), XOR(L"TimeOfDayManager"));
+
+				const auto TimeOfDayManager = reinterpret_cast<UClass*>(reinterpret_cast<uintptr_t>(Playlist) + TimeOfDayManageroOffset);
+
+				printf("\n\n[DEBUG] %ls\n\n", GetObjectFirstName(TimeOfDayManager).c_str());
+			}
+
 			else if (ScriptNameW == XOR(L"event"))
 			{
 				if (gVersion == XOR("14.60"))
 				{
-					UFunctions::Play(GALACTUS_EVENT_MAP, GALACTUS_EVENT_PLAYER);
+					UFunctions::Play(GALACTUS_EVENT_PLAYER);
 				}
 				else if (gVersion == XOR("12.41"))
 				{
-					UFunctions::Play(JERKY_EVENT_MAP, JERKY_EVENT_PLAYER);
+					UFunctions::Play(JERKY_EVENT_PLAYER);
 				}
 				else if (gVersion == XOR("12.61"))
 				{
-					UFunctions::Play(DEVICE_EVENT_MAP, DEVICE_EVENT_PLAYER);
+					UFunctions::Play(DEVICE_EVENT_PLAYER);
 				}
 				else
 				{

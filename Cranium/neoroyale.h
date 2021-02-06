@@ -124,6 +124,23 @@ namespace Neoroyale
 				UFunctions::SetGamePhase();
 			}
 
+			if (gVersion == XOR("14.60"))
+			{
+				UFunctions::LoadAndStreamInLevel(GALACTUS_EVENT_MAP);
+			}
+			else if (gVersion == XOR("12.41"))
+			{
+				UFunctions::LoadAndStreamInLevel(JERKY_EVENT_MAP);
+			}
+			else if (gVersion == XOR("12.61"))
+			{
+				UFunctions::LoadAndStreamInLevel(DEVICE_EVENT_MAP);
+			}
+			else
+			{
+				UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
+			}
+
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
@@ -134,3 +151,4 @@ namespace Neoroyale
 		bIsInit = !bIsInit;
 	}
 }
+

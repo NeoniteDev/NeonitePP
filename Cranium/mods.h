@@ -288,9 +288,9 @@ namespace UFunctions
 
 	}*/
 
-	inline void Play(const wchar_t* EventSequenceMap, const wchar_t* AnimationPlayerFullName)
+	inline void LoadAndStreamInLevel(const wchar_t* EventSequenceMap)
 	{
-		/*ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder NetworkManagerFinder = WorldFinder.Find(XOR(L"NetworkManager"));
@@ -315,37 +315,30 @@ namespace UFunctions
 		printf("\n[DEBUG] LEVEL INSTANCE WAS CREATED\n");
 		Sleep(5000);
 
-		//Using the game instance object to get it's FName
-		UObject* LevelInstance = LoadLevelInstanceParams.ReturnValue;
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		const auto GetWorldAssetPackageFName = FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreaming:GetWorldAssetPackageFName"));
+		const auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
 
-		ULevelStreaming_GetWorldAssetPackageFName_Params GetWorldAssetPackageFNameParams;
-		ProcessEvent(LevelInstance, GetWorldAssetPackageFName, &GetWorldAssetPackageFNameParams);
-		printf("\n[DEBUG] LEVEL FNAME\n");
-		
-		//We have the name now we call load stream level
-		FName MapName = GetWorldAssetPackageFNameParams.ReturnValue;
+		std::wstring command = L"streamlevelin " + std::wstring(EventSequenceMap);
 
-		const auto LoadStreamLevel = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameplayStatics:LoadStreamLevel"));
+		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
+		params.WorldContextObject = WorldFinder.GetObj();
+		params.Command = command.c_str();
+		params.SpecificPlayer = PlayerControllerFinder.GetObj();
 
-		UGameplayStatics_LoadStreamLevel_Params LoadStreamLevelParams;
-		LoadStreamLevelParams.WorldContextObject = WorldFinder.GetObj();
-		LoadStreamLevelParams.LevelName = MapName;
-		LoadStreamLevelParams.bMakeVisibleAfterLoad = true;
-		LoadStreamLevelParams.bShouldBlockOnLoad = false;
+		ProcessEvent(KismetSysLib, fn, &params);
+	}
 
-		ProcessEvent(NetworkManagerFinder.GetObj(), LoadStreamLevel, &LoadStreamLevelParams);
-		printf("\n[DEBUG] LEVEL WAS STREAMED IN\n");
-		Sleep(5000);*/
-
+	inline void Play(const wchar_t* AnimationPlayerFullName)
+	{
 		//Level is streamed inside the map now we start the event sequence
 		const auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
 
 		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
 
 		ProcessEvent(Sequence, Play, nullptr);
-		printf("\n[DEBUG] EVENT STARTED\n");
 	}
 
 	inline void ConsoleLog(std::wstring message)
@@ -372,6 +365,24 @@ namespace UFunctions
 
 			ProcessEvent(actor, fn, nullptr);
 		}
+	}
+
+	inline void ChangeTODM(const wchar_t* NewTODMClassName)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameModeAthena:SetTimeOfDayManagerGameplayOverride"));
+
+		const auto TODMClass = FindObject<UClass*>(NewTODMClassName);
+
+		AFortGameModeAthena_SetTimeOfDayManagerGameplayOverride_Params params;
+		params.TimeOfDayManagerClass = TODMClass;
+
+		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] Match started!.\n");
 	}
 }
 

@@ -293,6 +293,11 @@ struct UCheatManager_CheatScript_Params
 	FString ScriptName;
 };
 
+struct AFortGameModeAthena_SetTimeOfDayManagerGameplayOverride_Params
+{
+	UClass* TimeOfDayManagerClass;
+};
+
 struct AFortPlayerPawnAthena_TeleportToSkyDive_Params
 {
 	float HeightAboveGround;

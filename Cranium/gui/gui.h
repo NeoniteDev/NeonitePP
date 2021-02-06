@@ -191,70 +191,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							"TODM_STW_Winter_2018_C" 
 						};
 	
-						/*static int currentTODM = 0;
+						static int currentTODM = 0;
 						static int TODM = 0;
-						ImGui::Combo("TODM", &TODM, TODMs, IM_ARRAYSIZE(TODMs));
+						Combo("TODM", &TODM, TODMs, IM_ARRAYSIZE(TODMs));
 						if (currentTODM != TODM)
 						{
 							UFunctions::Summon(TODMs[TODM].c_str());
 						}*/
-
-						/*const char* items[] = { 
-							"TODM_Disabled_C",
-							"TODM_BR_C",
-							"TODM_BR_Halloween_C",
-							"TODM_BR_S7_C",
-							"TODM_BR_S7_W_C",
-							"TODM_BR_S8_C",
-							"TODM_BR_S8Hot_C",
-							"TODM_BR_S8_Child_C",
-							"TODM_Disabled_C",
-							"TODM_PG_PS_Capture_C",
-							"TODM_Papaya_C",
-							"TODM_BR_floorislava_V01_C",
-							"TODM_BR_s11_Fortnitemares_v2_C",
-							"TODM_BR_s11_STATIC_SKYLIGHT_C",
-							"TODM_BR_s13_FogOfWar_v2_C",
-							"TODM_BR_s14_C",
-							"TODM_BR_s14_Fortnitemares_C",
-							"TODM_BR_s14_Fortnitemares_Thick_C",
-							"TODM_BR_s14_Fortnitemares_Thin_C",
-							"TODM_Creative_C",
-							"TODM_STW_Parent_C",
-							"TODM_24_Fall_C",
-							"TODM_24_Fall_Storm_C",
-							"TODM_STW_Arid-WtS_R99_C",
-							"TODM_STW_Arid-WtS_R99_V2_C",
-							"TODM_STW_Arid-WtS_WW_C",
-							"TODM_STW_Arid-WtS_WW_V3_C",
-							"TODM_STW_Arid-WtS_WW_V4_C",
-							"TODM_STW_Arid_WtS_WW_V2_C",
-							"TODM_STW_Dudebro_C",
-							"TODM_STW_Onboarding_C",
-							"TODM_STW_Temperate-FtS_C",
-							"TODM_STW_TRV_C",
-							"TODM_STW_TRV_SW_BF_C",
-							"TODM_STW_TRV_SW_DF_C",
-							"TODM_STW_TRV_SW_LF_C",
-							"TODM_STW_TRV_SW_TF_C",
-							"TODM_STW_Winter-Endless_C",
-							"TODM_STW_Winter-Survival_C",
-							"TODM_STW_Winter_2018_C" 
-						};
-						static int item_current = 0;
-						static int currentitem_current = 0;
-						ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
-	
-						if (currentitem_current != item_current)
-						{
-							std::string TODMstr(items[item_current]);
-							std::wstring TODMName(TODMstr.begin(), TODMstr.end());
-							UFunctions::Summon(TODMName.c_str());
-							currentitem_current = item_current;
-						}
-	
-						std::string TODMstr2(items[item_current]);
-						Text("Current TODM: %s", TODMstr2.c_str());*/
 
 						if (Button("Summon Husk"))
 						{
@@ -275,6 +218,27 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							UFunctions::Summon(L"DUDEBRO_Pawn_C");
 						}
 
+						SameLine();
+
+						if (Button("Start Event"))
+						{
+							if (gVersion == XOR("14.60"))
+							{
+								UFunctions::Play(GALACTUS_EVENT_PLAYER);
+							}
+							else if (gVersion == XOR("12.41"))
+							{
+								UFunctions::Play(JERKY_EVENT_PLAYER);
+							}
+							else if (gVersion == XOR("12.61"))
+							{
+								UFunctions::Play(DEVICE_EVENT_PLAYER);
+							}
+							else
+							{
+								UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
+							}
+						}
 
 						static int timeOfDay = 1;
 						static int currentTimeOfDay = 1;
@@ -327,13 +291,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						EndTabItem();
 					}
-				}
 
-				if (PlayerPawn)
-				{
 					if (BeginTabItem("Character"))
 					{
-						if (Button("Pawn Fly"))
+						if (Button("Fly"))
 						{
 							PlayerPawn->Fly(bIsFlying);
 							bIsFlying = !bIsFlying;
@@ -381,7 +342,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							PlayerPawn->ExecuteConsoleCommand(command.c_str());
 							currentFov = fov;
 						}
-						SliderInt("Fov", &fov, 20, 200, "%.03f");
+						SliderInt("FOV", &fov, 20, 200, "%.03f");
 
 						NewLine();
 
@@ -440,13 +401,11 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						EndTabItem();
 					}
-				}
 
-				if (PlayerPawn)
-				{
+
 					static char weapon[1024];
 
-					if (BeginTabItem("Cheats"))
+					if (BeginTabItem("Modifiers"))
 					{
 						InputTextWithHint("Weapon ID", "WID/AGID", weapon, sizeof(weapon));
 
@@ -460,6 +419,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						EndTabItem();
 					}
 				}
+
 				if (BeginTabItem("Credits"))
 				{
 					SetCursorPosX(GetCursorPosX() + 50);
