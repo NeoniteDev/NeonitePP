@@ -169,13 +169,13 @@ namespace IMGUI_STB_NAMESPACE
 using namespace IMGUI_STB_NAMESPACE;
 #endif
 
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------
 // [SECTION] Style functions
 //-----------------------------------------------------------------------------
 
 void ImGui::StyleColorsDark(ImGuiStyle* dst) {
 	ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
-	ImVec4* colors = colors;
+	ImVec4* colors = style->Colors;
 
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -236,7 +236,7 @@ void ImGui::StyleColorsDark(ImGuiStyle* dst) {
 
 void ImGui::StyleColorsClassic(ImGuiStyle* dst) {
 	ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
-	ImVec4* colors = colors;
+	ImVec4* colors = style->Colors;
 
 	colors[ImGuiCol_Text] = ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);

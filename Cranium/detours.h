@@ -7,7 +7,7 @@
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
-static UObject* CurrentWeapon;
+
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -87,9 +87,16 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
 
-		auto NewWeapon = params->NewWeapon;
+		auto OldWeapon = params->PrevWeapon;
 
-		CurrentWeapon = NewWeapon;
+		if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
+		{
+			const auto DestroyActor = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+
+			ProcessEvent(OldWeapon, DestroyActor, nullptr);
+
+			OldWeapon = nullptr;
+		}
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
@@ -119,13 +126,7 @@ cheatscript debugcamera - Toggles a custom version of the debug camera.
 cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
 cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
 cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
-cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
 cheatscript setplaylist <Playlist> - Overrides the current playlist.
-cheatscript respawn - Respawns the player (duh)
-cheatscript sethealth <NewHealthFloat> - Changes your health value.
-cheatscript setshield <NewShieldFloat> - Changes your shield value.
-cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
-cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
 cheatscript dump - Dumps a list of all GObjects.
 cheatscript dumpbps - Dumps all blueprints.
 fly - Toggles flying.
@@ -187,43 +188,6 @@ enablecheats - Enables cheatmanager.
 				bIsDebugCamera = !bIsDebugCamera;
 			}
 
-			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
-			{
-				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
-			}
-
-			else if (ScriptNameW == XOR(L"respawn"))
-			{
-				Neoroyale::Respawn();
-			}
-
-			else if (ScriptNameW == XOR(L"tejsakldasst"))
-			{
-				if (!Util::IsBadReadPtr(CurrentWeapon))
-				{
-					const auto FortniteAutomation = FindObject<UObject*>(XOR(L"FortniteAutomationBlueprintLibrary /Script/FortniteGame.Default__FortniteAutomationBlueprintLibrary"));
-
-					const auto ApplyItemWrapToActor = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortniteAutomationBlueprintLibrary:ApplyItemWrapToActor"));
-
-					const auto testwrap = FindObject<UObject*>(XOR(L"AthenaItemWrapDefinition /Game/Athena/Items/Cosmetics/ItemWraps/Wrap_323_HalfFull.Wrap_323_HalfFull"));
-
-					UFortniteAutomationBlueprintLibrary_ApplyItemWrapToActor_Params params;
-					params.wrap = testwrap;
-					params.Actor = CurrentWeapon;
-					params.MaterialType = EItemWrapMaterialType::WeaponWrap;
-
-					ProcessEvent(FortniteAutomation, ApplyItemWrapToActor, &params);
-
-					const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortWeapon:OnRep_ReplicatedCosmeticOverrideWeaponData"));
-
-					ProcessEvent(CurrentWeapon, fn, nullptr);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"Why are you applying wrap without equipping a weapon :weirdchamp:"));
-				}
-			}
-
 			else if (ScriptNameW.starts_with(XOR(L"equip")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
@@ -232,119 +196,12 @@ enablecheats - Enables cheatmanager.
 				{
 					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
 					{
-						if (!Util::IsBadReadPtr(CurrentWeapon))
-						{
-							const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
-
-							ProcessEvent(CurrentWeapon, fn, nullptr);
-
-							CurrentWeapon = nullptr;
-						}
-
-
-						auto name = arg + L"." + arg;
-						Neoroyale::PlayerPawn->EquipWeapon(name.c_str(), rand());
+						Neoroyale::PlayerPawn->EquipWeapon(arg.c_str(), rand());
 					}
 					else
 					{
 						UFunctions::ConsoleLog(XOR(L"This command only works with WIDs and AGIDs."));
 					}
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetMaxHealth(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetMaxShield(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetHealth(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setshield")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetShield(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setspeed")) || ScriptNameW.starts_with(XOR(L"speed")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetMovementSpeed(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
-			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (!arg.empty())
-				{
-					const auto newgav = std::stof(arg);
-
-					Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
 				}
 				else
 				{

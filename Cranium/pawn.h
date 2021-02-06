@@ -1,7 +1,7 @@
 #pragma once
 
 struct Pawn
-{
+{	
 	auto Possess()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -91,7 +91,7 @@ struct Pawn
 
 		const auto Mesh = FindObject<UObject*>(
 			XOR(L"SkeletalMesh /Game/Characters/Player/Male/Medium/Base/SK_M_MALE_Base.SK_M_MALE_Base")
-			);
+		);
 
 		if (Mesh)
 		{
@@ -118,7 +118,7 @@ struct Pawn
 		printf("\nCharacter parts should be visiable now!.\n");
 	}
 
-	auto EquipWeapon(const wchar_t* weaponname, const int guid)
+	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
 	{
 		FGuid GUID;
 		GUID.A = guid;
@@ -128,7 +128,11 @@ struct Pawn
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
 
-		auto WeaponData = FindObject<UObject*>(weaponname, true);
+		std::wstring WeaponName = weaponname;
+
+		std::wstring name = WeaponName + L"." + WeaponName;
+
+		auto WeaponData = FindObject<UObject*>(name.c_str(), true);
 
 		if (WeaponData)
 		{
@@ -155,7 +159,7 @@ struct Pawn
 
 			ProcessEvent(this, fn, &params);
 
-			return params.ReturnValue;
+			MessageBoxW(nullptr, objectName.c_str(), L"TEST", MB_OK);
 		}
 		else
 		{
@@ -245,7 +249,6 @@ struct Pawn
 
 		ProcessEvent(this, fn, &params);
 	}
-
 
 	auto SetMovementSpeed(float SetMovementSpeedInput)
 	{

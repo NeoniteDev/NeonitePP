@@ -50,6 +50,50 @@ namespace UFunctions
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 	}
 
+	inline void TeleportToMain()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+
+		UCheatManager_BugItGo_Params params;
+		params.X = 0;
+		params.Y = 0;
+		params.Z = 0;
+		params.Pitch = 0;
+		params.Yaw = 0;
+		params.Roll = 0;
+
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	}
+
+	inline void TeleportToCoords(float X, float Y, float Z)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+
+		UCheatManager_BugItGo_Params params;
+		params.X = X;
+		params.Y = Y;
+		params.Z = Z;
+		params.Pitch = 0;
+		params.Yaw = 0;
+		params.Roll = 0;
+
+		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	}
+
 	inline void DestroyAllHLODs()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -302,6 +346,16 @@ namespace UFunctions
 		params.Msg = Msg;
 
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+	}
+
+	inline void DestoryActor(UObject* actor)
+	{
+		if (!Util::IsBadReadPtr(actor))
+		{
+			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+
+			ProcessEvent(actor, fn, nullptr);
+		}
 	}
 }
 

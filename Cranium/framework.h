@@ -23,4 +23,4 @@
 #pragma comment(lib, "advapi32.lib")
 #include "minhook/MinHook.h"
 
-static bool showMenu = true;
+static bool showMenu = false;
