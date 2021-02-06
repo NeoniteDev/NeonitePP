@@ -20,6 +20,10 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
+inline void* ParametersQueue;
+inline void* ObjectQueue;
+inline void* FunctionQueue;
+
 //Frees the memory for the name
 inline void Free(void* buffer)
 {
@@ -72,6 +76,12 @@ inline std::wstring GetObjectName(UObject* object)
 	}
 	
 	return name;
+}
+
+inline void ProcessEventQueue(void* pObj, void* pFunc, void* pParams) {
+	ObjectQueue = pObj;
+	ParametersQueue = pParams;
+	FunctionQueue = pFunc;
 }
 
 //Return FULL Object name including it's type.

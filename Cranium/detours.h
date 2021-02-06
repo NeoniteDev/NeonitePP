@@ -7,9 +7,7 @@
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
-inline void* ParametersQueue;
-inline void* ObjectQueue;
-inline void* FunctionQueue;
+
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -272,7 +270,6 @@ enablecheats - Enables cheatmanager.
 
 	return ProcessEvent(pObj, pFunc, pParams);
 }
-
 namespace CameraHook
 {
 	inline float Speed = 0.1;
@@ -329,12 +326,4 @@ inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE s
 	}
 
 	return CurrentViewPoint;
-}
-
-
-
-inline void ProcessEventQueue(void* pObj, void* pFunc, void* pParams) {
-	ObjectQueue = pObj;
-	ParametersQueue = pParams;
-	FunctionQueue = pFunc;
 }
