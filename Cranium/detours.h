@@ -102,7 +102,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
-		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"FortWeaponRangedItemDefinition /Game/Athena/Items/Weapons/Prototype/WID_FireExtinguisher_Spray.WID_FireExtinguisher_Spray"), rand());
+		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
@@ -121,13 +121,18 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 						LR"(
 Custom Cheatscript Commands
 ---------------------------
-
 cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
 cheatscript debugcamera - Toggles a custom version of the debug camera.
 cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
 cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
 cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
 cheatscript setplaylist <Playlist> - Overrides the current playlist.
+cheatscript respawn - Respawns the player (duh)
+cheatscript sethealth <NewHealthFloat> - Changes your health value.
+cheatscript setshield <NewShieldFloat> - Changes your shield value.
+cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
 cheatscript dump - Dumps a list of all GObjects.
 cheatscript dumpbps - Dumps all blueprints.
 fly - Toggles flying.
@@ -162,17 +167,6 @@ enablecheats - Enables cheatmanager.
 			else if (ScriptNameW == XOR(L"dump"))
 			{
 				DumpGObjects();
-			}
-
-			else if (ScriptNameW == XOR(L"test"))
-			{
-				const auto Playlist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/Fill/Playlist_Fill_Solo.Playlist_Fill_Solo"));
-
-				const auto TimeOfDayManageroOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlaylist"), XOR(L"TimeOfDayManager"));
-
-				const auto TimeOfDayManager = reinterpret_cast<UClass*>(reinterpret_cast<uintptr_t>(Playlist) + TimeOfDayManageroOffset);
-
-				printf("\n\n[DEBUG] %ls\n\n", GetObjectFirstName(TimeOfDayManager).c_str());
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
@@ -221,6 +215,87 @@ enablecheats - Enables cheatmanager.
 				}
 			}
 
+			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetMaxHealth(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetMaxShield(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetHealth(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+			else if (ScriptNameW.starts_with(XOR(L"setshield")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetShield(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"setspeed")) || ScriptNameW.starts_with(XOR(L"speed")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetMovementSpeed(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				if (!arg.empty())
+				{
+					const auto newgav = std::stof(arg);
+					Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+
 			else if (ScriptNameW.starts_with(XOR(L"setplaylist")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
@@ -241,6 +316,16 @@ enablecheats - Enables cheatmanager.
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
+			}
+
+			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
+			{
+				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
+			}
+
+			else if (ScriptNameW == XOR(L"respawn"))
+			{
+				Neoroyale::Respawn();
 			}
 		}
 	}

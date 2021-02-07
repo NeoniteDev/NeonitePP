@@ -583,9 +583,9 @@ struct ULevelStreamingDynamic_LoadLevelInstance_Params
 	UObject* ReturnValue;
 };
 
-struct ULevelStreaming_GetWorldAssetPackageFName_Params
+struct AActor_K2_GetActorLocation_Params
 {
-	FName ReturnValue;
+	FVector ReturnValue;
 };
 
 struct FLatentActionInfo

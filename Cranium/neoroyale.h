@@ -117,7 +117,7 @@ namespace Neoroyale
 				UFunctions::TeleportToSpawn();
 			}
 
-			if (gVersion != "12.41")
+			if (gVersion != "12.41" || gVersion != "14.60" || gVersion != "12.61")
 			{
 				UFunctions::SetPlaylist();
 
@@ -151,4 +151,3 @@ namespace Neoroyale
 		bIsInit = !bIsInit;
 	}
 }
-

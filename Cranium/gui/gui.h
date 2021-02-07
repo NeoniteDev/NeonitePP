@@ -418,6 +418,37 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						EndTabItem();
 					}
+
+					if (BeginTabItem("Spawn"))
+					{
+						const char* blueprints[] = { "HUSKPAWN_C", "SMASHERPAWN_C", "DUDEBRO_Pawn_C", "SHIELDERPAWN_C", "BGA_FireExtinguisher_Pickup_C", "HuskPreset" };
+						const char* items[] = { "Husk", "Smasher", "Storm King", "Shielder", "Fire Extinguisher", "4 Husks Preset" };
+						static int item_current = 0;
+						static int currentitem_current = 0;
+						Combo("Blueprints", &item_current, items, IM_ARRAYSIZE(items));
+
+						if (currentitem_current != item_current)
+						{
+							std::string StringOfBlueprint(blueprints[item_current]);
+							const std::wstring Blueprint(StringOfBlueprint.begin(), StringOfBlueprint.end());
+							if (Blueprint.find(L"HuskPreset") != std::string::npos) {
+								for (auto i = 0; i < 4; i++)
+								{
+									UFunctions::Summon(L"HUSKPAWN_c");
+									auto currentLocation = PlayerPawn->GetLocation();
+									UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y + (20 * i), currentLocation.Z);
+								}
+							}
+							else {
+								UFunctions::Summon(Blueprint.c_str());
+							}
+
+							currentitem_current = item_current;
+
+						}
+
+						EndTabItem();
+					}
 				}
 
 				if (BeginTabItem("Credits"))

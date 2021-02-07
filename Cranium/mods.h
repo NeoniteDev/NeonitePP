@@ -59,7 +59,7 @@ namespace UFunctions
 		params.X = -156128.36;
 		params.Y = -159492.78;
 		params.Z = -2996.30;
-		params.Pitch = 0;
+		params.Pitch = 90;
 		params.Yaw = 0;
 		params.Roll = 0;
 
@@ -333,7 +333,6 @@ namespace UFunctions
 
 	inline void Play(const wchar_t* AnimationPlayerFullName)
 	{
-		//Level is streamed inside the map now we start the event sequence
 		const auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
 
 		const auto Sequence = FindObject<void*>(AnimationPlayerFullName);
@@ -365,24 +364,6 @@ namespace UFunctions
 
 			ProcessEvent(actor, fn, nullptr);
 		}
-	}
-
-	inline void ChangeTODM(const wchar_t* NewTODMClassName)
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameModeAthena:SetTimeOfDayManagerGameplayOverride"));
-
-		const auto TODMClass = FindObject<UClass*>(NewTODMClassName);
-
-		AFortGameModeAthena_SetTimeOfDayManagerGameplayOverride_Params params;
-		params.TimeOfDayManagerClass = TODMClass;
-
-		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
-		printf("\n[Neoroyale] Match started!.\n");
 	}
 }
 

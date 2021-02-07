@@ -165,6 +165,17 @@ struct Pawn
 		}
 	}
 
+	auto GetLocation() -> FVector
+	{
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+
+		AActor_K2_GetActorLocation_Params params;
+
+		ProcessEvent(this, fn, &params);
+
+		return params.ReturnValue;
+	}
+
 	auto SetMovementMode(TEnumAsByte<EMovementMode> NewMode, unsigned char CustomMode)
 	{
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
