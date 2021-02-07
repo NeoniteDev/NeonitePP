@@ -66,21 +66,21 @@ namespace Neoroyale
 			}
 		}
 		else bHasJumped = false;
-
-		if (GetAsyncKeyState(VK_F3))
-		{
-			UFunctions::Travel(FRONTEND);
-			bIsStarted = false;
-			bIsInit = false;
-			PlayerPawn = nullptr;
-			return;
-		}
 	}
 
 	inline void thread()
 	{
 		while (true)
 		{
+			if (GetAsyncKeyState(VK_F3))
+			{
+				UFunctions::Travel(FRONTEND);
+				bIsStarted = false;
+				bIsInit = false;
+				PlayerPawn = nullptr;
+				return;
+			}
+
 			Sleep(1000 / 30);
 		}
 	}
