@@ -366,8 +366,7 @@ struct Pawn
 
 			const auto Weapon = GetObjectFirstName(WeaponDefFinder.GetObj());
 
-			const std::wstring Command = L"cheatscript equip " + Weapon;
-			this->ExecuteConsoleCommand(Command.c_str());
+			this->EquipWeapon(Weapon.c_str());
 		}
 	}
 };

@@ -403,7 +403,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					}
 
 
-					static char weapon[1024];
+					static char weapon[512];
 
 					if (BeginTabItem("Modifiers"))
 					{
@@ -413,7 +413,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							std::string weaponS = weapon;
 							std::wstring weaponW(weaponS.begin(), weaponS.end());
-							WeaponQueue = weaponW;
+							PlayerPawn->EquipWeapon(weaponW.c_str());
+						}
+
+						SameLine();
+
+						if (Button("Dump"))
+						{
+							DumpGObjects();
 						}
 
 						EndTabItem();
@@ -421,8 +428,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 					if (BeginTabItem("Spawn"))
 					{
-						const char* blueprints[] = { "HUSKPAWN_C", "SMASHERPAWN_C", "DUDEBRO_Pawn_C", "SHIELDERPAWN_C", "BGA_FireExtinguisher_Pickup_C", "HuskPreset" };
-						const char* items[] = { "Husk", "Smasher", "Storm King", "Shielder", "Fire Extinguisher", "4 Husks Preset" };
+						const char* blueprints[] = {"HUSKPAWN_C", "SMASHERPAWN_C", "DUDEBRO_Pawn_C", "SHIELDERPAWN_C", "BGA_FireExtinguisher_Pickup_C", "HuskPreset"};
+						const char* items[] = {"Husk", "Smasher", "Storm King", "Shielder", "Fire Extinguisher", "4 Husks Preset"};
 						static int item_current = 0;
 						static int currentitem_current = 0;
 						Combo("Blueprints", &item_current, items, IM_ARRAYSIZE(items));
@@ -431,20 +438,21 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							std::string StringOfBlueprint(blueprints[item_current]);
 							const std::wstring Blueprint(StringOfBlueprint.begin(), StringOfBlueprint.end());
-							if (Blueprint.find(L"HuskPreset") != std::string::npos) {
+							if (Blueprint.find(L"HuskPreset") != std::string::npos)
+							{
 								for (auto i = 0; i < 4; i++)
 								{
 									UFunctions::Summon(L"HUSKPAWN_c");
-									auto currentLocation = PlayerPawn->GetLocation();
+									const auto currentLocation = PlayerPawn->GetLocation();
 									UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y + (20 * i), currentLocation.Z);
 								}
 							}
-							else {
+							else
+							{
 								UFunctions::Summon(Blueprint.c_str());
 							}
 
 							currentitem_current = item_current;
-
 						}
 
 						EndTabItem();

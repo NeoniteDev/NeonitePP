@@ -10,12 +10,6 @@ inline bool bIsFlying;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	if (!WeaponQueue.empty())
-	{
-		Neoroyale::PlayerPawn->EquipWeapon(WeaponQueue.c_str());
-		WeaponQueue.clear();
-	}
-
 	const auto nObj = GetObjectFirstName(pObj);
 	const auto nFunc = GetObjectFirstName(pFunc);
 
@@ -169,6 +163,24 @@ enablecheats - Enables cheatmanager.
 				DumpGObjects();
 			}
 
+			else if (ScriptNameW == XOR(L"test"))
+			{
+				struct AFortBroadcastRemoteClientInfo_ServerSetPlayerInventoryActive_Params
+				{
+					bool bInventorypActive;
+				};
+
+				const auto FortBroadcastRemoteClientInfo = FindObject<UObject*>(
+					XOR(L"FortBroadcastRemoteClientInfo /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.FortBroadcastRemoteClientInfo_"));
+
+				const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortBroadcastRemoteClientInfo:ServerSetPlayerInventoryActive"));
+
+				AFortBroadcastRemoteClientInfo_ServerSetPlayerInventoryActive_Params params;
+				params.bInventorypActive = true;
+
+				ProcessEvent(FortBroadcastRemoteClientInfo, fn, &params);
+			}
+
 			else if (ScriptNameW == XOR(L"event"))
 			{
 				if (gVersion == XOR("14.60"))
@@ -202,7 +214,7 @@ enablecheats - Enables cheatmanager.
 				{
 					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
 					{
-						Neoroyale::PlayerPawn->EquipWeapon(arg.c_str(), rand());
+						Neoroyale::PlayerPawn->EquipWeapon(arg.c_str());
 					}
 					else
 					{

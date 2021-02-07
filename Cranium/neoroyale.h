@@ -1,8 +1,6 @@
 #pragma once
 #include "mods.h"
 
-inline std::wstring WeaponQueue;
-
 namespace Neoroyale
 {
 	inline bool bIsInit;

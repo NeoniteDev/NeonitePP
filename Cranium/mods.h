@@ -59,8 +59,8 @@ namespace UFunctions
 		params.X = -156128.36;
 		params.Y = -159492.78;
 		params.Z = -2996.30;
-		params.Pitch = 90;
-		params.Yaw = 0;
+		params.Pitch = 00;
+		params.Yaw = 90;
 		params.Roll = 0;
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
