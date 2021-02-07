@@ -6,7 +6,7 @@ namespace Neoroyale
 	inline bool bIsInit;
 	inline bool bIsStarted;
 	inline bool bHasJumped;
-	inline bool bHasDeployed;
+	inline bool bHasJumpedFromBus;
 	inline Pawn* PlayerPawn;
 
 	inline void start(const wchar_t* MapToPlayOn)
@@ -51,13 +51,19 @@ namespace Neoroyale
 						PlayerPawn->ForceOpenParachute();
 					}
 
-					// Skydive
+						// Skydive
 					else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
 					{
+						if (!bHasJumpedFromBus)
+						{
+							const auto currentLocation = PlayerPawn->GetLocation();
+							UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
+							bHasJumpedFromBus = !bHasJumpedFromBus;
+						}
 						PlayerPawn->Skydive();
 					}
 
-					// Jump
+						// Jump
 					else if (!PlayerPawn->IsJumpProvidingForce())
 					{
 						PlayerPawn->Jump();
@@ -73,15 +79,6 @@ namespace Neoroyale
 			bIsStarted = false;
 			bIsInit = false;
 			PlayerPawn = nullptr;
-			return;
-		}
-	}
-
-	inline void thread()
-	{
-		while (true)
-		{
-			Sleep(1000 / 30);
 		}
 	}
 
@@ -141,8 +138,6 @@ namespace Neoroyale
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
-
-			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread), nullptr, NULL, nullptr);
 		}
 
 		bIsInit = !bIsInit;

@@ -176,20 +176,6 @@ enablecheats - Enables cheatmanager.
 
 			else if (ScriptNameW == XOR(L"test"))
 			{
-				struct AFortBroadcastRemoteClientInfo_ServerSetPlayerInventoryActive_Params
-				{
-					bool bInventorypActive;
-				};
-
-				const auto FortBroadcastRemoteClientInfo = FindObject<UObject*>(
-					XOR(L"FortBroadcastRemoteClientInfo /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.FortBroadcastRemoteClientInfo_"));
-
-				const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortBroadcastRemoteClientInfo:ServerSetPlayerInventoryActive"));
-
-				AFortBroadcastRemoteClientInfo_ServerSetPlayerInventoryActive_Params params;
-				params.bInventorypActive = true;
-
-				ProcessEvent(FortBroadcastRemoteClientInfo, fn, &params);
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
