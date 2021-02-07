@@ -347,7 +347,6 @@ struct Pawn
 		return params.ReturnValue;
 	}
 
-
 	auto ShowPickaxe()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
