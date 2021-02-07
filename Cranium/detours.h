@@ -74,6 +74,17 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			Neoroyale::PlayerPawn->Fly(bIsFlying);
 			bIsFlying = !bIsFlying;
 		}
+
+		// NOTE: (irma) This is better.
+		if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
+		{
+			Neoroyale::Respawn();
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"Tick")))
+		{
+			Neoroyale::gametick();
+		}
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))

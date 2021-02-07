@@ -423,7 +423,6 @@ enum class EFortCustomGender : uint8_t
 	EFortCustomGender_MAX = 4
 };
 
-
 enum class EMovementMode : uint8_t
 {
 	MOVE_None = 0,

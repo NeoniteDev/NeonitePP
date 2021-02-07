@@ -31,7 +31,49 @@ namespace Neoroyale
 			{
 				PlayerPawn->Possess();
 				PlayerPawn->ShowSkin();
+				PlayerPawn->ShowPickaxe();
 			}
+		}
+	}
+
+	inline void gametick()
+	{
+		if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
+		{
+			if (!bHasJumped)
+			{
+				bHasJumped = !bHasJumped;
+				if (!PlayerPawn->IsInAircraft())
+				{
+					// Glide
+					if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+					{
+						PlayerPawn->ForceOpenParachute();
+					}
+
+					// Skydive
+					else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+					{
+						PlayerPawn->Skydive();
+					}
+
+					// Jump
+					else if (!PlayerPawn->IsJumpProvidingForce())
+					{
+						PlayerPawn->Jump();
+					}
+				}
+			}
+		}
+		else bHasJumped = false;
+
+		if (GetAsyncKeyState(VK_F3))
+		{
+			UFunctions::Travel(FRONTEND);
+			bIsStarted = false;
+			bIsInit = false;
+			PlayerPawn = nullptr;
+			return;
 		}
 	}
 
@@ -39,49 +81,6 @@ namespace Neoroyale
 	{
 		while (true)
 		{
-			if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
-			{
-				if (!bHasJumped)
-				{
-					bHasJumped = !bHasJumped;
-					if (PlayerPawn->IsInAircraft())
-					{
-						Respawn();
-					}
-					else
-					{
-						// Glide
-						if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen() && !bHasDeployed)
-						{
-							PlayerPawn->ForceOpenParachute();
-							bHasDeployed = !bHasDeployed;
-						}
-
-							// Skydive
-						else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
-						{
-							PlayerPawn->Skydive();
-						}
-
-							// Jump
-						else if (!PlayerPawn->IsJumpProvidingForce())
-						{
-							PlayerPawn->Jump();
-						}
-					}
-				}
-			}
-			else bHasJumped = false;
-
-			if (GetAsyncKeyState(VK_F3))
-			{
-				UFunctions::Travel(FRONTEND);
-				bIsStarted = false;
-				bIsInit = false;
-				PlayerPawn = nullptr;
-				break;
-			}
-
 			Sleep(1000 / 30);
 		}
 	}
