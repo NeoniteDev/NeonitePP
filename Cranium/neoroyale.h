@@ -1,10 +1,15 @@
 #pragma once
+#include <chrono>
+#include <thread>
+
+
 #include "mods.h"
 
 namespace Neoroyale
 {
 	inline bool bIsInit;
 	inline bool bIsStarted;
+	inline bool bIsPlayerInit;
 	inline bool bHasJumped;
 	inline bool bHasJumpedFromBus;
 	inline bool bHasShowedPickaxe;
@@ -28,7 +33,7 @@ namespace Neoroyale
 				{
 					//Stopping emotes
 					NeoPlayer.StopMontageIfEmote();
-					
+
 					//Glide
 					if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
@@ -56,7 +61,7 @@ namespace Neoroyale
 			}
 		}
 		else bHasJumped = false;
-		
+
 
 		if (NeoPlayer.Pawn && GetAsyncKeyState(0x31) /* 1 key */)
 		{
@@ -67,7 +72,7 @@ namespace Neoroyale
 			}
 		}
 		else bHasShowedPickaxe = false;
-		
+
 
 		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
 		{
@@ -84,17 +89,21 @@ namespace Neoroyale
 
 		UFunctions::DestroyAllHLODs();
 
-		if (NeoPlayer.Init())
+		NeoPlayer.Summon(L"PlayerPawn_Athena_C");
+
+		NeoPlayer.Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+
+		if (NeoPlayer.Pawn)
 		{
 			NeoPlayer.Possess();
-
-			//NeoPlayer.SetSkeletalMesh();
 
 			NeoPlayer.ShowSkin();
 
 			NeoPlayer.ShowPickaxe();
 
 			NeoPlayer.ToggleInfiniteAmmo();
+
+			//NeoPlayer.SetSkeletalMesh();
 
 			const auto PlaylistName = GetObjectFirstName(gPlaylist);
 
@@ -131,8 +140,8 @@ namespace Neoroyale
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
-		}
 
-		bIsInit = !bIsInit;
+			bIsInit = !bIsInit;
+		}
 	}
 }

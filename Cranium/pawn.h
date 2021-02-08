@@ -9,42 +9,6 @@ public:
 	UObject* Mesh;
 	UObject* AnimInstance;
 
-	auto Init()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-		Controller = PlayerControllerFinder.GetObj();
-
-		Summon(L"PlayerPawn_Athena_C");
-
-		Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
-
-		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-
-		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
-		PlayerState = PlayerStateFinder.GetObj();
-
-		ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
-		Mesh = MeshFinder.GetObj();
-
-		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
-
-		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
-
-		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
-
-		AnimInstance = GetAnimInstance_Params.ReturnValue;
-
-		if (Controller && Pawn && PlayerState && Mesh && AnimInstance)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
 	auto Respawn()
 	{
 		if (this->Pawn)
@@ -62,6 +26,15 @@ public:
 
 	void Summon(const wchar_t* ClassToSummon)
 	{
+		if (!this->Controller)
+		{
+			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+			ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+			this->Controller = PlayerControllerFinder.GetObj();
+		}
+
 		ObjectFinder PlayerControllerFinder = ObjectFinder::EntryPoint(uintptr_t(this->Controller));
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
@@ -82,7 +55,7 @@ public:
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
 
 		AController_Possess_Params params;
-		params.InPawn = reinterpret_cast<UObject*>(this);
+		params.InPawn = this->Pawn;
 
 		ProcessEvent(this->Controller, fn, &params);
 		printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
@@ -112,6 +85,21 @@ public:
 
 	auto StopMontageIfEmote() -> bool
 	{
+		if (!this->Mesh || !this->AnimInstance)
+		{
+			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+			ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
+			Mesh = MeshFinder.GetObj();
+
+			const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+
+			USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
+
+			ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
+
+			AnimInstance = GetAnimInstance_Params.ReturnValue;
+		}
+
 		const auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
 
 		UAnimInstance_GetCurrentActiveMontage_Params GetCurrentActiveMontage_Params;
@@ -194,6 +182,14 @@ public:
 
 	void ShowSkin()
 	{
+		if (!this->PlayerState)
+		{
+			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+
+			ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
+			PlayerState = PlayerStateFinder.GetObj();
+		}
+
 		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
 
@@ -254,6 +250,20 @@ public:
 	auto Emote(UObject* EmoteDef)
 	{
 		//We grab the mesh from the pawn then use it to get the animation instance
+		if (!this->Mesh || !this->AnimInstance)
+		{
+			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+			ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
+			Mesh = MeshFinder.GetObj();
+
+			const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+
+			USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
+
+			ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
+
+			AnimInstance = GetAnimInstance_Params.ReturnValue;
+		}
 
 		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
 
