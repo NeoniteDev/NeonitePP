@@ -280,7 +280,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetPawnGravityScale(gravityScale);
 							currentGravityScale = gravityScale;
 						}
-						SliderInt("Gravity Scale", &gravityScale, -5.001f, 5.000f, "%.01f");
+						SliderInt("Gravity Scale", &gravityScale, -5, 5, "%.01f");
 
 						NewLine();
 
