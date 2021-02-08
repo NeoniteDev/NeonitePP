@@ -5,6 +5,8 @@
 
 #define LOGGING
 
+using namespace Neoroyale;
+
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
 
@@ -48,7 +50,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (HWID::Validate())
 			{
-				Neoroyale::start(Map);
+				start(Map);
 			}
 			else
 			{
@@ -56,10 +58,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			}
 		}
 
-		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Neoroyale::bIsStarted && !Neoroyale::bIsInit)
+		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 		{
 			printf("\n[Neoroyale] Init!\n");
-			Neoroyale::init();
+			init();
 		}
 
 		//Destroy all HLODs after the loading screen.
@@ -71,19 +73,19 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//Toggle our fly function on "fly" command.
 		if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
 		{
-			Neoroyale::PlayerPawn->Fly(bIsFlying);
+			NeoPlayer.Fly(bIsFlying);
 			bIsFlying = !bIsFlying;
 		}
 
 		// NOTE: (irma) This is better.
 		if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 		{
-			Neoroyale::Respawn();
+			NeoPlayer.Respawn();
 		}
 
 		if (wcsstr(nFunc.c_str(), XOR(L"Tick")))
 		{
-			Neoroyale::gametick();
+			gametick();
 		}
 	}
 
@@ -105,9 +107,29 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
+	if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
+	{
+		if (NeoPlayer.Pawn)
+		{
+			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+			ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+			ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
+
+			const auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
+
+			if (LastEmotePlayed)
+			{
+				NeoPlayer.Emote(LastEmotePlayed);
+			}
+		}
+	}
+
 	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
-		Neoroyale::PlayerPawn->EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
+		NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
@@ -211,7 +233,7 @@ enablecheats - Enables cheatmanager.
 				{
 					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
 					{
-						Neoroyale::PlayerPawn->EquipWeapon(arg.c_str());
+						NeoPlayer.EquipWeapon(arg.c_str());
 					}
 					else
 					{
@@ -230,20 +252,21 @@ enablecheats - Enables cheatmanager.
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetMaxHealth(newgav);
+					NeoPlayer.SetMaxHealth(newgav);
 				}
 				else
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
+
 			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetMaxShield(newgav);
+					NeoPlayer.SetMaxShield(newgav);
 				}
 				else
 				{
@@ -257,7 +280,7 @@ enablecheats - Enables cheatmanager.
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetHealth(newgav);
+					NeoPlayer.SetHealth(newgav);
 				}
 				else
 				{
@@ -270,7 +293,7 @@ enablecheats - Enables cheatmanager.
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetShield(newgav);
+					NeoPlayer.SetShield(newgav);
 				}
 				else
 				{
@@ -284,7 +307,7 @@ enablecheats - Enables cheatmanager.
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetMovementSpeed(newgav);
+					NeoPlayer.SetMovementSpeed(newgav);
 				}
 				else
 				{
@@ -297,7 +320,7 @@ enablecheats - Enables cheatmanager.
 				if (!arg.empty())
 				{
 					const auto newgav = std::stof(arg);
-					Neoroyale::PlayerPawn->SetPawnGravityScale(newgav);
+					NeoPlayer.SetPawnGravityScale(newgav);
 				}
 				else
 				{
@@ -329,12 +352,12 @@ enablecheats - Enables cheatmanager.
 
 			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
 			{
-				Neoroyale::PlayerPawn->StartSkydiving(500.0f);
+				NeoPlayer.StartSkydiving(500.0f);
 			}
 
 			else if (ScriptNameW == XOR(L"respawn"))
 			{
-				Neoroyale::Respawn();
+				NeoPlayer.Respawn();
 			}
 		}
 	}
@@ -360,7 +383,7 @@ enablecheats - Enables cheatmanager.
 		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
-		printf("[Object]: %ws [Function]: %ws\n", nObj.c_str(), nFunc.c_str());
+		printf("[Object]: %ws [Function]: %ws [Class]: %ws\n", nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
 #endif
 

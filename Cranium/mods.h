@@ -7,26 +7,6 @@ inline UObject* gPlaylist;
 //TODO: add safety checks in UFuncs.
 namespace UFunctions
 {
-	//same as summon command in-game but from code.
-	inline void Summon(const wchar_t* ClassToSummon)
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
-
-		const FString ClassName = ClassToSummon;
-
-		UCheatManager_Summon_Params params;
-		params.ClassName = ClassName;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf("\n[Neoroyale] %ls was summoned!.\n", ClassToSummon);
-	}
 
 	auto SetTimeOfDay(float Time)
 	{

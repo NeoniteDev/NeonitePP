@@ -28,7 +28,7 @@ void InitImGui()
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (uMsg == WM_KEYUP && (wParam == 0x2D /*INSERT*/ || (showMenu && wParam == VK_ESCAPE)))
+	if (uMsg == WM_KEYUP && (wParam == 0x2D /*INSERT*/ || wParam == VK_F5 || (showMenu && wParam == VK_ESCAPE)))
 	{
 		showMenu = !showMenu;
 		GetIO().MouseDrawCursor = showMenu;
@@ -144,81 +144,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 			if (BeginTabBar("Neonite"), ImGuiTabBarFlags_AutoSelectNewTabs)
 			{
-				if (PlayerPawn)
+				if (NeoPlayer.Pawn)
 				{
 					if (BeginTabItem("World"))
 					{
-						/*const char* TODMs[] = { 
-							"TODM_Disabled_C",
-							"TODM_BR_C",
-							"TODM_BR_Halloween_C",
-							"TODM_BR_S7_C",
-							"TODM_BR_S7_W_C",
-							"TODM_BR_S8_C",
-							"TODM_BR_S8Hot_C",
-							"TODM_BR_S8_Child_C",
-							"TODM_Disabled_C",
-							"TODM_PG_PS_Capture_C",
-							"TODM_Papaya_C",
-							"TODM_BR_floorislava_V01_C",
-							"TODM_BR_s11_Fortnitemares_v2_C",
-							"TODM_BR_s11_STATIC_SKYLIGHT_C",
-							"TODM_BR_s13_FogOfWar_v2_C",
-							"TODM_BR_s14_C",
-							"TODM_BR_s14_Fortnitemares_C",
-							"TODM_BR_s14_Fortnitemares_Thick_C",
-							"TODM_BR_s14_Fortnitemares_Thin_C",
-							"TODM_Creative_C",
-							"TODM_STW_Parent_C",
-							"TODM_24_Fall_C",
-							"TODM_24_Fall_Storm_C",
-							"TODM_STW_Arid-WtS_R99_C",
-							"TODM_STW_Arid-WtS_R99_V2_C",
-							"TODM_STW_Arid-WtS_WW_C",
-							"TODM_STW_Arid-WtS_WW_V3_C",
-							"TODM_STW_Arid-WtS_WW_V4_C",
-							"TODM_STW_Arid_WtS_WW_V2_C",
-							"TODM_STW_Dudebro_C",
-							"TODM_STW_Onboarding_C",
-							"TODM_STW_Temperate-FtS_C",
-							"TODM_STW_TRV_C",
-							"TODM_STW_TRV_SW_BF_C",
-							"TODM_STW_TRV_SW_DF_C",
-							"TODM_STW_TRV_SW_LF_C",
-							"TODM_STW_TRV_SW_TF_C",
-							"TODM_STW_Winter-Endless_C",
-							"TODM_STW_Winter-Survival_C",
-							"TODM_STW_Winter_2018_C" 
-						};
-	
-						static int currentTODM = 0;
-						static int TODM = 0;
-						Combo("TODM", &TODM, TODMs, IM_ARRAYSIZE(TODMs));
-						if (currentTODM != TODM)
-						{
-							UFunctions::Summon(TODMs[TODM].c_str());
-						}*/
-
-						if (Button("Summon Husk"))
-						{
-							UFunctions::Summon(L"HUSKPAWN_C");
-						}
-
-						SameLine();
-
-						if (Button("Summon Smasher"))
-						{
-							UFunctions::Summon(L"SMASHERPAWN_C");
-						}
-
-						SameLine();
-
-						if (Button("Summon Storm King"))
-						{
-							UFunctions::Summon(L"DUDEBRO_Pawn_C");
-						}
-
-						SameLine();
 
 						if (Button("Start Event"))
 						{
@@ -296,7 +225,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					{
 						if (Button("Fly"))
 						{
-							PlayerPawn->Fly(bIsFlying);
+							NeoPlayer.Fly(bIsFlying);
 							bIsFlying = !bIsFlying;
 						}
 
@@ -305,18 +234,18 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (Button("Skydive"))
 						{
 							//??
-							PlayerPawn->StartSkydiving(0);
-							PlayerPawn->StartSkydiving(0);
-							PlayerPawn->StartSkydiving(0);
-							PlayerPawn->StartSkydiving(0);
-							PlayerPawn->StartSkydiving(2000.0f);
+							NeoPlayer.StartSkydiving(0);
+							NeoPlayer.StartSkydiving(0);
+							NeoPlayer.StartSkydiving(0);
+							NeoPlayer.StartSkydiving(0);
+							NeoPlayer.StartSkydiving(2000.0f);
 						}
 
 						SameLine(0.0f, 20.0f);
 
 						if (Button("Respawn"))
 						{
-							Respawn();
+							NeoPlayer.Respawn();
 						}
 
 						NewLine();
@@ -339,7 +268,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (currentFov != fov)
 						{
 							std::wstring command(L"fov " + std::to_wstring(fov));
-							PlayerPawn->ExecuteConsoleCommand(command.c_str());
+							NeoPlayer.ExecuteConsoleCommand(command.c_str());
 							currentFov = fov;
 						}
 						SliderInt("FOV", &fov, 20, 200, "%.03f");
@@ -348,7 +277,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentGravityScale != gravityScale)
 						{
-							PlayerPawn->SetPawnGravityScale(gravityScale);
+							NeoPlayer.SetPawnGravityScale(gravityScale);
 							currentGravityScale = gravityScale;
 						}
 						SliderInt("Gravity Scale", &gravityScale, -5.001f, 5.000f, "%.01f");
@@ -357,7 +286,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentSpeed != speed)
 						{
-							PlayerPawn->SetMovementSpeed(speed);
+							NeoPlayer.SetMovementSpeed(speed);
 							currentSpeed = speed;
 						}
 						SliderFloat("Speed Multiplier", &speed, 1.0f, 5.0f, "%.1f", 10.000001f);
@@ -366,7 +295,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentHealth != health)
 						{
-							PlayerPawn->SetHealth(health);
+							NeoPlayer.SetHealth(health);
 							currentHealth = health;
 						}
 						SliderInt("Health Percent", &health, 1, 100, "%.3f");
@@ -375,7 +304,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentShield != shield)
 						{
-							PlayerPawn->SetShield(shield);
+							NeoPlayer.SetShield(shield);
 							currentShield = shield;
 						}
 						SliderInt("Shield Percent", &shield, 1, 100, "%.3f");
@@ -384,7 +313,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentMaxHealth != maxHealth)
 						{
-							PlayerPawn->SetMaxHealth(maxHealth);
+							NeoPlayer.SetMaxHealth(maxHealth);
 							currentMaxHealth = maxHealth;
 						}
 						SliderInt("Max Health", &maxHealth, 1, 10000000, "%.3f");
@@ -393,7 +322,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (currentMaxShield != maxShield)
 						{
-							PlayerPawn->SetMaxShield(maxShield);
+							NeoPlayer.SetMaxShield(maxShield);
 							currentMaxShield = maxShield;
 						}
 						SliderInt("Max Shield", &maxShield, 1, 10000000, "%.3f");
@@ -403,7 +332,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					}
 
 
-					static char weapon[512];
+					static char weapon[128];
 
 					if (BeginTabItem("Modifiers"))
 					{
@@ -413,14 +342,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							std::string weaponS = weapon;
 							std::wstring weaponW(weaponS.begin(), weaponS.end());
-							PlayerPawn->EquipWeapon(weaponW.c_str());
-						}
-
-						SameLine();
-
-						if (Button("Dump"))
-						{
-							DumpGObjects();
+							NeoPlayer.EquipWeapon(weaponW.c_str());
 						}
 
 						EndTabItem();
@@ -442,14 +364,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							{
 								for (auto i = 0; i < 4; i++)
 								{
-									UFunctions::Summon(L"HUSKPAWN_c");
-									const auto currentLocation = PlayerPawn->GetLocation();
+									NeoPlayer.Summon(L"HUSKPAWN_c");
+									const auto currentLocation = NeoPlayer.GetLocation();
 									UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y + (20 * i), currentLocation.Z);
 								}
 							}
 							else
 							{
-								UFunctions::Summon(Blueprint.c_str());
+								NeoPlayer.Summon(Blueprint.c_str());
 							}
 
 							currentitem_current = item_current;

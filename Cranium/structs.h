@@ -618,6 +618,41 @@ struct UKismetSystemLibrary_ExecuteConsoleCommand_Params
 	UObject* SpecificPlayer;
 };
 
+struct USkeletalMeshComponent_GetAnimInstance_Params
+{
+	UObject* ReturnValue;
+};
+
+struct UAnimInstance_GetCurrentActiveMontage_Params
+{
+	UObject* ReturnValue;
+};
+
+
+struct UAnimInstance_Montage_Stop_Params
+{
+	float InBlendOutTime;
+	UObject* Montage;
+};
+
+struct UFortMontageItemDefinitionBase_GetAnimationHardReference_Params
+{
+	TEnumAsByte<EFortCustomBodyType> BodyType;
+	TEnumAsByte<EFortCustomGender> Gender;
+	UObject* PawnContext;
+	UObject* ReturnValue;
+};
+
+struct UAnimInstance_Montage_Play_Params
+{
+	UObject* MontageToPlay;
+	float InPlayRate;
+	EMontagePlayReturnType ReturnValueType;
+	float InTimeToStartMontageAt;
+	bool bStopAllMontages;
+	float ReturnValue;
+};
+
 struct FFortAthenaLoadout
 {
 	FString BannerIconId;

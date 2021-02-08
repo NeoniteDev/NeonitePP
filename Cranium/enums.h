@@ -194,6 +194,27 @@ enum class EAthenaGamePhase : uint8_t
 	EAthenaGamePhase_MAX = 7
 };
 
+enum class EMontagePlayReturnType : uint8_t
+{
+	MontageLength = 0,
+	Duration = 1,
+	EMontagePlayReturnType_MAX = 2
+};
+
+enum class EFortCustomBodyType : uint8_t
+{
+	NONE = 0,
+	Small = 1,
+	Medium = 2,
+	MediumAndSmall = 3,
+	Large = 4,
+	LargeAndSmall = 5,
+	LargeAndMedium = 6,
+	All = 7,
+	Deprecated = 8,
+	EFortCustomBodyType_MAX = 9
+};
+
 enum class EItemWrapMaterialType : uint8_t
 {
 	WeaponWrap = 0,

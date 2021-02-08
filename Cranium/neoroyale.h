@@ -7,7 +7,8 @@ namespace Neoroyale
 	inline bool bIsStarted;
 	inline bool bHasJumped;
 	inline bool bHasJumpedFromBus;
-	inline Pawn* PlayerPawn;
+	inline bool bHasShowedPickaxe;
+	inline Player NeoPlayer;
 
 	inline void start(const wchar_t* MapToPlayOn)
 	{
@@ -15,70 +16,65 @@ namespace Neoroyale
 		bIsStarted = !bIsStarted;
 	}
 
-	inline auto Respawn()
-	{
-		if (PlayerPawn)
-		{
-			auto oldPawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
-			if (oldPawn)
-			{
-				UFunctions::DestoryActor(oldPawn);
-			}
-			UFunctions::Summon(L"PlayerPawn_Athena_C");
-			PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
-
-			if (PlayerPawn)
-			{
-				PlayerPawn->Possess();
-				PlayerPawn->ShowSkin();
-				PlayerPawn->ShowPickaxe();
-			}
-		}
-	}
-
 	inline void gametick()
 	{
-		if (PlayerPawn && GetAsyncKeyState(VK_SPACE))
+		//TODO: better keyboard hook
+		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_SPACE))
 		{
 			if (!bHasJumped)
 			{
 				bHasJumped = !bHasJumped;
-				if (!PlayerPawn->IsInAircraft())
+				if (!NeoPlayer.IsInAircraft())
 				{
-					// Glide
-					if (PlayerPawn->IsSkydiving() && !PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+					//Stopping emotes
+					NeoPlayer.StopMontageIfEmote();
+					
+					//Glide
+					if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
-						PlayerPawn->ForceOpenParachute();
+						NeoPlayer.ForceOpenParachute();
 					}
 
-						// Skydive
-					else if (PlayerPawn->IsSkydiving() && PlayerPawn->IsParachuteOpen() && !PlayerPawn->IsParachuteForcedOpen())
+					//Skydive
+					else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
 						if (!bHasJumpedFromBus)
 						{
-							const auto currentLocation = PlayerPawn->GetLocation();
+							const auto currentLocation = NeoPlayer.GetLocation();
 							UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
 							bHasJumpedFromBus = !bHasJumpedFromBus;
 						}
-						PlayerPawn->Skydive();
+						NeoPlayer.Skydive();
 					}
 
-						// Jump
-					else if (!PlayerPawn->IsJumpProvidingForce())
+					//Jump
+					else if (!NeoPlayer.IsJumpProvidingForce())
 					{
-						PlayerPawn->Jump();
+						NeoPlayer.Jump();
 					}
 				}
 			}
 		}
 		else bHasJumped = false;
+		
 
-		if (GetAsyncKeyState(VK_F3))
+		if (NeoPlayer.Pawn && GetAsyncKeyState(0x31) /* 1 key */)
+		{
+			if (!bHasShowedPickaxe)
+			{
+				bHasShowedPickaxe = !bHasShowedPickaxe;
+				NeoPlayer.ShowPickaxe();
+			}
+		}
+		else bHasShowedPickaxe = false;
+		
+
+		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
 		{
 			UFunctions::Travel(FRONTEND);
 			bIsStarted = false;
 			bIsInit = false;
-			PlayerPawn = nullptr;
+			NeoPlayer.Pawn = nullptr;
 		}
 	}
 
@@ -88,22 +84,19 @@ namespace Neoroyale
 
 		UFunctions::DestroyAllHLODs();
 
-		UFunctions::Summon(L"PlayerPawn_Athena_C");
-
-		PlayerPawn = reinterpret_cast<Pawn*>(ObjectFinder::FindActor(L"PlayerPawn_Athena_C"));
-		auto PlaylistName = GetObjectFirstName(gPlaylist);
-
-		if (PlayerPawn)
+		if (NeoPlayer.Init())
 		{
-			PlayerPawn->Possess();
+			NeoPlayer.Possess();
 
-			//PlayerPawn->SetSkeletalMesh();
+			//NeoPlayer.SetSkeletalMesh();
 
-			PlayerPawn->ShowSkin();
+			NeoPlayer.ShowSkin();
 
-			PlayerPawn->ShowPickaxe();
+			NeoPlayer.ShowPickaxe();
 
-			PlayerPawn->ToggleInfiniteAmmo();
+			NeoPlayer.ToggleInfiniteAmmo();
+
+			const auto PlaylistName = GetObjectFirstName(gPlaylist);
 
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
