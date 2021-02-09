@@ -11,9 +11,7 @@ namespace settings
 		json config = {
 			{"name", name},
 			{"vbucks", vbucks},
-			{"seasonLevel", seasonLevel},
-			{"bHasBattlepass", bHasBattlepass},
-			{"bIsCataba", bIsCataba}
+			{"seasonLevel", seasonLevel}
 		};
 
 		if (sol)
@@ -42,7 +40,6 @@ namespace settings
 				std::string sname = config["name"];
 				int slevel = config["seasonLevel"];
 				int sbucks = config["vbucks"];
-				bool isCataba = config["bIsCataba"];
 				bool hasBattlepass = config["bHasBattlepass"];
 
 				if (sname.size() > 32)
@@ -54,8 +51,6 @@ namespace settings
 
 				seasonLevel = slevel;
 				vbucks = sbucks;
-				bIsCataba = isCataba;
-				bHasBattlepass = hasBattlepass;
 			}
 			catch (...)
 			{
@@ -98,9 +93,7 @@ namespace settings
 			}
 		}
 
-		std::string itemsPath;
-		if (bPaksIds) itemsPath = fnPath + "\\FortniteGame\\Binaries\\Win64\\ids.config";
-		else itemsPath = util::GetEXEPath() + "\\ids.config";
+		std::string itemsPath = util::GetEXEPath() + "\\ids.config";
 		auto itemsFile = itemsPath.c_str();
 		try
 		{

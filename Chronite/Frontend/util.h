@@ -21,9 +21,6 @@ inline ULONG pid = 0;
 inline char name[33] = "NeoniteUser";
 inline char gameDir[MAX_PATH];
 inline char exchangeCode[33];
-inline bool bHasBattlepass = false;
-inline bool bIsCataba = false;
-inline bool bPaksIds = false;
 inline int seasonLevel = 100;
 inline int vbucks = 100000;
 

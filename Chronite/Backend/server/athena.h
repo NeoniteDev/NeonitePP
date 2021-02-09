@@ -159,6 +159,5 @@ inline json pAthena()
 	profile_athena["_id"] = name;
 	profile_athena["accountId"] = name;
     profile_athena["stats"]["attributes"]["book_level"] = seasonLevel;
-    profile_athena["stats"]["attributes"]["book_purchased"] = bHasBattlepass;
 	return profile_athena;
 }

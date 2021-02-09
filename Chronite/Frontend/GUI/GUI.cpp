@@ -155,31 +155,6 @@ void ImGui::ShowLoader(bool* p_open)
 		}
 	}
 
-
-	if (BeginTabItem("Server Settings"))
-	{
-		SetCursorPosX(GetCursorPosX() + 165);
-		SetCursorPosY(GetCursorPosY() + 5);
-		Text("Customize your Server!");
-
-		Checkbox("Import all items from paks", &bPaksIds);
-
-		Spacing();
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Checkbox("Cataba Shop Style", &bIsCataba);
-
-		Spacing();
-
-		SetCursorPosX(GetCursorPosX() + 55);
-		SetCursorPosY(GetCursorPosY() + 5);
-		
-
-		Text("*We are going to add more things soon. Stay updated.*");
-
-		EndTabItem();
-	}
-
 	if (BeginTabItem("Profile Settings"))
 	{
 		SetCursorPosX(GetCursorPosX() + 115);
@@ -199,10 +174,6 @@ void ImGui::ShowLoader(bool* p_open)
 		{
 			seasonLevel = 100;
 		}
-
-		Checkbox("Has Battlepass", &bHasBattlepass);
-
-		SameLine(GetWindowWidth() - 205);
 		
 		EndTabItem();
 	}
