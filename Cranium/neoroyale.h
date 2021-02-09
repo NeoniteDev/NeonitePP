@@ -1,9 +1,10 @@
 #pragma once
-#include <chrono>
-#include <thread>
-
+#include <vector>
 
 #include "mods.h"
+
+inline std::vector<std::wstring> gWeapons;
+inline std::vector<std::wstring> gBlueprints;
 
 namespace Neoroyale
 {
@@ -19,6 +20,34 @@ namespace Neoroyale
 	{
 		UFunctions::Travel(MapToPlayOn);
 		bIsStarted = !bIsStarted;
+	}
+
+
+	inline void InitCombos()
+	{
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
+		{
+			const auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
+			{
+				continue;
+			}
+
+			if (!Util::IsBadReadPtr(object))
+			{
+				auto objectFullName = GetObjectFullName(object);
+				auto objectFirstName = GetObjectFirstName(object);
+
+				if (objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_"))
+				{
+					gWeapons.push_back(objectFirstName);
+				}
+				else if (objectFirstName.ends_with(L"_C"))
+				{
+					gBlueprints.push_back(objectFirstName);
+				}
+			}
+		}
 	}
 
 	inline void gametick()
@@ -40,7 +69,7 @@ namespace Neoroyale
 						NeoPlayer.ForceOpenParachute();
 					}
 
-					//Skydive
+						//Skydive
 					else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
 						if (!bHasJumpedFromBus)
@@ -52,7 +81,7 @@ namespace Neoroyale
 						NeoPlayer.Skydive();
 					}
 
-					//Jump
+						//Jump
 					else if (!NeoPlayer.IsJumpProvidingForce())
 					{
 						NeoPlayer.Jump();
@@ -83,6 +112,24 @@ namespace Neoroyale
 		}
 	}
 
+	auto Respawn()
+	{
+		if (NeoPlayer.Pawn)
+		{
+			UFunctions::DestoryActor(NeoPlayer.Pawn);
+
+			NeoPlayer.Summon(L"PlayerPawn_Athena_C");
+			NeoPlayer.Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+
+			if (NeoPlayer.Pawn)
+			{
+				NeoPlayer.Possess();
+				NeoPlayer.ShowSkin();
+				NeoPlayer.UpdateAnimInstance();
+			}
+		}
+	}
+
 	inline void init()
 	{
 		Console::CheatManager();
@@ -102,6 +149,9 @@ namespace Neoroyale
 			NeoPlayer.ShowPickaxe();
 
 			NeoPlayer.ToggleInfiniteAmmo();
+
+			//LOL
+			NeoPlayer.ExecuteConsoleCommand(L"god");
 
 			//NeoPlayer.SetSkeletalMesh();
 
@@ -140,6 +190,8 @@ namespace Neoroyale
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
+
+			InitCombos();
 
 			bIsInit = !bIsInit;
 		}

@@ -5,34 +5,47 @@ class Player
 public:
 	UObject* Controller;
 	UObject* Pawn;
-	UObject* PlayerState;
 	UObject* Mesh;
 	UObject* AnimInstance;
 
-	auto Respawn()
+	void UpdatePlayerController()
 	{
-		if (this->Pawn)
-		{
-			Summon(L"PlayerPawn_Athena_C");
-			this->Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
-			if (this->Pawn)
-			{
-				this->Possess();
-				this->ShowSkin();
-			}
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+		this->Controller = PlayerControllerFinder.GetObj();
+	}
+
+	void UpdateMesh()
+	{
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+
+		ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
+		this->Mesh = MeshFinder.GetObj();
+	}
+
+	void UpdateAnimInstance()
+	{
+		if (!this->Mesh || !Util::IsBadReadPtr(this->Mesh))
+		{
+			this->UpdateMesh();
 		}
+		
+		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+
+		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
+
+		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
+
+		this->AnimInstance = GetAnimInstance_Params.ReturnValue;
 	}
 
 	void Summon(const wchar_t* ClassToSummon)
 	{
 		if (!this->Controller)
 		{
-			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-			ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-			this->Controller = PlayerControllerFinder.GetObj();
+			UpdatePlayerController();
 		}
 
 		ObjectFinder PlayerControllerFinder = ObjectFinder::EntryPoint(uintptr_t(this->Controller));
@@ -85,19 +98,10 @@ public:
 
 	auto StopMontageIfEmote() -> bool
 	{
-		if (!this->Mesh || !this->AnimInstance)
+		if (!this->Mesh || !this->AnimInstance || !Util::IsBadReadPtr(this->Mesh) || !Util::IsBadReadPtr(this->AnimInstance))
 		{
-			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-			ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
-			Mesh = MeshFinder.GetObj();
-
-			const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
-
-			USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
-
-			ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
-
-			AnimInstance = GetAnimInstance_Params.ReturnValue;
+			this->UpdateMesh();
+			this->UpdateAnimInstance();
 		}
 
 		const auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
@@ -164,11 +168,15 @@ public:
 
 	auto SetSkeletalMesh()
 	{
+		if (!this->Mesh || !Util::IsBadReadPtr(this->Mesh))
+		{
+			this->UpdateMesh();
+		}
+
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
 
 		const auto Mesh = FindObject<UObject*>(
-			XOR(L"SkeletalMesh /Game/Characters/Player/Male/Medium/Base/SK_M_MALE_Base.SK_M_MALE_Base")
-		);
+			XOR(L"SkeletalMesh /Game/Characters/Player/Male/Medium/Base/SK_M_MALE_Base.SK_M_MALE_Base"));
 
 		if (Mesh)
 		{
@@ -182,19 +190,14 @@ public:
 
 	void ShowSkin()
 	{
-		if (!this->PlayerState)
-		{
-			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-
-			ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
-			PlayerState = PlayerStateFinder.GetObj();
-		}
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
 		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
 
 		UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params params;
-		params.PlayerState = this->PlayerState;
+		params.PlayerState = PlayerStateFinder.GetObj();
 
 		ProcessEvent(KismetLib, fn, &params);
 		printf("\nCharacter parts should be visiable now!.\n");
@@ -250,19 +253,10 @@ public:
 	auto Emote(UObject* EmoteDef)
 	{
 		//We grab the mesh from the pawn then use it to get the animation instance
-		if (!this->Mesh || !this->AnimInstance)
+		if (!this->Mesh || !this->AnimInstance || !Util::IsBadReadPtr(this->Mesh) || !Util::IsBadReadPtr(this->AnimInstance))
 		{
-			ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-			ObjectFinder MeshFinder = PawnFinder.Find(XOR(L"Mesh"));
-			Mesh = MeshFinder.GetObj();
-
-			const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
-
-			USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
-
-			ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
-
-			AnimInstance = GetAnimInstance_Params.ReturnValue;
+			this->UpdateMesh();
+			this->UpdateAnimInstance();
 		}
 
 		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
@@ -344,7 +338,7 @@ public:
 
 	auto SetPawnGravityScale(float GravityScaleInput)
 	{
-		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this));
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 

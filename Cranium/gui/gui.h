@@ -148,7 +148,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 				{
 					if (BeginTabItem("World"))
 					{
-
 						if (Button("Start Event"))
 						{
 							if (gVersion == XOR("14.60"))
@@ -245,7 +244,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (Button("Respawn"))
 						{
-							NeoPlayer.Respawn();
+							Neoroyale::Respawn();
 						}
 
 						NewLine();
@@ -331,51 +330,49 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						EndTabItem();
 					}
 
-
-					static char weapon[128];
-
 					if (BeginTabItem("Modifiers"))
 					{
-						InputTextWithHint("Weapon ID", "WID/AGID", weapon, sizeof(weapon));
+						static std::wstring currentItem;
+						static std::wstring currentBlueprint;
 
-						if (Button("Equip Weapon"))
+						if (BeginCombo("Weapons", std::string(currentItem.begin(), currentItem.end()).c_str()))
 						{
-							std::string weaponS = weapon;
-							std::wstring weaponW(weaponS.begin(), weaponS.end());
-							NeoPlayer.EquipWeapon(weaponW.c_str());
-						}
-
-						EndTabItem();
-					}
-
-					if (BeginTabItem("Spawn"))
-					{
-						const char* blueprints[] = {"HUSKPAWN_C", "SMASHERPAWN_C", "DUDEBRO_Pawn_C", "SHIELDERPAWN_C", "BGA_FireExtinguisher_Pickup_C", "HuskPreset"};
-						const char* items[] = {"Husk", "Smasher", "Storm King", "Shielder", "Fire Extinguisher", "4 Husks Preset"};
-						static int item_current = 0;
-						static int currentitem_current = 0;
-						Combo("Blueprints", &item_current, items, IM_ARRAYSIZE(items));
-
-						if (currentitem_current != item_current)
-						{
-							std::string StringOfBlueprint(blueprints[item_current]);
-							const std::wstring Blueprint(StringOfBlueprint.begin(), StringOfBlueprint.end());
-							if (Blueprint.find(L"HuskPreset") != std::string::npos)
+							for (auto n = 0; n < gWeapons.size(); n++)
 							{
-								for (auto i = 0; i < 4; i++)
+								const bool is_selected = (currentItem == gWeapons[n]);
+								const std::string wid(gWeapons[n].begin(), gWeapons[n].end());
+								if (Selectable(wid.c_str(), is_selected))
 								{
-									NeoPlayer.Summon(L"HUSKPAWN_c");
-									const auto currentLocation = NeoPlayer.GetLocation();
-									UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y + (20 * i), currentLocation.Z);
+									currentItem = gWeapons[n];
+									NeoPlayer.EquipWeapon(gWeapons[n].c_str());
+								}
+								if (is_selected)
+								{
+									SetItemDefaultFocus();
 								}
 							}
-							else
-							{
-								NeoPlayer.Summon(Blueprint.c_str());
-							}
-
-							currentitem_current = item_current;
+							EndCombo();
 						}
+
+						if (BeginCombo("Blueprints", std::string(currentBlueprint.begin(), currentBlueprint.end()).c_str()))
+						{
+							for (auto n = 0; n < gBlueprints.size(); n++)
+							{
+								const bool is_selected = (currentBlueprint == gBlueprints[n]);
+								const std::string blueprint(gBlueprints[n].begin(), gBlueprints[n].end());
+								if (Selectable(blueprint.c_str(), is_selected))
+								{
+									currentBlueprint = gBlueprints[n];
+									NeoPlayer.Summon(gBlueprints[n].c_str());
+								}
+								if (is_selected)
+								{
+									SetItemDefaultFocus();
+								}
+							}
+							EndCombo();
+						}
+
 
 						EndTabItem();
 					}
