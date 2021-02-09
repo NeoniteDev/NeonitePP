@@ -81,7 +81,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 		{
 			NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-			Respawn();
+			NeoPlayer.Respawn();
 		}
 
 		if (wcsstr(nFunc.c_str(), XOR(L"Tick")))
@@ -199,6 +199,7 @@ enablecheats - Enables cheatmanager.
 
 			else if (ScriptNameW == XOR(L"test"))
 			{
+				
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
@@ -358,7 +359,7 @@ enablecheats - Enables cheatmanager.
 
 			else if (ScriptNameW == XOR(L"respawn"))
 			{
-				Neoroyale::Respawn();
+				NeoPlayer.Respawn();
 			}
 		}
 	}

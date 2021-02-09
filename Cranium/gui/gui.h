@@ -244,7 +244,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (Button("Respawn"))
 						{
-							Neoroyale::Respawn();
+							NeoPlayer.Respawn();
 						}
 
 						NewLine();

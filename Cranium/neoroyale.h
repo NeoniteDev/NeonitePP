@@ -42,7 +42,7 @@ namespace Neoroyale
 				{
 					gWeapons.push_back(objectFirstName);
 				}
-				else if (objectFirstName.ends_with(L"_C"))
+				else if (objectFirstName.ends_with(L"_C") && !objectFirstName.starts_with(L"Default__"))
 				{
 					gBlueprints.push_back(objectFirstName);
 				}
@@ -60,16 +60,13 @@ namespace Neoroyale
 				bHasJumped = !bHasJumped;
 				if (!NeoPlayer.IsInAircraft())
 				{
-					//Stopping emotes
-					NeoPlayer.StopMontageIfEmote();
-
 					//Glide
 					if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
 						NeoPlayer.ForceOpenParachute();
 					}
 
-						//Skydive
+					//Skydive
 					else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
 						if (!bHasJumpedFromBus)
@@ -81,7 +78,7 @@ namespace Neoroyale
 						NeoPlayer.Skydive();
 					}
 
-						//Jump
+					//Jump
 					else if (!NeoPlayer.IsJumpProvidingForce())
 					{
 						NeoPlayer.Jump();
@@ -97,6 +94,7 @@ namespace Neoroyale
 			if (!bHasShowedPickaxe)
 			{
 				bHasShowedPickaxe = !bHasShowedPickaxe;
+				NeoPlayer.StopMontageIfEmote();
 				NeoPlayer.ShowPickaxe();
 			}
 		}
@@ -109,24 +107,6 @@ namespace Neoroyale
 			bIsStarted = false;
 			bIsInit = false;
 			NeoPlayer.Pawn = nullptr;
-		}
-	}
-
-	auto Respawn()
-	{
-		if (NeoPlayer.Pawn)
-		{
-			UFunctions::DestoryActor(NeoPlayer.Pawn);
-
-			NeoPlayer.Summon(L"PlayerPawn_Athena_C");
-			NeoPlayer.Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
-
-			if (NeoPlayer.Pawn)
-			{
-				NeoPlayer.Possess();
-				NeoPlayer.ShowSkin();
-				NeoPlayer.UpdateAnimInstance();
-			}
 		}
 	}
 

@@ -6,7 +6,7 @@ public:
 	UObject* Controller;
 	UObject* Pawn;
 	UObject* Mesh;
-	UObject* AnimInstance;
+	UObject* AnimInstance;;
 
 	void UpdatePlayerController()
 	{
@@ -31,7 +31,7 @@ public:
 		{
 			this->UpdateMesh();
 		}
-		
+
 		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
 
 		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
@@ -39,6 +39,22 @@ public:
 		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
 
 		this->AnimInstance = GetAnimInstance_Params.ReturnValue;
+	}
+
+	void Respawn()
+	{
+		if (this->Pawn)
+		{
+			this->Summon(L"PlayerPawn_Athena_C");
+			this->Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+
+			if (this->Pawn)
+			{
+				this->Possess();
+				this->ShowSkin();
+				this->UpdateAnimInstance();
+			}
+		}
 	}
 
 	void Summon(const wchar_t* ClassToSummon)
@@ -219,7 +235,7 @@ public:
 
 		auto WeaponData = FindObject<UObject*>(name.c_str(), true);
 
-		if (WeaponData)
+		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
 			std::wstring objectName = GetObjectFullName(WeaponData);
 
@@ -231,7 +247,7 @@ public:
 
 				ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
 
-				if (prm_ReturnValue.ReturnValue)
+				if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
 				{
 					WeaponData = prm_ReturnValue.ReturnValue;
 				}
@@ -435,6 +451,7 @@ public:
 
 	auto Skydive()
 	{
+		/*
 		if (this->IsSkydiving())
 		{
 			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
@@ -448,17 +465,20 @@ public:
 		params.bFromBus = true;
 
 		ProcessEvent(this->Pawn, fn, &params);
-
-		//this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
+		*/
+		this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 
 	auto ForceOpenParachute()
 	{
+		/*
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
 
 		Empty_Params params;
 
 		ProcessEvent(this->Pawn, fn, &params);
+		*/
+		this->SetMovementMode(EMovementMode::MOVE_Custom, 3);
 	}
 
 	auto IsInAircraft()
