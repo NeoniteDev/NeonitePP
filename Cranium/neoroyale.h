@@ -15,6 +15,7 @@ namespace Neoroyale
 	inline bool bHasJumpedFromBus;
 	inline bool bHasShowedPickaxe;
 	inline Player NeoPlayer;
+	inline Player Bot;
 
 	inline void start(const wchar_t* MapToPlayOn)
 	{
@@ -66,7 +67,7 @@ namespace Neoroyale
 						NeoPlayer.ForceOpenParachute();
 					}
 
-					//Skydive
+						//Skydive
 					else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 					{
 						if (!bHasJumpedFromBus)
@@ -78,7 +79,7 @@ namespace Neoroyale
 						NeoPlayer.Skydive();
 					}
 
-					//Jump
+						//Jump
 					else if (!NeoPlayer.IsJumpProvidingForce())
 					{
 						NeoPlayer.Jump();
@@ -164,6 +165,7 @@ namespace Neoroyale
 			}
 			else
 			{
+				//UFunctions::LoadAndStreamInLevel(XOR(L"Apollo_Pickle_001"));
 				UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 			}
 

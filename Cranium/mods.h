@@ -293,7 +293,6 @@ namespace UFunctions
 
 		ProcessEvent(LevelStreamingDynamic, LoadLevelInstance, &LoadLevelInstanceParams);
 		printf("\n[DEBUG] LEVEL INSTANCE WAS CREATED\n");
-		Sleep(5000);
 
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
@@ -349,7 +348,7 @@ namespace UFunctions
 
 namespace Console
 {
-	//constructs and assigns FortCheatManager to the main console.
+	//constructs and assigns CheatManager to the main console.
 	inline bool CheatManager()
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));

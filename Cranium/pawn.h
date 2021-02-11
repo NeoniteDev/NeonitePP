@@ -204,6 +204,23 @@ public:
 		}
 	}
 
+	void Thanos()
+	{
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
+		ObjectFinder HeroTypeFinder = PlayerStateFinder.Find(XOR(L"HeroType"));
+
+		UObject*& pcHeroType = reinterpret_cast<UObject*&>(HeroTypeFinder.GetObj());
+
+		const auto Thanos = FindObject<UObject*>(XOR(L"FortHeroType /Game/Athena/Heroes/Dev_TestAsset_HID_M_XL.Dev_TestAsset_HID_M_XL"));
+
+		pcHeroType = Thanos;
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerState:OnRep_HeroType"));
+
+		ProcessEvent(PlayerStateFinder.GetObj(), fn, nullptr);
+	}
+
 	void ShowSkin()
 	{
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
@@ -217,6 +234,59 @@ public:
 
 		ProcessEvent(KismetLib, fn, &params);
 		printf("\nCharacter parts should be visiable now!.\n");
+	}
+
+	void CopySkinFromPawn(UObject* PawnToCopyFrom)
+	{
+		struct UFortKismetLibrary_ApplyCharacterCosmetics_Params
+		{
+			UObject* WorldContextObject;
+			UObject* CharacterParts;
+			UObject* PlayerState;
+			bool bSuccess;
+		};
+
+		struct UFortHero
+		{
+			struct FString hero_name;
+			TArray<struct FFortSavedModeLoadout> mode_loadouts;
+			bool Refundable;
+			unsigned char UnknownData00[0x7];
+			TArray<struct FMcpVariantReader> OutfitVariants;
+			TArray<struct FMcpVariantReader> BackblingVariants;
+			TArray<class UFortHeroSpecialization*> Specializations;
+			TArray<class UFortAbilityKit*> SpecializationAbilityKits;
+			TArray<UObject*> CharacterParts;
+			unsigned char UnknownData01[0x8];
+			TArray<struct FMcpVariantChannelInfo> OutfitVariantChannels;
+			TArray<struct FMcpVariantChannelInfo> BackblingVariantChannels;
+		};
+
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+
+		const auto Hero = FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
+
+		printf("\n\nFFS: %ls\n\n", GetObjectFullName(Hero).c_str());
+
+		/*
+		 
+		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
+		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
+
+		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
+
+		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
+		params.WorldContextObject = WorldFinder.GetObj();
+		params.CharacterParts = CharacterParts.GetObj();
+		params.PlayerState = PlayerStateFinder.GetObj();
+
+		ProcessEvent(KismetLib, fn, &params);
+		printf("\nCharacter parts should be visiable now!.\n");
+
+		*/
 	}
 
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
@@ -425,7 +495,7 @@ public:
 		const auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
 		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
-		// the offset has 8 bits, bools are only one bit as it's only 0\1 so we have a struct with 8 bools to be able to edit that specific bool
+		// the offset has 8 bits (a bitfield), bools are only one bit as it's only 0\1 so we have a struct with 8 bools to be able to edit that specific bool
 		const auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(this->Controller) + bEnableVoiceChatPTTOffset);
 
 		PlayerControllerBools->bInfiniteAmmo = true;

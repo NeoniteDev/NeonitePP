@@ -40,7 +40,6 @@ namespace settings
 				std::string sname = config["name"];
 				int slevel = config["seasonLevel"];
 				int sbucks = config["vbucks"];
-				bool hasBattlepass = config["bHasBattlepass"];
 
 				if (sname.size() > 32)
 				{

@@ -1,4 +1,7 @@
 #pragma once
+#include <mutex>
+#include <queue>
+
 #include "ue4.h"
 #include "neoroyale.h"
 #include "hwid.h"
@@ -9,6 +12,8 @@ using namespace Neoroyale;
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
+inline std::queue<std::wstring> queue;
+inline std::mutex queue_mutex;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -124,6 +129,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			if (LastEmotePlayed)
 			{
 				NeoPlayer.Emote(LastEmotePlayed);
+				if (Bot.Pawn)
+				{
+					Bot.Emote(LastEmotePlayed);
+				}
 			}
 		}
 	}
@@ -199,7 +208,16 @@ enablecheats - Enables cheatmanager.
 
 			else if (ScriptNameW == XOR(L"test"))
 			{
-				
+				NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
+				Bot.Pawn = ObjectFinder::FindActor(L"BP_PlayerPawn_Athena_Phoebe_C");
+
+				//Bot.SetSkeletalMesh();
+				Bot.CopySkinFromPawn(NeoPlayer.Pawn);
+			}
+
+			else if (ScriptNameW == XOR(L"thanos"))
+			{
+				NeoPlayer.Thanos();
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
@@ -225,6 +243,36 @@ enablecheats - Enables cheatmanager.
 			else if (ScriptNameW == XOR(L"debugcamera"))
 			{
 				bIsDebugCamera = !bIsDebugCamera;
+			}
+
+			else if (ScriptNameW.starts_with(XOR(L"emote")))
+			{
+				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
+				if (!arg.empty())
+				{
+					if (arg.starts_with(XOR(L"EID_")))
+					{
+						std::wstring EmoteName = arg + L"." + arg;
+						const auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
+						if(Emote)
+						{
+							NeoPlayer.Emote(Emote);
+						}
+						else
+						{
+							UFunctions::ConsoleLog(XOR(L"Emote was not found."));
+						}
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command only works with EIDs."));
+					}
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
 			}
 
 			else if (ScriptNameW.starts_with(XOR(L"equip")))
