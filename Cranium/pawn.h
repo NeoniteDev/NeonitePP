@@ -7,6 +7,7 @@ public:
 	UObject* Pawn;
 	UObject* Mesh;
 	UObject* AnimInstance;;
+	std::wstring SkinOverride;
 
 	void UpdatePlayerController()
 	{
@@ -182,7 +183,7 @@ public:
 		ProcessEvent(this->Pawn, fn, &params);
 	}
 
-	auto SetSkeletalMesh()
+	auto SetSkeletalMesh(const wchar_t* meshname)
 	{
 		if (!this->Mesh || !Util::IsBadReadPtr(this->Mesh))
 		{
@@ -191,8 +192,11 @@ public:
 
 		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
 
-		const auto Mesh = FindObject<UObject*>(
-			XOR(L"SkeletalMesh /Game/Characters/Player/Male/Medium/Base/SK_M_MALE_Base.SK_M_MALE_Base"));
+		std::wstring MeshName = meshname;
+
+		std::wstring name = MeshName + L"." + MeshName;
+
+		const auto Mesh = FindObject<UObject*>(name.c_str(), true);
 
 		if (Mesh)
 		{
@@ -204,21 +208,50 @@ public:
 		}
 	}
 
-	void Thanos()
+	void ApplyOverride()
 	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
-		ObjectFinder HeroTypeFinder = PlayerStateFinder.Find(XOR(L"HeroType"));
 
-		UObject*& pcHeroType = reinterpret_cast<UObject*&>(HeroTypeFinder.GetObj());
+		const auto Hero = FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
 
-		const auto Thanos = FindObject<UObject*>(XOR(L"FortHeroType /Game/Athena/Heroes/Dev_TestAsset_HID_M_XL.Dev_TestAsset_HID_M_XL"));
+		/*
+		 * CharacterParts Array Indexes (typeof UCustomCharacterPart)
+		 * 0 - Body (e.g: CP_031_Athena_Body_Retro)
+		 * 1 - Head (e.g: M_Med_HIS_Diego_Head_01)
+		 * 2 - Hat (e.g: M_Med_HIS_Diego_Hat_02)
+		 * 3 - Charm (e.g: M_Commando_UR_01_Grenades)
+		 */
 
-		pcHeroType = Thanos;
+		const auto CharacterParts = reinterpret_cast<TArray<UObject*>*>(reinterpret_cast<uintptr_t>(Hero) + ObjectFinder::FindOffset(
+			XOR(L"Class /Script/FortniteGame.FortHero"), XOR(L"CharacterParts")));
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerState:OnRep_HeroType"));
+		if (SkinOverride == L"Thanos")
+		{
+			CharacterParts->operator[](1) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Heads/Dev_TestAsset_Head_M_XL.Dev_TestAsset_Head_M_XL"));
+			CharacterParts->operator[](0) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/Dev_TestAsset_Body_M_XL.Dev_TestAsset_Body_M_XL"));
+		}
+		else if (SkinOverride == L"Chituari")
+		{
+			CharacterParts->operator[](1) = FindObject<UObject*>(
+				XOR(L"CustomCharacterPart /Game/Characters/CharacterParts/Male/Medium/Heads/CP_Athena_Head_M_AshtonMilo.CP_Athena_Head_M_AshtonMilo"));
+			CharacterParts->operator[](0) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/CP_Athena_Body_M_AshtonMilo.CP_Athena_Body_M_AshtonMilo"));
+		}
+		else return;
 
-		ProcessEvent(PlayerStateFinder.GetObj(), fn, nullptr);
+
+		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
+
+		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
+		params.WorldContextObject = WorldFinder.GetObj();
+		params.CharacterParts = *CharacterParts;
+		params.PlayerState = PlayerStateFinder.GetObj();
+
+		ProcessEvent(KismetLib, fn, &params);
 	}
 
 	void ShowSkin()
@@ -234,59 +267,6 @@ public:
 
 		ProcessEvent(KismetLib, fn, &params);
 		printf("\nCharacter parts should be visiable now!.\n");
-	}
-
-	void CopySkinFromPawn(UObject* PawnToCopyFrom)
-	{
-		struct UFortKismetLibrary_ApplyCharacterCosmetics_Params
-		{
-			UObject* WorldContextObject;
-			UObject* CharacterParts;
-			UObject* PlayerState;
-			bool bSuccess;
-		};
-
-		struct UFortHero
-		{
-			struct FString hero_name;
-			TArray<struct FFortSavedModeLoadout> mode_loadouts;
-			bool Refundable;
-			unsigned char UnknownData00[0x7];
-			TArray<struct FMcpVariantReader> OutfitVariants;
-			TArray<struct FMcpVariantReader> BackblingVariants;
-			TArray<class UFortHeroSpecialization*> Specializations;
-			TArray<class UFortAbilityKit*> SpecializationAbilityKits;
-			TArray<UObject*> CharacterParts;
-			unsigned char UnknownData01[0x8];
-			TArray<struct FMcpVariantChannelInfo> OutfitVariantChannels;
-			TArray<struct FMcpVariantChannelInfo> BackblingVariantChannels;
-		};
-
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-
-		const auto Hero = FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
-
-		printf("\n\nFFS: %ls\n\n", GetObjectFullName(Hero).c_str());
-
-		/*
-		 
-		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
-
-		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
-
-		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
-		params.WorldContextObject = WorldFinder.GetObj();
-		params.CharacterParts = CharacterParts.GetObj();
-		params.PlayerState = PlayerStateFinder.GetObj();
-
-		ProcessEvent(KismetLib, fn, &params);
-		printf("\nCharacter parts should be visiable now!.\n");
-
-		*/
 	}
 
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())

@@ -153,28 +153,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (wcsstr(ScriptNameW.c_str(), XOR(L"help")))
 			{
-				UFunctions::ConsoleLog(
-					XOR(
-						LR"(
-Custom Cheatscript Commands
----------------------------
-cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
-cheatscript debugcamera - Toggles a custom version of the debug camera.
-cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
-cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
-cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
-cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
-cheatscript setplaylist <Playlist> - Overrides the current playlist.
-cheatscript respawn - Respawns the player (duh)
-cheatscript sethealth <NewHealthFloat> - Changes your health value.
-cheatscript setshield <NewShieldFloat> - Changes your shield value.
-cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
-cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
-cheatscript dump - Dumps a list of all GObjects.
-cheatscript dumpbps - Dumps all blueprints.
-fly - Toggles flying.
-enablecheats - Enables cheatmanager.
-)"));
+				UFunctions::ConsoleLog(CheatScriptHelp);
 			}
 
 			else if (ScriptNameW.starts_with(XOR(L"activate")))
@@ -206,18 +185,18 @@ enablecheats - Enables cheatmanager.
 				DumpGObjects();
 			}
 
-			else if (ScriptNameW == XOR(L"test"))
+			else if (ScriptNameW == XOR(L"dump"))
+			{
+				DumpGObjects();
+			}
+
+			else if (ScriptNameW == XOR(L"bot"))
 			{
 				NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
 				Bot.Pawn = ObjectFinder::FindActor(L"BP_PlayerPawn_Athena_Phoebe_C");
 
-				//Bot.SetSkeletalMesh();
-				Bot.CopySkinFromPawn(NeoPlayer.Pawn);
-			}
-
-			else if (ScriptNameW == XOR(L"thanos"))
-			{
-				NeoPlayer.Thanos();
+				Bot.SetSkeletalMesh(L"SK_M_MALE_Base");
+				Bot.Emote(FindObject<UObject*>(L"EID_HightowerSquash.EID_HightowerSquash", true));
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
@@ -255,7 +234,7 @@ enablecheats - Enables cheatmanager.
 					{
 						std::wstring EmoteName = arg + L"." + arg;
 						const auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
-						if(Emote)
+						if (Emote)
 						{
 							NeoPlayer.Emote(Emote);
 						}
@@ -337,6 +316,7 @@ enablecheats - Enables cheatmanager.
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
+
 			else if (ScriptNameW.starts_with(XOR(L"setshield")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
@@ -364,6 +344,7 @@ enablecheats - Enables cheatmanager.
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 			}
+
 			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
 			{
 				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);

@@ -283,6 +283,14 @@ struct K2_OnMovementModeChanged_Params
 	char NewCustomMode;
 };
 
+struct UFortKismetLibrary_ApplyCharacterCosmetics_Params
+{
+	UObject* WorldContextObject;
+	TArray<UObject*> CharacterParts;
+	UObject* PlayerState;
+	bool bSuccess;
+};
+
 struct AFortPlayerPawn_BeginSkydiving_Params
 {
 	bool bFromBus;

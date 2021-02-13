@@ -16,6 +16,31 @@
 #define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
 
 
+constexpr const wchar_t* CheatScriptHelp = XOR(
+LR"(
+Custom Cheatscript Commands
+---------------------------
+cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
+cheatscript debugcamera - Toggles a custom version of the debug camera.
+cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
+cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
+cheatscript bot - Spawns a bot.
+cheatscript emoet <EID> - Emotes.
+cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
+cheatscript setplaylist <Playlist> - Overrides the current playlist.
+cheatscript respawn - Respawns the player (duh)
+cheatscript sethealth <NewHealthFloat> - Changes your health value.
+cheatscript setshield <NewShieldFloat> - Changes your shield value.
+cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
+cheatscript dump - Dumps a list of all GObjects.
+cheatscript dumpbps - Dumps all blueprints.
+fly - Toggles flying.
+enablecheats - Enables cheatmanager.
+)");
+
+
 //Memory
 namespace Patterns
 {

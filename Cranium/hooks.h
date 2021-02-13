@@ -45,6 +45,8 @@ namespace Hooks
 
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
+		gProcessEventAdd = ProcessEventAdd;
+
 		//Used for Camera Hooking.
 		//Tested from 12.41 to latest
 		const auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);

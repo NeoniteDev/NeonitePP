@@ -20,6 +20,8 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
+inline uintptr_t gProcessEventAdd;
+
 //Frees the memory for the name
 inline void Free(void* buffer)
 {

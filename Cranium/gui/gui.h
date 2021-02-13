@@ -334,6 +334,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					{
 						static std::wstring currentItem;
 						static std::wstring currentBlueprint;
+						static std::wstring currentMesh;
 
 						if (BeginCombo("Weapons", std::string(currentItem.begin(), currentItem.end()).c_str()))
 						{
@@ -374,6 +375,52 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						}
 
 
+						if (BeginCombo("Mesh", std::string(currentMesh.begin(), currentMesh.end()).c_str()))
+						{
+							for (auto n = 0; n < gMeshes.size(); n++)
+							{
+								const bool is_selected = (currentMesh == gMeshes[n]);
+								const std::string mesh(gMeshes[n].begin(), gMeshes[n].end());
+								if (Selectable(mesh.c_str(), is_selected))
+								{
+									currentMesh = gMeshes[n];
+									NeoPlayer.SetSkeletalMesh(gMeshes[n].c_str());
+								}
+								if (is_selected)
+								{
+									SetItemDefaultFocus();
+								}
+							}
+							EndCombo();
+						}
+
+						NewLine();
+
+						Text(XOR("DICLAIMER: Stuff here may cause crashes."));
+
+						EndTabItem();
+					}
+				}
+
+				if (!NeoPlayer.Pawn)
+				{
+					if (BeginTabItem("Override Skin"))
+					{
+						SetCursorPosY(GetCursorPosY() + 5);
+
+						Text(XOR("NOTE: Doesn't work after jumping from bus\n(Recommendation: use battlelab)"));
+
+						const char* overrides[] = {"None", "Thanos", "Chituari"};
+						static int Item = 0;
+						static int currentItem = 0;
+						Combo("Skin", &Item, overrides, IM_ARRAYSIZE(overrides));
+
+						if (currentItem != Item)
+						{
+							std::string OverrideName(overrides[Item]);
+							NeoPlayer.SkinOverride = std::wstring(OverrideName.begin(), OverrideName.end());
+							currentItem = Item;
+						}
 						EndTabItem();
 					}
 				}

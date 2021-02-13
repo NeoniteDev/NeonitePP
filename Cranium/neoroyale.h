@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
-
 #include "mods.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
+inline std::vector<std::wstring> gMeshes;
 
 namespace Neoroyale
 {
@@ -46,6 +46,10 @@ namespace Neoroyale
 				else if (objectFirstName.ends_with(L"_C") && !objectFirstName.starts_with(L"Default__"))
 				{
 					gBlueprints.push_back(objectFirstName);
+				}
+				else if (objectFullName.starts_with(L"SkeletalMesh "))
+				{
+					gMeshes.push_back(objectFirstName);
 				}
 			}
 		}
@@ -105,8 +109,9 @@ namespace Neoroyale
 		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
 		{
 			UFunctions::Travel(FRONTEND);
-			bIsStarted = false;
-			bIsInit = false;
+			MH_DisableHook(reinterpret_cast<void*>(gProcessEventAdd));
+			//bIsStarted = false;
+			//bIsInit = false;
 			NeoPlayer.Pawn = nullptr;
 		}
 	}
@@ -131,10 +136,10 @@ namespace Neoroyale
 
 			NeoPlayer.ToggleInfiniteAmmo();
 
+			NeoPlayer.ApplyOverride();
+
 			//LOL
 			NeoPlayer.ExecuteConsoleCommand(L"god");
-
-			//NeoPlayer.SetSkeletalMesh();
 
 			const auto PlaylistName = GetObjectFirstName(gPlaylist);
 
