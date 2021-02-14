@@ -33,7 +33,7 @@ public:
 			this->UpdateMesh();
 		}
 
-		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+		auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
 
 		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
 
@@ -46,8 +46,8 @@ public:
 	{
 		if (this->Pawn)
 		{
-			this->Summon(L"PlayerPawn_Athena_C");
-			this->Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+			this->Summon(XOR(L"PlayerPawn_Athena_C"));
+			this->Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
 			if (this->Pawn)
 			{
@@ -60,7 +60,7 @@ public:
 
 	void Summon(const wchar_t* ClassToSummon)
 	{
-		if (!this->Controller)
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
 		{
 			UpdatePlayerController();
 		}
@@ -69,7 +69,7 @@ public:
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
 
 		const FString ClassName = ClassToSummon;
 
@@ -82,18 +82,23 @@ public:
 
 	void Possess()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		{
+			UpdatePlayerController();
+		}
+		
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
 
 		AController_Possess_Params params;
 		params.InPawn = this->Pawn;
 
 		ProcessEvent(this->Controller, fn, &params);
-		printf("\n[Neoroyale] PlayerPawn was possessed!.\n");
+		printf(XOR("\n[Neoroyale] PlayerPawn was possessed!.\n"));
 	}
 
 	auto StartSkydiving(float height)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
 
 		AFortPlayerPawnAthena_TeleportToSkyDive_Params params;
 		params.HeightAboveGround = height;
@@ -104,7 +109,7 @@ public:
 
 	auto IsJumpProvidingForce()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
 
 		ACharacter_IsJumpProvidingForce_Params params;
 
@@ -121,17 +126,17 @@ public:
 			this->UpdateAnimInstance();
 		}
 
-		const auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
+		auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
 
 		UAnimInstance_GetCurrentActiveMontage_Params GetCurrentActiveMontage_Params;
 
 		ProcessEvent(this->AnimInstance, FUNC_GetCurrentActiveMontage, &GetCurrentActiveMontage_Params);
 
-		const auto CurrentPlayingMontage = GetCurrentActiveMontage_Params.ReturnValue;
+		auto CurrentPlayingMontage = GetCurrentActiveMontage_Params.ReturnValue;
 
 		if (CurrentPlayingMontage && GetObjectFirstName(CurrentPlayingMontage).starts_with(XOR(L"Emote_")))
 		{
-			const auto FUNC_Montage_Stop = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
+			auto FUNC_Montage_Stop = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
 
 			UAnimInstance_Montage_Stop_Params Montage_Stop_Params;
 			Montage_Stop_Params.InBlendOutTime = 1;
@@ -143,7 +148,7 @@ public:
 
 	auto IsSkydiving()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
 
 		ACharacter_IsSkydiving_Params params;
 
@@ -154,7 +159,7 @@ public:
 
 	auto IsParachuteOpen()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
 
 		ACharacter_IsParachuteOpen_Params params;
 
@@ -165,7 +170,7 @@ public:
 
 	auto IsParachuteForcedOpen()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
 
 		ACharacter_IsParachuteForcedOpen_Params params;
 
@@ -176,7 +181,7 @@ public:
 
 	auto Jump()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
 
 		Empty_Params params;
 
@@ -190,13 +195,13 @@ public:
 			this->UpdateMesh();
 		}
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
 
 		std::wstring MeshName = meshname;
 
 		std::wstring name = MeshName + L"." + MeshName;
 
-		const auto Mesh = FindObject<UObject*>(name.c_str(), true);
+		auto Mesh = FindObject<UObject*>(name.c_str(), true);
 
 		if (Mesh)
 		{
@@ -212,11 +217,11 @@ public:
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
-		const auto Hero = FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
+		auto Hero = FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
 
 		/*
 		 * CharacterParts Array Indexes (typeof UCustomCharacterPart)
@@ -226,7 +231,7 @@ public:
 		 * 3 - Charm (e.g: M_Commando_UR_01_Grenades)
 		 */
 
-		const auto CharacterParts = reinterpret_cast<TArray<UObject*>*>(reinterpret_cast<uintptr_t>(Hero) + ObjectFinder::FindOffset(
+		auto CharacterParts = reinterpret_cast<TArray<UObject*>*>(reinterpret_cast<uintptr_t>(Hero) + ObjectFinder::FindOffset(
 			XOR(L"Class /Script/FortniteGame.FortHero"), XOR(L"CharacterParts")));
 
 		if (SkinOverride == L"Thanos")
@@ -243,8 +248,8 @@ public:
 		else return;
 
 
-		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
+		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
 
 		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
@@ -252,6 +257,8 @@ public:
 		params.PlayerState = PlayerStateFinder.GetObj();
 
 		ProcessEvent(KismetLib, fn, &params);
+
+		printf(XOR("\n[Neoroyale] Character parts overrides was applied.\n"));
 	}
 
 	void ShowSkin()
@@ -259,14 +266,14 @@ public:
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
-		const auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
+		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
 
 		UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params params;
 		params.PlayerState = PlayerStateFinder.GetObj();
 
 		ProcessEvent(KismetLib, fn, &params);
-		printf("\nCharacter parts should be visiable now!.\n");
+		printf(XOR("\n[Neoroyale] Character parts should be visiable now!.\n"));
 	}
 
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
@@ -277,7 +284,7 @@ public:
 		GUID.C = guid;
 		GUID.D = guid;
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
 
 		std::wstring WeaponName = weaponname;
 
@@ -291,7 +298,7 @@ public:
 
 			if (objectName.starts_with(L"AthenaGadget"))
 			{
-				const auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+				auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
 
 				UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
@@ -325,18 +332,18 @@ public:
 			this->UpdateAnimInstance();
 		}
 
-		const auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+		auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
 
 		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
 
 		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
 
-		const auto AnimInstance = GetAnimInstance_Params.ReturnValue;
+		auto AnimInstance = GetAnimInstance_Params.ReturnValue;
 
 		if (EmoteDef && !Util::IsBadReadPtr(EmoteDef))
 		{
 			//Emote Def is valid, now we grab the animation montage
-			const auto FUNC_GetAnimationHardReference = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortMontageItemDefinitionBase:GetAnimationHardReference"));
+			auto FUNC_GetAnimationHardReference = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortMontageItemDefinitionBase:GetAnimationHardReference"));
 
 			UFortMontageItemDefinitionBase_GetAnimationHardReference_Params GetAnimationHardReference_Params;
 			GetAnimationHardReference_Params.BodyType = EFortCustomBodyType::All;
@@ -345,10 +352,10 @@ public:
 
 			ProcessEvent(EmoteDef, FUNC_GetAnimationHardReference, &GetAnimationHardReference_Params);
 
-			const auto Animation = GetAnimationHardReference_Params.ReturnValue;
+			auto Animation = GetAnimationHardReference_Params.ReturnValue;
 
 			//got the animation, now play :JAM:
-			const auto FUNC_Montage_Play = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Play"));
+			auto FUNC_Montage_Play = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Play"));
 
 			UAnimInstance_Montage_Play_Params params;
 			params.MontageToPlay = Animation;
@@ -367,7 +374,7 @@ public:
 
 	auto GetLocation() -> FVector
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
 
 		AActor_K2_GetActorLocation_Params params;
 
@@ -382,7 +389,7 @@ public:
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
 
 		UCharacterMovementComponent_SetMovementMode_Params params;
 
@@ -408,7 +415,7 @@ public:
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		const auto GravityScaleOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/Engine.CharacterMovementComponent"), XOR(L"GravityScale"));
+		auto GravityScaleOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/Engine.CharacterMovementComponent"), XOR(L"GravityScale"));
 
 		float* GravityScale = reinterpret_cast<float*>(reinterpret_cast<uintptr_t>(CharMovementFinder.GetObj()) + GravityScaleOffset);
 
@@ -417,7 +424,7 @@ public:
 
 	auto SetHealth(float SetHealthInput)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetHealth"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetHealth"));
 
 		AFortPawn_SetHealth_Params params;
 
@@ -428,7 +435,7 @@ public:
 
 	auto SetShield(float SetShieldInput)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetShield"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetShield"));
 
 		AFortPawn_SetShield_Params params;
 
@@ -439,7 +446,7 @@ public:
 
 	auto SetMaxHealth(float SetMaxHealthInput)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxHealth"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxHealth"));
 
 		AFortPawn_SetMaxHealth_Params params;
 
@@ -450,7 +457,7 @@ public:
 
 	auto SetMaxShield(float SetMaxShieldInput)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxShield"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxShield"));
 
 		AFortPawn_SetMaxShield_Params params;
 
@@ -461,7 +468,7 @@ public:
 
 	auto SetMovementSpeed(float SetMovementSpeedInput)
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMovementSpeed"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMovementSpeed"));
 
 		AFortPawn_SetMovementSpeedMultiplier_Params params;
 
@@ -472,24 +479,31 @@ public:
 
 	auto ToggleInfiniteAmmo()
 	{
-		const auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		{
+			UpdatePlayerController();
+		}
+		
+		auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
 		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
 		// the offset has 8 bits (a bitfield), bools are only one bit as it's only 0\1 so we have a struct with 8 bools to be able to edit that specific bool
-		const auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(this->Controller) + bEnableVoiceChatPTTOffset);
+		auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(this->Controller) + bEnableVoiceChatPTTOffset);
 
 		PlayerControllerBools->bInfiniteAmmo = true;
 		PlayerControllerBools->bInfiniteMagazine = true;
+
+		printf(XOR("\n[Neoroyale] You should have infinty ammo now!.\n"));
 	}
 
 	auto ExecuteConsoleCommand(const wchar_t* command)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
-		const auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
+		auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
 
 		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
@@ -497,6 +511,7 @@ public:
 		params.SpecificPlayer = this->Controller;
 
 		ProcessEvent(KismetSysLib, fn, &params);
+		printf(XOR("\n[Neoroyale] Executed a console command !.\n"));
 	}
 
 	auto Skydive()
@@ -504,12 +519,12 @@ public:
 		/*
 		if (this->IsSkydiving())
 		{
-			const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
+			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
 
 			ProcessEvent(this->Pawn, fn, nullptr);
 		}
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
 
 		AFortPlayerPawn_BeginSkydiving_Params params;
 		params.bFromBus = true;
@@ -522,7 +537,7 @@ public:
 	auto ForceOpenParachute()
 	{
 		/*
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
 
 		Empty_Params params;
 
@@ -533,7 +548,12 @@ public:
 
 	auto IsInAircraft()
 	{
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		{
+			UpdatePlayerController();
+		}
+		
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
 		ACharacter_IsInAircraft_Params params;
 
 		ProcessEvent(this->Controller, fn, &params);
@@ -542,19 +562,26 @@ public:
 
 	auto ShowPickaxe()
 	{
-		const auto CosmeticLoadoutPCOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"CosmeticLoadoutPC"));
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		{
+			UpdatePlayerController();
+		}
+		
+		auto CosmeticLoadoutPCOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"CosmeticLoadoutPC"));
 
-		const auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(this->Controller) + CosmeticLoadoutPCOffset);
+		auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(this->Controller) + CosmeticLoadoutPCOffset);
 
 		if (!Util::IsBadReadPtr(CosmeticLoadoutPC))
 		{
-			const auto PickaxeFinder = ObjectFinder::EntryPoint(uintptr_t(CosmeticLoadoutPC->Pickaxe));
+			auto PickaxeFinder = ObjectFinder::EntryPoint(uintptr_t(CosmeticLoadoutPC->Pickaxe));
 
-			const auto WeaponDefFinder = PickaxeFinder.Find(XOR(L"WeaponDefinition"));
+			auto WeaponDefFinder = PickaxeFinder.Find(XOR(L"WeaponDefinition"));
 
-			const auto Weapon = GetObjectFirstName(WeaponDefFinder.GetObj());
+			auto Weapon = GetObjectFirstName(WeaponDefFinder.GetObj());
 
 			this->EquipWeapon(Weapon.c_str());
+
+			printf(XOR("\n[Neoroyale] Equipped the pickaxe.!.\n"));
 		}
 	}
 };

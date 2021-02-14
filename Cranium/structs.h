@@ -68,7 +68,7 @@ struct FString : private TArray<wchar_t>
 
 	std::string ToString() const
 	{
-		const auto length = std::wcslen(Data);
+		auto length = std::wcslen(Data);
 
 		std::string str(length, '\0');
 
@@ -225,6 +225,7 @@ struct UFunction : UStruct
 	void* Func;
 };
 
+
 struct UCheatManager_Summon_Params
 {
 	FString ClassName;
@@ -274,6 +275,10 @@ struct Empty_Params
 {
 };
 
+struct UGameUserSettings_SetFullscreenMode_Params
+{
+	TEnumAsByte<EWindowMode> InFullscreenMode;
+};
 
 struct K2_OnMovementModeChanged_Params
 {

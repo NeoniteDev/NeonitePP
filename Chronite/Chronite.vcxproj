@@ -287,7 +287,6 @@
     <ClInclude Include="includes\imgui\imstb_truetype.h" />
     <ClInclude Include="includes\injection\Injection.h" />
     <ClInclude Include="includes\json\json.hpp" />
-    <ClInclude Include="includes\skCrypter.h" />
     <ClInclude Include="includes\termcolor\termcolor.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

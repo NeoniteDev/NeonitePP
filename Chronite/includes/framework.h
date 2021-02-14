@@ -47,5 +47,6 @@
 #include <tchar.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "../xorstr.hpp"
 
-#define XOR(STR) STR
+#define XOR(STR) xorstr(STR).crypt_get()

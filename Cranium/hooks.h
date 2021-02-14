@@ -15,10 +15,10 @@ namespace Hooks
 	{
 		//cURL Hooking.
 		//Works on all versions
-		const auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::CurlEasySetOpt, Masks::Curl::CurlEasySetOpt);
+		auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::CurlEasySetOpt, Masks::Curl::CurlEasySetOpt);
 		VALIDATE_ADDRESS(CurlEasyAdd, XOR("Failed to find Curl Easy Address."));
 
-		const auto CurlSetAdd = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
+		auto CurlSetAdd = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
 		VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
 
 		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
@@ -40,7 +40,7 @@ namespace Hooks
 
 		//Used for ProcessEvent Hooking.
 		//Should work on everything
-		const auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
+		auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
 		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
@@ -49,14 +49,14 @@ namespace Hooks
 
 		//Used for Camera Hooking.
 		//Tested from 12.41 to latest
-		const auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
+		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
 
 		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
 		//Used for getting UObjects names.
 		//Tested from 12.41 to latest
-		const auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
+		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
@@ -65,7 +65,7 @@ namespace Hooks
 		if (gVersion == "12.41" || gVersion == "12.50" || gVersion == "12.61" || gVersion == "13.00")
 		{
 			//Tested only on 12.41 and 12.61.
-			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
+			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
 			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
@@ -73,21 +73,21 @@ namespace Hooks
 		else
 		{
 			//14.30^
-			const auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
+			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
 			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
 		}
 
 		//Used for getting FFields full names.
-		const auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
+		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
 		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
 
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
 
 
 		//Used to free the memory for names.
-		const auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
+		auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
 		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
 
 		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
@@ -95,7 +95,7 @@ namespace Hooks
 
 		//Used to construct objects, mostly used for console stuff.
 		//Tested from 12.41 to latest
-		const auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
+		auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
@@ -103,20 +103,20 @@ namespace Hooks
 
 		//Used for mostly everything.
 		//Tested from 12.41 to latest
-		const auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
+		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
 
 		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
 
 
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		const auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
+		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
 
-		const auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
+		auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
 
 		//Patches fortnite ability ownership checks, work on everysingle fortnite version.

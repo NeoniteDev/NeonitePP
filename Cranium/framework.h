@@ -9,13 +9,14 @@
 #include <stdlib.h>
 #include <d3d11.h>
 #include <dxgi.h>
+#include <vector>
 #include "gui/kiero.h"
 #include "gui/imgui/imgui.h"
 #include "gui/imgui/imgui_impl_win32.h"
 #include "gui/imgui/imgui_impl_dx11.h"
+#include "xorstr.hpp"
 
-//disabled until we find a good xor lib
-#define XOR(STR) STR
+#define XOR(STR) xorstr(STR).crypt_get()
 
 #pragma comment(lib, "minhook/minhook.lib")
 #pragma comment(lib, "user32.lib")

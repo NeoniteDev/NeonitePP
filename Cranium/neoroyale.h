@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+
 #include "mods.h"
 
 inline std::vector<std::wstring> gWeapons;
@@ -11,13 +11,19 @@ namespace Neoroyale
 	inline bool bIsInit;
 	inline bool bIsStarted;
 	inline bool bIsPlayerInit;
+
 	inline bool bHasJumped;
 	inline bool bHasJumpedFromBus;
 	inline bool bHasShowedPickaxe;
+	inline bool bWantsToJump;
+	inline bool bWantsToSkydive;
+	inline bool bWantsToOpenGlider;
+	inline bool bWantsToShowPickaxe;
+
 	inline Player NeoPlayer;
 	inline Player Bot;
 
-	inline void start(const wchar_t* MapToPlayOn)
+	inline void Start(const wchar_t* MapToPlayOn)
 	{
 		UFunctions::Travel(MapToPlayOn);
 		bIsStarted = !bIsStarted;
@@ -28,7 +34,7 @@ namespace Neoroyale
 	{
 		for (auto i = 0x0; i < GObjs->NumElements; ++i)
 		{
-			const auto object = GObjs->GetByIndex(i);
+			auto object = GObjs->GetByIndex(i);
 			if (object == nullptr)
 			{
 				continue;
@@ -39,7 +45,7 @@ namespace Neoroyale
 				auto objectFullName = GetObjectFullName(object);
 				auto objectFirstName = GetObjectFirstName(object);
 
-				if (objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_"))
+				if (objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_") && !objectFirstName.starts_with(L"Default__"))
 				{
 					gWeapons.push_back(objectFirstName);
 				}
@@ -47,7 +53,7 @@ namespace Neoroyale
 				{
 					gBlueprints.push_back(objectFirstName);
 				}
-				else if (objectFullName.starts_with(L"SkeletalMesh "))
+				else if (objectFullName.starts_with(L"SkeletalMesh ") && !objectFirstName.starts_with(L"Default__"))
 				{
 					gMeshes.push_back(objectFirstName);
 				}
@@ -55,76 +61,79 @@ namespace Neoroyale
 		}
 	}
 
-	inline void gametick()
+	inline void Thread()
 	{
-		//TODO: better keyboard hook
-		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_SPACE))
+		//NOTE (kemo): i know this isn't the best practice but it does the job on another thread so it's not a frezzing call
+		while (true)
 		{
-			if (!bHasJumped)
+			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_SPACE))
 			{
-				bHasJumped = !bHasJumped;
-				if (!NeoPlayer.IsInAircraft())
+				if (!bHasJumped)
 				{
-					//Glide
-					if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
+					bHasJumped = !bHasJumped;
+					if (!NeoPlayer.IsInAircraft())
 					{
-						NeoPlayer.ForceOpenParachute();
-					}
-
-						//Skydive
-					else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
-					{
-						if (!bHasJumpedFromBus)
+						if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
 						{
-							const auto currentLocation = NeoPlayer.GetLocation();
-							UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
-							bHasJumpedFromBus = !bHasJumpedFromBus;
+							bWantsToOpenGlider = true;
 						}
-						NeoPlayer.Skydive();
-					}
 
-						//Jump
-					else if (!NeoPlayer.IsJumpProvidingForce())
-					{
-						NeoPlayer.Jump();
+
+						else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
+						{
+							bWantsToSkydive = true;
+						}
+
+
+						else if (!NeoPlayer.IsJumpProvidingForce())
+						{
+							bWantsToJump = true;
+						}
 					}
 				}
 			}
-		}
-		else bHasJumped = false;
+			else bHasJumped = false;
 
 
-		if (NeoPlayer.Pawn && GetAsyncKeyState(0x31) /* 1 key */)
-		{
-			if (!bHasShowedPickaxe)
+			if (NeoPlayer.Pawn && GetAsyncKeyState(0x31) /* 1 key */)
 			{
-				bHasShowedPickaxe = !bHasShowedPickaxe;
-				NeoPlayer.StopMontageIfEmote();
-				NeoPlayer.ShowPickaxe();
+				if (!NeoPlayer.IsInAircraft())
+				{
+					if (!bHasShowedPickaxe)
+					{
+						bHasShowedPickaxe = !bHasShowedPickaxe;
+						bWantsToShowPickaxe = true;
+					}
+				}
 			}
-		}
-		else bHasShowedPickaxe = false;
+			else bHasShowedPickaxe = false;
 
 
-		if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
-		{
-			UFunctions::Travel(FRONTEND);
-			MH_DisableHook(reinterpret_cast<void*>(gProcessEventAdd));
-			//bIsStarted = false;
-			//bIsInit = false;
-			NeoPlayer.Pawn = nullptr;
+			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
+			{
+				UFunctions::Travel(FRONTEND);
+				bIsStarted = false;
+				bIsInit = false;
+				NeoPlayer.Controller = nullptr;
+				NeoPlayer.Pawn = nullptr;
+				NeoPlayer.Mesh = nullptr;
+				NeoPlayer.AnimInstance = nullptr;
+				gPlaylist = nullptr;
+				break;
+			}
+			Sleep(1000 / 30);
 		}
 	}
 
-	inline void init()
+	inline void Init()
 	{
 		Console::CheatManager();
 
 		UFunctions::DestroyAllHLODs();
 
-		NeoPlayer.Summon(L"PlayerPawn_Athena_C");
+		NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
 
-		NeoPlayer.Pawn = ObjectFinder::FindActor(L"PlayerPawn_Athena_C");
+		NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
 		if (NeoPlayer.Pawn)
 		{
@@ -139,9 +148,9 @@ namespace Neoroyale
 			NeoPlayer.ApplyOverride();
 
 			//LOL
-			NeoPlayer.ExecuteConsoleCommand(L"god");
+			NeoPlayer.ExecuteConsoleCommand(XOR(L"god"));
 
-			const auto PlaylistName = GetObjectFirstName(gPlaylist);
+			auto PlaylistName = GetObjectFirstName(gPlaylist);
 
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
@@ -174,11 +183,11 @@ namespace Neoroyale
 				UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 			}
 
-			UFunctions::StartMatch();
-
 			UFunctions::ServerReadyToStartMatch();
 
 			InitCombos();
+
+			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
 
 			bIsInit = !bIsInit;
 		}

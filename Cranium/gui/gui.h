@@ -176,15 +176,15 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							UFunctions::SetTimeOfDay(timeOfDay);
 							currentTimeOfDay = timeOfDay;
 						}
-						SliderInt("Time Of Day", &timeOfDay, 1.000f, 24.000f, "%.01f");
+						SliderInt(XOR("Time Of Day"), &timeOfDay, 1.000f, 24.000f, "%.01f");
 
-						if (Button("Teleport to Spawn Island"))
+						if (Button(XOR("Teleport to Spawn Island")))
 						{
 							UFunctions::TeleportToSpawn();
 						}
 
 						SameLine(0.0f, 20.0f);
-						if (Button("Teleport to Main Island"))
+						if (Button(XOR("Teleport to Main Island")))
 						{
 							UFunctions::TeleportToMain();
 						}
@@ -195,7 +195,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						NewLine();
 
-						BeginChild("BugItGo");
+						BeginChild(XOR("BugItGo"));
 						PushItemWidth(60);
 						InputFloat("X", &X);
 
@@ -211,7 +211,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						SameLine(0.0f, 18.0f);
 
-						if (Button("Teleport"))
+						if (Button(XOR("Teleport")))
 						{
 							UFunctions::TeleportToCoords(X, Y, Z);
 						}
@@ -270,7 +270,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.ExecuteConsoleCommand(command.c_str());
 							currentFov = fov;
 						}
-						SliderInt("FOV", &fov, 20, 200, "%.03f");
+						SliderInt(XOR("FOV"), &fov, 20, 200, "%.03f");
 
 						NewLine();
 
@@ -279,7 +279,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetPawnGravityScale(gravityScale);
 							currentGravityScale = gravityScale;
 						}
-						SliderInt("Gravity Scale", &gravityScale, -5, 5, "%.01f");
+						SliderInt(XOR("Gravity Scale"), &gravityScale, -5, 5, "%.01f");
 
 						NewLine();
 
@@ -297,7 +297,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetHealth(health);
 							currentHealth = health;
 						}
-						SliderInt("Health Percent", &health, 1, 100, "%.3f");
+						SliderInt(XOR("Health Percent"), &health, 1, 100, "%.3f");
 
 						NewLine();
 
@@ -306,7 +306,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetShield(shield);
 							currentShield = shield;
 						}
-						SliderInt("Shield Percent", &shield, 1, 100, "%.3f");
+						SliderInt(XOR("Shield Percent"), &shield, 1, 100, "%.3f");
 
 						NewLine();
 
@@ -315,7 +315,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetMaxHealth(maxHealth);
 							currentMaxHealth = maxHealth;
 						}
-						SliderInt("Max Health", &maxHealth, 1, 10000000, "%.3f");
+						SliderInt(XOR("Max Health"), &maxHealth, 1, 10000000, "%.3f");
 
 						NewLine();
 
@@ -324,7 +324,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetMaxShield(maxShield);
 							currentMaxShield = maxShield;
 						}
-						SliderInt("Max Shield", &maxShield, 1, 10000000, "%.3f");
+						SliderInt(XOR("Max Shield"), &maxShield, 1, 10000000, "%.3f");
 
 
 						EndTabItem();
@@ -404,7 +404,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 				if (!NeoPlayer.Pawn)
 				{
-					if (BeginTabItem("Override Skin"))
+					if (BeginTabItem(XOR("Override Skin")))
 					{
 						SetCursorPosY(GetCursorPosY() + 5);
 
@@ -424,6 +424,28 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						EndTabItem();
 					}
 				}
+
+				if (BeginTabItem("Help"))
+				{
+					if (CollapsingHeader("CheatScript"))
+					{
+						SetCursorPosX(GetCursorPosX() + 50);
+						SetCursorPosY(GetCursorPosY() + 5);
+
+						Text(XOR("Cheatscript help placeholder"));
+					}
+
+					if (CollapsingHeader("GUI"))
+					{
+						SetCursorPosX(GetCursorPosX() + 50);
+						SetCursorPosY(GetCursorPosY() + 5);
+
+						Text(XOR("gui help placeholder"));
+					}
+
+					EndTabItem();
+				}
+
 
 				if (BeginTabItem("Credits"))
 				{
@@ -445,17 +467,17 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);
 
-					Text("Nyamimi (@nyameows): Internal, General.");
+					Text(XOR("Nyamimi (@nyameows): Internal, General."));
 
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);
 
-					Text("AsrielD (@Asriel_Dev): SSL-Bypass, General.");
+					Text(XOR("AsrielD (@Asriel_Dev): SSL-Bypass, General."));
 
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);
 
-					Text("Irma (@omairma): Frontend, Internal.");
+					Text(XOR("Irma (@omairma): Frontend, Internal."));
 
 					EndTabItem();
 				}

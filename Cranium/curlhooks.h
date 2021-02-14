@@ -73,7 +73,7 @@ CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 			std::string data = list->data;
 			if (data.starts_with("User-Agent:"))
 			{
-				const auto version = data.erase(0, 44).erase(5, data.size() - 5);
+				auto version = data.erase(0, 44).erase(5, data.size() - 5);
 				gVersion = version;
 				bIsVersionFound = !bIsVersionFound;
 			}

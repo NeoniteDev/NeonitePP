@@ -107,7 +107,7 @@ static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower =
 {
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
-		const auto object = GObjs->GetByIndex(i);
+		auto object = GObjs->GetByIndex(i);
 		if (object == nullptr)
 		{
 			continue;
@@ -145,7 +145,7 @@ inline void DumpGObjects()
 
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
-		const auto object = GObjs->GetByIndex(i);
+		auto object = GObjs->GetByIndex(i);
 		if (object == nullptr)
 		{
 			continue;
@@ -163,7 +163,7 @@ inline void DumpBPs()
 	std::wofstream log("Blueprints.log");
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
-		const auto object = GObjs->GetByIndex(i);
+		auto object = GObjs->GetByIndex(i);
 		if (object == nullptr)
 		{
 			continue;

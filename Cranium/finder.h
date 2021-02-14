@@ -59,7 +59,7 @@ class ObjectFinder
 		GameObject* next = inObject->GetNext();
 		if (next == nullptr) return nullptr;
 
-		const auto firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
+		auto firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
 
 		//printf("\n firstPropertyName: %ls \n", firstPropertyName.c_str());
 
@@ -122,7 +122,7 @@ public:
 
 	static auto FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
 	{
-		const auto Class = FindObject<UClass*>(classToFind.c_str());
+		auto Class = FindObject<UClass*>(classToFind.c_str());
 
 		if (Class)
 		{
@@ -192,9 +192,9 @@ public:
 
 		for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
 		{
-			const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+			auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
 
-			const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+			auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
 
 			if (pActor != nullptr)
 			{
@@ -222,9 +222,9 @@ public:
 
 		for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
 		{
-			const auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
+			auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
 
-			const auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+			auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
 
 
 			if (pActor != nullptr)
@@ -233,7 +233,7 @@ public:
 
 				if (GetObjectFullName(pActor).starts_with(name))
 				{
-					const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
 					ProcessEvent(pActor, fn, nullptr);
 					printf("\n[Neoroyale] %ls was destroyed!.\n", name.c_str());

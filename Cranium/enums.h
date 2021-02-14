@@ -1,9 +1,8 @@
 #pragma once
 
-#define FRONTEND XOR(L"Frontend?game=/Script/FortniteGame.FortGameModeFrontEnd")
-#define APOLLO_TERRAIN XOR(L"Apollo_Terrain")
-#define APOLLO_PAPAYA XOR(L"Apollo_Papaya")
-#define CUSTOM XOR(L"/Game/Maps/Apollo_Custom")
+#define FRONTEND XOR(L"Frontend_Lobby_Default?game=/Script/FortniteGame.FortGameModeFrontEnd")
+#define APOLLO_TERRAIN XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C")
+#define APOLLO_PAPAYA XOR(L"Apollo_Papaya?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C")
 #define APOLLO_TERRAIN_BASE XOR(L"Apollo_Terrain?game=/Script/FortniteGame.FortGameModeBase")
 #define APOLLO_PAPAYA_BASE XOR(L"Apollo_Papaya?game=/Script/FortniteGame.FortGameModeBase")
 
@@ -16,7 +15,7 @@
 #define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
 
 
-constexpr const wchar_t* CheatScriptHelp = XOR(
+const wchar_t* CheatScriptHelp = XOR(
 LR"(
 Custom Cheatscript Commands
 ---------------------------
@@ -25,7 +24,6 @@ cheatscript debugcamera - Toggles a custom version of the debug camera.
 cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
 cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
 cheatscript bot - Spawns a bot.
-cheatscript emoet <EID> - Emotes.
 cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
 cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
 cheatscript setplaylist <Playlist> - Overrides the current playlist.
@@ -315,6 +313,14 @@ enum class ECollisionChannel : uint8_t
 	ECC_GameTraceChannel18 = 31,
 	ECC_OverlapAll_Deprecated = 32,
 	ECC_MAX = 33
+};
+
+enum class EWindowMode : uint8_t
+{
+	Fullscreen = 0,
+	WindowedFullscreen = 1,
+	Windowed = 2,
+	EWindowMode_MAX = 3
 };
 
 enum EPropertyFlags : uint64_t

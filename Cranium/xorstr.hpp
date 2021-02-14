@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define JM_XORSTR_DISABLE_AVX_INTRINSICS 
+
 #ifndef JM_XORSTR_HPP
 #define JM_XORSTR_HPP
 

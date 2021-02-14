@@ -3,21 +3,20 @@
 #include "hooks.h"
 #include "gui/gui.h"
 
-DWORD WINAPI ImguiThread(HMODULE hModule)
+bool WINAPI ImguiThread()
 {
-	bool init_hook = false;
-	do
+	while (true)
 	{
 		if (kiero::init(kiero::RenderType::D3D11) == kiero::Status::Success)
 		{
-			kiero::bind(8, (void**)&oPresent, hkPresent);
-			init_hook = true;
+			kiero::bind(8, reinterpret_cast<void**>(&oPresent), hkPresent);
+			break;
 		}
-	} while (!init_hook);
-	return TRUE;
+	};
+	return true;
 }
 
-void dllMain(HMODULE hModule)
+void dllMain()
 {
 #ifdef CONSOLE
 	FILE* fDummy;
@@ -38,9 +37,9 @@ void dllMain(HMODULE hModule)
 	{
 		if (isReady)
 		{
-			if (Hooks::Misc(gVersion) && Console::Unlock())
+			if (Hooks::Misc(gVersion) && Console::Unlock() && ForceSettings())
 			{
-				ImguiThread(hModule);
+				ImguiThread();
 				break;
 			}
 		}
@@ -55,7 +54,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		dllMain(hModule);
+		dllMain();
 		break;
 	case DLL_PROCESS_DETACH:
 	case DLL_THREAD_ATTACH:

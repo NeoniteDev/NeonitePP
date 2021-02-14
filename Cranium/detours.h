@@ -1,7 +1,4 @@
 #pragma once
-#include <mutex>
-#include <queue>
-
 #include "ue4.h"
 #include "neoroyale.h"
 #include "hwid.h"
@@ -12,20 +9,18 @@ using namespace Neoroyale;
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
-inline std::queue<std::wstring> queue;
-inline std::mutex queue_mutex;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	const auto nObj = GetObjectFirstName(pObj);
-	const auto nFunc = GetObjectFirstName(pFunc);
+	auto nObj = GetObjectFirstName(pObj);
+	auto nFunc = GetObjectFirstName(pFunc);
 
 	if (!ProdMode)
 	{
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			printf("\n\n[Neoroyale] Start!");
+			printf(XOR("\n\n[Neoroyale] Start!"));
 
 			//TODO: clean this mess;
 			std::string url = gUrl;
@@ -36,7 +31,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			std::string PlaylistName = query + "." + query;
 			const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
-			const auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+			auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
 			auto Map = APOLLO_TERRAIN;
 
 			if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
@@ -55,7 +50,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (HWID::Validate())
 			{
-				start(Map);
+				Start(Map);
 			}
 			else
 			{
@@ -65,14 +60,24 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 		{
-			printf("\n[Neoroyale] Init!\n");
-			init();
+			printf(XOR("\n[Neoroyale] Init!\n"));
+			Init();
 		}
 
 		//Destroy all HLODs after the loading screen.
 		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 		{
 			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
+		{
+			return nullptr;
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
+		{
+			return nullptr;
 		}
 
 		//Toggle our fly function on "fly" command.
@@ -89,9 +94,39 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			NeoPlayer.Respawn();
 		}
 
-		if (wcsstr(nFunc.c_str(), XOR(L"Tick")))
+		if (bIsInit)
 		{
-			gametick();
+
+			if (bWantsToJump)
+			{
+				NeoPlayer.Jump();
+				bWantsToJump = false;
+			}
+
+			else if (bWantsToOpenGlider)
+			{
+				NeoPlayer.ForceOpenParachute();
+				bWantsToOpenGlider = false;
+			}
+
+			else if (bWantsToSkydive)
+			{
+				if (!bHasJumpedFromBus)
+				{
+					auto currentLocation = NeoPlayer.GetLocation();
+					UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
+					bHasJumpedFromBus = !bHasJumpedFromBus;
+				}
+				NeoPlayer.Skydive();
+				bWantsToSkydive = false;
+			}
+
+			else if (bWantsToShowPickaxe)
+			{
+				NeoPlayer.StopMontageIfEmote();
+				NeoPlayer.ShowPickaxe();
+				bWantsToShowPickaxe = false;
+			}
 		}
 	}
 
@@ -124,7 +159,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
 
-			const auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
+			auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
 
 			if (LastEmotePlayed)
 			{
@@ -158,7 +193,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"activate")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
 					if (HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
@@ -190,13 +225,17 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				DumpGObjects();
 			}
 
+			else if (ScriptNameW == XOR(L"test"))
+			{
+			}
+
 			else if (ScriptNameW == XOR(L"bot"))
 			{
 				NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
-				Bot.Pawn = ObjectFinder::FindActor(L"BP_PlayerPawn_Athena_Phoebe_C");
+				Bot.Pawn = ObjectFinder::FindActor(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
 
-				Bot.SetSkeletalMesh(L"SK_M_MALE_Base");
-				Bot.Emote(FindObject<UObject*>(L"EID_HightowerSquash.EID_HightowerSquash", true));
+				Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
+				Bot.Emote(FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
 			}
 
 			else if (ScriptNameW == XOR(L"event"))
@@ -226,14 +265,14 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"emote")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 
 				if (!arg.empty())
 				{
 					if (arg.starts_with(XOR(L"EID_")))
 					{
 						std::wstring EmoteName = arg + L"." + arg;
-						const auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
+						auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
 						if (Emote)
 						{
 							NeoPlayer.Emote(Emote);
@@ -256,7 +295,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"equip")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 
 				if (!arg.empty())
 				{
@@ -277,10 +316,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetMaxHealth(newgav);
 				}
 				else
@@ -291,10 +330,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetMaxShield(newgav);
 				}
 				else
@@ -305,10 +344,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetHealth(newgav);
 				}
 				else
@@ -319,10 +358,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setshield")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetShield(newgav);
 				}
 				else
@@ -333,10 +372,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setspeed")) || ScriptNameW.starts_with(XOR(L"speed")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetMovementSpeed(newgav);
 				}
 				else
@@ -347,10 +386,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 				if (!arg.empty())
 				{
-					const auto newgav = std::stof(arg);
+					auto newgav = std::stof(arg);
 					NeoPlayer.SetPawnGravityScale(newgav);
 				}
 				else
@@ -361,11 +400,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW.starts_with(XOR(L"setplaylist")))
 			{
-				const auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 
 				if (!arg.empty())
 				{
-					const auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
+					auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
 					if (Playlist)
 					{
 						gPlaylist = Playlist;
@@ -414,7 +453,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
-		printf("[Object]: %ws [Function]: %ws [Class]: %ws\n", nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
 #endif
 
@@ -431,7 +470,7 @@ namespace CameraHook
 
 inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass)
 {
-	const auto CurrentViewPoint = GetViewPoint(pPlayer, pViewInfo, stereoPass);
+	auto CurrentViewPoint = GetViewPoint(pPlayer, pViewInfo, stereoPass);
 
 	if (bIsDebugCamera)
 	{

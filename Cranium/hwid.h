@@ -18,7 +18,7 @@ namespace HWID
 
 		if (sysdrive.empty())
 		{
-			MessageBoxA(nullptr, XOR("Couldn't find the system drive letter."), XOR("Cranium HWID System"), MB_OK);
+			MessageBoxW(nullptr, XOR(L"Couldn't find the system drive letter."), XOR(L"Cranium HWID System"), MB_OK);
 			exit(0);
 		}
 		else
@@ -30,7 +30,7 @@ namespace HWID
 	inline auto GetId()
 	{
 		DWORD serialNumber;
-		const auto systemDriveLetter = GetSystemDriveLetter() + "\\";
+		auto systemDriveLetter = GetSystemDriveLetter() + "\\";
 
 		if (GetVolumeInformationA(
 			systemDriveLetter.c_str(),
@@ -66,7 +66,7 @@ namespace HWID
 			&dwDisposition);
 		if (Ret != ERROR_SUCCESS)
 		{
-			printf("Error opening or creating key.\n");
+			printf(XOR("Error opening or creating key.\n"));
 			return false;
 		}
 		if (ERROR_SUCCESS !=
@@ -105,7 +105,7 @@ namespace HWID
 			DWORD size = sizeof(buffer);
 			DWORD type = REG_SZ;
 
-			const auto nError = RegQueryValueEx(hKey, XOR(L"key"), nullptr, &type, reinterpret_cast<LPBYTE>(buffer), &size);
+			auto nError = RegQueryValueEx(hKey, XOR(L"key"), nullptr, &type, reinterpret_cast<LPBYTE>(buffer), &size);
 
 			if (nError != ERROR_FILE_NOT_FOUND)
 			{
@@ -124,13 +124,13 @@ namespace HWID
 			e,
 			XOR(
 				"zm+58eRygXW8bBm4y6fxGJnvv4GhT7VQgimSEZQPiaASvx/mAeTHpAzO4KTyixFUopapcOYI9NW/b5cAo1VwmIM/KUlSLs2l5npGOiuN78IhMnxIy83N6xnr+iuOqlG0l+KhYavRNPkBuBMmlw5d8hm3TItr8Oas43WHq5m/gozR0EVsw8/F0tpmZMSP6KytJ3XaWbGVE9lCgcJtNQqpvzOWq/1FC47ILbSbqnjkDf7Nv3GCu+nxnxg0ZyzTrHLyo07Ntei6b1zoz8uUd5cK5tJy3engZHbFjdScjXbZAVmBlB9sOjzjf97OYQOKrx46SoLLPrb6hM+rwOJnYo6koQ=="));
-		cryptolens_handle.signature_verifier.set_exponent_base64(e, "AQAB");
+		cryptolens_handle.signature_verifier.set_exponent_base64(e, XOR("AQAB"));
 		std::ostringstream hwid;
 		hwid << GetId();
 		cryptolens_handle.machine_code_computer.set_machine_code(e, hwid.str());
 
 		auto keyW = ReadKeyFromReg();
-		const auto key = std::string(keyW.begin(), keyW.end());
+		auto key = std::string(keyW.begin(), keyW.end());
 
 		if (!key.empty())
 		{
@@ -140,7 +140,7 @@ namespace HWID
 				XOR("WyI0MDgyNTciLCJvR0cwVTZhSTg1NGxURmI5SVVBNUdFUisyRmlqVHM4U29EVlBINDR3Il0="),
 				9575,
 				// License Key
-				XOR(key)
+				key
 			);
 
 			if (license_key->check().has_feature(1))
