@@ -15,7 +15,7 @@ ID3D11DeviceContext* pContext = nullptr;
 ID3D11RenderTargetView* mainRenderTargetView;
 
 using namespace ImGui;
-using namespace Neoroyale;
+using namespace NeoRoyale;
 
 void InitImGui()
 {

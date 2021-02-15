@@ -208,7 +208,7 @@ public:
 					}
 					else
 					{
-						printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
+						printf("\n[NeoRoyale] %ls was found!.\n", name.c_str());
 						return pActor;
 					}
 				}
@@ -243,7 +243,7 @@ public:
 					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
 					ProcessEvent(pActor, fn, nullptr);
-					printf("\n[Neoroyale] %ls was destroyed!.\n", name.c_str());
+					printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());
 				}
 			}
 		}

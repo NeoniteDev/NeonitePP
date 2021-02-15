@@ -68,7 +68,7 @@ namespace UFunctions
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[Neoroyale] Teleported to spawn island.\n"));
+		printf(XOR("\n[NeoRoyale] Teleported to spawn island.\n"));
 	}
 
 	inline void TeleportToMain()
@@ -132,7 +132,7 @@ namespace UFunctions
 		params.Class = HLODSMActor;
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf(XOR("[Neoroyale] HLODSM Actor was destroyed."));
+		printf(XOR("[NeoRoyale] HLODSM Actor was destroyed."));
 	}
 
 	//travel to a url
@@ -166,7 +166,7 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
-		printf(XOR("\n[Neoroyale] Server is ready to start match now!.\n"));
+		printf(XOR("\n[NeoRoyale] Server is ready to start match now!.\n"));
 	}
 
 	inline void SetPlaylist()
@@ -189,7 +189,7 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[Neoroyale] Playlist was set!.\n"));
+		printf(XOR("\n[NeoRoyale] Playlist was set!.\n"));
 	}
 
 	inline void SetGamePhase()
@@ -212,7 +212,7 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[Neoroyale] Game phase was set!.\n"));
+		printf(XOR("\n[NeoRoyale] Game phase was set!.\n"));
 	}
 
 	/*
@@ -392,7 +392,7 @@ namespace Console
 			);
 
 			pcCheatManager = CheatManager;
-			printf(XOR("[Neoroyale] Player now has cheatmanager."));
+			printf(XOR("[NeoRoyale] Player now has cheatmanager."));
 			return true;
 		}
 		return false;

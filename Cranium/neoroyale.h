@@ -7,7 +7,7 @@ inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
 inline std::vector<Player> Bots;
 
-namespace Neoroyale
+namespace NeoRoyale
 {
 	inline bool bIsInit;
 	inline bool bIsStarted;
