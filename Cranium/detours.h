@@ -282,47 +282,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				bIsDebugCamera = !bIsDebugCamera;
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"emote")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				std::transform(arg.begin(), arg.end(), arg.begin(),
-					[](const unsigned char c) { return std::tolower(c); });
-
-				if (ScriptNameW != XOR(L"emote") && !arg.empty())
-				{
-					if (arg.starts_with(XOR(L"eid_")))
-					{
-						std::wstring EmoteName = arg + L"." + arg;
-						auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
-						if (Emote)
-						{
-							NeoPlayer.Emote(Emote);
-						}
-						else
-						{
-							UFunctions::ConsoleLog(XOR(L"Emote was not found."));
-						}
-					}
-					else
-					{
-						UFunctions::ConsoleLog(XOR(L"This command only works with EIDs."));
-					}
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
 			else if (ScriptNameW.starts_with(XOR(L"equip")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				std::transform(arg.begin(), arg.end(), arg.begin(),
-					[](const unsigned char c) { return std::tolower(c); });
 
 				if (ScriptNameW != XOR(L"equip") && !arg.empty())
 				{
-					if (arg.starts_with(XOR(L"wid_")) || arg.starts_with(XOR(L"agid_")))
+					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
 					{
 						NeoPlayer.EquipWeapon(arg.c_str());
 					}

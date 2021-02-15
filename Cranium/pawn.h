@@ -129,7 +129,7 @@ public:
 		return params.ReturnValue;
 	}
 
-	auto StopMontageIfEmote() -> bool
+	auto StopMontageIfEmote()
 	{
 		if (!this->Mesh || !this->AnimInstance || !Util::IsBadReadPtr(this->Mesh) || !Util::IsBadReadPtr(this->AnimInstance))
 		{
@@ -150,14 +150,11 @@ public:
 			auto FUNC_Montage_Stop = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
 
 			UAnimInstance_Montage_Stop_Params Montage_Stop_Params;
-			Montage_Stop_Params.InBlendOutTime = 1;
+			Montage_Stop_Params.InBlendOutTime = 0;
 			Montage_Stop_Params.Montage = CurrentPlayingMontage;
 
 			ProcessEvent(this->AnimInstance, FUNC_Montage_Stop, &Montage_Stop_Params);
-
-			return TRUE;
 		}
-		return FALSE;
 	}
 
 	auto IsSkydiving()
