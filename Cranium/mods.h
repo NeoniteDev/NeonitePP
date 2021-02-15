@@ -166,7 +166,7 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
-		printf(XOR("\n[NeoRoyale] Server is ready to start match now!.\n"));
+		printf(XOR("\n[NeoRoyale] Server is now ready to start match!\n"));
 	}
 
 	inline void SetPlaylist()
@@ -189,7 +189,7 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[NeoRoyale] Playlist was set!.\n"));
+		printf(XOR("\n[NeoRoyale] Playlist was set!\n"));
 	}
 
 	inline void SetGamePhase()
@@ -212,7 +212,7 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[NeoRoyale] Game phase was set!.\n"));
+		printf(XOR("\n[NeoRoyale] Game phase was set!\n"));
 	}
 
 	/*
@@ -392,7 +392,7 @@ namespace Console
 			);
 
 			pcCheatManager = CheatManager;
-			printf(XOR("[NeoRoyale] Player now has cheatmanager."));
+			printf(XOR("[NeoRoyale] Player now has cheatmanager!"));
 			return true;
 		}
 		return false;

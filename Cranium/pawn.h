@@ -88,7 +88,7 @@ public:
 		params.ClassName = ClassName;
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf("\n[NeoRoyale] %ls was summoned!.\n", ClassToSummon);
+		printf("\n[NeoRoyale] %ls was summoned!\n", ClassToSummon);
 	}
 
 	void Possess()
@@ -104,7 +104,7 @@ public:
 		params.InPawn = this->Pawn;
 
 		ProcessEvent(this->Controller, fn, &params);
-		printf(XOR("\n[NeoRoyale] PlayerPawn was possessed!.\n"));
+		printf(XOR("\n[NeoRoyale] PlayerPawn was possessed!\n"));
 	}
 
 	auto StartSkydiving(float height)
@@ -272,7 +272,7 @@ public:
 
 		ProcessEvent(KismetLib, fn, &params);
 
-		printf(XOR("\n[NeoRoyale] Character parts overrides was applied.\n"));
+		printf(XOR("\n[NeoRoyale] Character Part overrides were applied.\n"));
 	}
 
 	void ShowSkin()
@@ -287,7 +287,7 @@ public:
 		params.PlayerState = PlayerStateFinder.GetObj();
 
 		ProcessEvent(KismetLib, fn, &params);
-		printf(XOR("\n[NeoRoyale] Character parts should be visiable now!.\n"));
+		printf(XOR("\n[NeoRoyale] Character Parts should be visible now!.\n"));
 	}
 
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
@@ -507,7 +507,7 @@ public:
 		PlayerControllerBools->bInfiniteAmmo = true;
 		PlayerControllerBools->bInfiniteMagazine = true;
 
-		printf(XOR("\n[NeoRoyale] You should have infinty ammo now!.\n"));
+		printf(XOR("\n[NeoRoyale] You should have infinite ammo now!\n"));
 	}
 
 	auto ExecuteConsoleCommand(const wchar_t* command)
@@ -525,7 +525,7 @@ public:
 		params.SpecificPlayer = this->Controller;
 
 		ProcessEvent(KismetSysLib, fn, &params);
-		printf(XOR("\n[NeoRoyale] Executed a console command !.\n"));
+		printf(XOR("\n[NeoRoyale] Executed a console command!\n"));
 	}
 
 	auto Skydive()
@@ -595,7 +595,7 @@ public:
 
 			this->EquipWeapon(Weapon.c_str());
 
-			printf(XOR("\n[NeoRoyale] Equipped the pickaxe.!.\n"));
+			printf(XOR("\n[NeoRoyale] Equipped the pickaxe!\n"));
 		}
 	}
 };
