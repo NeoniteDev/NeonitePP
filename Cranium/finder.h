@@ -181,7 +181,7 @@ public:
 		}
 	}
 
-	static UObject* FindActor(std::wstring name)
+	static UObject* FindActor(std::wstring name, int toSkip = 0)
 	{
 		ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
@@ -202,8 +202,15 @@ public:
 
 				if (GetObjectFullName(pActor).starts_with(name))
 				{
-					printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
-					return pActor;
+					if (toSkip > 0)
+					{
+						toSkip--;
+					}
+					else
+					{
+						printf("\n[Neoroyale] %ls was found!.\n", name.c_str());
+						return pActor;
+					}
 				}
 			}
 		}

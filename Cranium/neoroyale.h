@@ -5,6 +5,7 @@
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
+inline std::vector<Player> Bots;
 
 namespace Neoroyale
 {
@@ -15,13 +16,13 @@ namespace Neoroyale
 	inline bool bHasJumped;
 	inline bool bHasJumpedFromBus;
 	inline bool bHasShowedPickaxe;
+
 	inline bool bWantsToJump;
 	inline bool bWantsToSkydive;
 	inline bool bWantsToOpenGlider;
 	inline bool bWantsToShowPickaxe;
 
 	inline Player NeoPlayer;
-	inline Player Bot;
 
 	inline void Start(const wchar_t* MapToPlayOn)
 	{
@@ -29,6 +30,18 @@ namespace Neoroyale
 		bIsStarted = !bIsStarted;
 	}
 
+	inline void Stop()
+	{
+		UFunctions::Travel(FRONTEND);
+		bIsStarted = false;
+		bIsInit = false;
+		NeoPlayer.Controller = nullptr;
+		NeoPlayer.Pawn = nullptr;
+		NeoPlayer.Mesh = nullptr;
+		NeoPlayer.AnimInstance = nullptr;
+		Bots.clear();
+		gPlaylist = nullptr;
+	}
 
 	inline void InitCombos()
 	{
@@ -111,14 +124,7 @@ namespace Neoroyale
 
 			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_F3))
 			{
-				UFunctions::Travel(FRONTEND);
-				bIsStarted = false;
-				bIsInit = false;
-				NeoPlayer.Controller = nullptr;
-				NeoPlayer.Pawn = nullptr;
-				NeoPlayer.Mesh = nullptr;
-				NeoPlayer.AnimInstance = nullptr;
-				gPlaylist = nullptr;
+				Stop();
 				break;
 			}
 			Sleep(1000 / 30);

@@ -601,6 +601,22 @@ struct AActor_K2_GetActorLocation_Params
 	FVector ReturnValue;
 };
 
+struct AActor_ReceiveHit_Params
+{
+	UObject* MyComp;
+	UObject* Other;
+	UObject* OtherComp;
+	bool bSelfMoved;
+	FVector HitLocation;
+};
+
+struct AActor_K2_TeleportTo_Params
+{
+	FVector DestLocation;
+	FRotator DestRotation;
+	bool ReturnValue;
+};
+
 struct FLatentActionInfo
 {
 	int Linkage;

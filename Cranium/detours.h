@@ -96,7 +96,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		if (bIsInit)
 		{
-
 			if (bWantsToJump)
 			{
 				NeoPlayer.Jump();
@@ -161,14 +160,45 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
 
-			if (LastEmotePlayed)
+			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
 			{
 				NeoPlayer.Emote(LastEmotePlayed);
-				if (Bot.Pawn)
+				for (auto i = 0; i < Bots.size(); i++)
 				{
-					Bot.Emote(LastEmotePlayed);
+					auto Bot = Bots[i];
+					if (Bot.Pawn)
+					{
+						Bot.Emote(LastEmotePlayed);
+					}
 				}
 			}
+		}
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"ReceiveHit")) && nObj.starts_with(XOR(L"Prj_Athena_FrenchYedoc_JWFriendly_C")))
+	{
+		Player Bot;
+		const auto Params = static_cast<AActor_ReceiveHit_Params*>(pParams);
+		auto HitLocation = Params->HitLocation;
+
+		NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
+		Bot.Pawn = ObjectFinder::FindActor(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"), Bots.size());
+
+		if (Bot.Pawn)
+		{
+			HitLocation.Z = HitLocation.Z + 200;
+
+			FRotator Rotation;
+			Rotation.Yaw = 0;
+			Rotation.Roll = 0;
+			Rotation.Pitch = 0;
+
+			Bot.TeleportTo(HitLocation, Rotation);
+
+			Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
+			Bot.Emote(FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
+
+			Bots.push_back(Bot);
 		}
 	}
 
@@ -227,15 +257,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (ScriptNameW == XOR(L"test"))
 			{
-			}
-
-			else if (ScriptNameW == XOR(L"bot"))
-			{
-				NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
-				Bot.Pawn = ObjectFinder::FindActor(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
-
-				Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
-				Bot.Emote(FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
 			}
 
 			else if (ScriptNameW == XOR(L"event"))

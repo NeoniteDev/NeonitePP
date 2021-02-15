@@ -58,6 +58,17 @@ public:
 		}
 	}
 
+	void TeleportTo(FVector Location, FRotator Rotation)
+	{
+		const auto FUNC_K2_TeleportTo = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_TeleportTo"));
+
+		AActor_K2_TeleportTo_Params K2_TeleportTo_Params;
+		K2_TeleportTo_Params.DestLocation = Location;
+		K2_TeleportTo_Params.DestRotation = Rotation;
+
+		ProcessEvent(this->Pawn, FUNC_K2_TeleportTo, &K2_TeleportTo_Params);
+	}
+
 	void Summon(const wchar_t* ClassToSummon)
 	{
 		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
@@ -86,7 +97,7 @@ public:
 		{
 			UpdatePlayerController();
 		}
-		
+
 		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
 
 		AController_Possess_Params params;
@@ -361,7 +372,7 @@ public:
 			params.MontageToPlay = Animation;
 			params.InPlayRate = 1;
 			params.ReturnValueType = EMontagePlayReturnType::Duration;
-			params.InTimeToStartMontageAt = 1;
+			params.InTimeToStartMontageAt = 0;
 			params.bStopAllMontages = true;
 
 			ProcessEvent(AnimInstance, FUNC_Montage_Play, &params);
@@ -483,7 +494,7 @@ public:
 		{
 			UpdatePlayerController();
 		}
-		
+
 		auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
 		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
@@ -552,7 +563,7 @@ public:
 		{
 			UpdatePlayerController();
 		}
-		
+
 		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
 		ACharacter_IsInAircraft_Params params;
 
@@ -566,7 +577,7 @@ public:
 		{
 			UpdatePlayerController();
 		}
-		
+
 		auto CosmeticLoadoutPCOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"CosmeticLoadoutPC"));
 
 		auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(this->Controller) + CosmeticLoadoutPCOffset);
