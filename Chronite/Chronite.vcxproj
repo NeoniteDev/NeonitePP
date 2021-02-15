@@ -291,7 +291,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
     <None Include="Chronite.aps" />
     <None Include="packages.config" />
   </ItemGroup>
