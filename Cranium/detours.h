@@ -5,7 +5,7 @@
 
 #define LOGGING
 
-using namespace Neoroyale;
+using namespace NeoRoyale;
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
@@ -20,7 +20,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//If the game requested matchmaking we open the game mode
 		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			printf(XOR("\n\n[Neoroyale] Start!"));
+			printf(XOR("\n\n[NeoRoyale] Start!"));
 
 			//TODO: clean this mess;
 			std::string url = gUrl;
@@ -60,7 +60,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 		{
-			printf(XOR("\n[Neoroyale] Init!\n"));
+			printf(XOR("\n[NeoRoyale] Init!\n"));
 			Init();
 		}
 
