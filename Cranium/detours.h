@@ -224,13 +224,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"activate")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+
 				if (!arg.empty())
 				{
-					if (HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
-					{
-					}
-					else
-					{
+					if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str()))) 
+					{ 
 						UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
 					}
 				}
@@ -287,10 +285,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"emote")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				std::transform(arg.begin(), arg.end(), arg.begin(),
+					[](const unsigned char c) { return std::tolower(c); });
 
-				if (!arg.empty())
+				if (ScriptNameW != XOR(L"emote") && !arg.empty())
 				{
-					if (arg.starts_with(XOR(L"EID_")))
+					if (arg.starts_with(XOR(L"eid_")))
 					{
 						std::wstring EmoteName = arg + L"." + arg;
 						auto Emote = FindObject<UObject*>(EmoteName.c_str(), true);
@@ -317,10 +317,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"equip")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+				std::transform(arg.begin(), arg.end(), arg.begin(),
+					[](const unsigned char c) { return std::tolower(c); });
 
-				if (!arg.empty())
+				if (ScriptNameW != XOR(L"equip") && !arg.empty())
 				{
-					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
+					if (arg.starts_with(XOR(L"wid_")) || arg.starts_with(XOR(L"agid_")))
 					{
 						NeoPlayer.EquipWeapon(arg.c_str());
 					}
@@ -338,7 +340,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"setmaxhealth") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetMaxHealth(newgav);
@@ -352,7 +355,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"setmaxshield") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetMaxShield(newgav);
@@ -366,7 +370,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"sethealth") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetHealth(newgav);
@@ -380,7 +385,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"setshield")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"setshield") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetShield(newgav);
@@ -391,10 +397,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"setspeed")) || ScriptNameW.starts_with(XOR(L"speed")))
+			else if (ScriptNameW.starts_with(XOR(L"setspeed")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"setspeed") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetMovementSpeed(newgav);
@@ -408,7 +415,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-				if (!arg.empty())
+
+				if (ScriptNameW != XOR(L"setgravity") && !arg.empty())
 				{
 					auto newgav = std::stof(arg);
 					NeoPlayer.SetPawnGravityScale(newgav);
@@ -423,7 +431,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
 
-				if (!arg.empty())
+				if (ScriptNameW != XOR(L"setplaylist") && !arg.empty())
 				{
 					auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
 					if (Playlist)
@@ -441,7 +449,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 			}
 
-			else if (ScriptNameW == XOR(L"skydive") || ScriptNameW == XOR(L"skydiving"))
+			else if (ScriptNameW == XOR(L"skydive"))
 			{
 				NeoPlayer.StartSkydiving(500.0f);
 			}
