@@ -1,17 +1,20 @@
 #pragma once
 #include "pch.h"
+uintptr_t CurlSetAdd;
 LPCVOID redir_func_ptr;
 LPCVOID orig_func_ptr;
+DWORD oldFlags;
+void* ExecHandle;
 
 namespace VEH
 {
-	LONG ExcHandler(EXCEPTION_POINTERS* ExceptionInfo)
+	long ExcHandler(EXCEPTION_POINTERS* ExceptionInfo)
 	{
 		if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_GUARD_PAGE)
 		{
-			if (ExceptionInfo->ContextRecord->Rip == (DWORD64)orig_func_ptr)
+			if (ExceptionInfo->ContextRecord->Rip == reinterpret_cast<DWORD64>(orig_func_ptr))
 			{
-				ExceptionInfo->ContextRecord->Rip = (DWORD64)redir_func_ptr;
+				ExceptionInfo->ContextRecord->Rip = reinterpret_cast<DWORD64>(redir_func_ptr);
 			}
 			ExceptionInfo->ContextRecord->EFlags |= 0x100; // http://www.c-jump.com/CIS77/ASM/Instructions/I77_0070_eflags_bits.htm (bit 8)
 			return EXCEPTION_CONTINUE_EXECUTION;
@@ -19,7 +22,7 @@ namespace VEH
 		if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_SINGLE_STEP)
 		{
 			DWORD oldFlags;
-			VirtualProtect((LPVOID)orig_func_ptr, 1, PAGE_GUARD | PAGE_EXECUTE_READ, &oldFlags);
+			VirtualProtect(const_cast<LPVOID>(orig_func_ptr), 1, PAGE_GUARD | PAGE_EXECUTE_READ, &oldFlags);
 			return EXCEPTION_CONTINUE_EXECUTION;
 		}
 		return EXCEPTION_CONTINUE_SEARCH;
@@ -36,12 +39,23 @@ namespace VEH
 		{
 			if (origMemInfo.BaseAddress != redirMemInfo.BaseAddress)
 			{
-				if (AddVectoredExceptionHandler(1, ExcHandler))
+				ExecHandle = AddVectoredExceptionHandler(1, ExcHandler);
+				
+				if (ExecHandle)
 				{
-					DWORD oldFlags;
-					VirtualProtect((LPVOID)orig_func_ptr, 1, PAGE_GUARD | PAGE_EXECUTE_READ, &oldFlags);
+					VirtualProtect(const_cast<LPVOID>(orig_func_ptr), 1, PAGE_GUARD | PAGE_EXECUTE_READ, &oldFlags);
 				}
 			}
+		}
+	}
+
+	inline void DisableHook()
+	{
+		DWORD dwOldProtect;
+
+		if (VirtualProtect(const_cast<LPVOID>(orig_func_ptr), 1, oldFlags, &dwOldProtect))
+		{
+			RemoveVectoredExceptionHandler(ExecHandle);
 		}
 	}
 }

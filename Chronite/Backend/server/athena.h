@@ -158,6 +158,5 @@ inline json pAthena()
 	profile_athena["updated"] = date;
 	profile_athena["_id"] = name;
 	profile_athena["accountId"] = name;
-    profile_athena["stats"]["attributes"]["book_level"] = seasonLevel;
 	return profile_athena;
 }

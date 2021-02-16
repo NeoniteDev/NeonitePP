@@ -65,6 +65,5 @@ inline json pCommonCore()
 	profile_core["updated"] = date;
 	profile_core["_id"] = name;
 	profile_core["accountId"] = name;
-	profile_core["items"]["Currency:MtxPurchased"]["quantity"] = vbucks;
 	return profile_core;
 }

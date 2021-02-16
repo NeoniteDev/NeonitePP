@@ -10,8 +10,7 @@ namespace settings
 		const char* configFile = configPath.c_str();
 		json config = {
 			{"name", name},
-			{"vbucks", vbucks},
-			{"seasonLevel", seasonLevel}
+			{"path", path},
 		};
 
 		if (sol)
@@ -38,8 +37,7 @@ namespace settings
 			try
 			{
 				std::string sname = config["name"];
-				int slevel = config["seasonLevel"];
-				int sbucks = config["vbucks"];
+				std::string spath = config["path"];
 
 				if (sname.size() > 32)
 				{
@@ -48,8 +46,7 @@ namespace settings
 				}
 				strncpy(name, sname.c_str(), 33);
 
-				seasonLevel = slevel;
-				vbucks = sbucks;
+				strncpy(path, spath.c_str(), spath.size() + 1);
 			}
 			catch (...)
 			{

@@ -447,7 +447,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 				}
 
 
-				if (BeginTabItem("Credits"))
+				if (BeginTabItem(XOR("About")))
 				{
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);
@@ -468,11 +468,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 					SetCursorPosY(GetCursorPosY() + 5);
 
 					Text(XOR("Nyamimi (@nyameows): Internal, General."));
-
-					SetCursorPosX(GetCursorPosX() + 50);
-					SetCursorPosY(GetCursorPosY() + 5);
-
-					Text(XOR("AsrielD (@Asriel_Dev): SSL-Bypass, General."));
 
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);

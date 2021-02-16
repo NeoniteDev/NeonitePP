@@ -104,7 +104,7 @@ void ImGui::ShowLoader(bool* p_open)
 
 			SameLine(GetWindowWidth() - 390);
 
-			InputTextWithHint(" ", "Fortnite Path (Optional)", gameDir, sizeof(gameDir));
+			InputTextWithHint(" ", "Fortnite Path (Optional)", path, sizeof(path));
 
 			SameLine(GetWindowWidth() - 100);
 
@@ -155,30 +155,7 @@ void ImGui::ShowLoader(bool* p_open)
 		}
 	}
 
-	if (BeginTabItem("Profile Settings"))
-	{
-		SetCursorPosX(GetCursorPosX() + 115);
-		SetCursorPosY(GetCursorPosY() + 5);
-		Text("Modify your profile as much as you want!");
-
-		InputInt("    Season Level", &seasonLevel);
-
-		InputInt("    VBucks Amount", &vbucks);
-
-		if (vbucks > 2147483647)
-		{
-			vbucks = 0;
-		}
-
-		if (seasonLevel > 1000)
-		{
-			seasonLevel = 100;
-		}
-		
-		EndTabItem();
-	}
-
-	if (BeginTabItem("Credits"))
+	if (BeginTabItem(XOR("About")))
 	{
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
@@ -198,32 +175,12 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Nyamimi (@nyameows): Internals, General.");
+		Text(XOR("Nyamimi (@nyameows): Internals, General."));
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text("Makks (@MakksFN): ConsoleUnlocker.");
-
-		SetCursorPosX(GetCursorPosX() + 50);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Syfe (@ItsSyfe): Github ReadME.");
-
-		SetCursorPosX(GetCursorPosX() + 50);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("AsrielD (@Asriel_Dev): SSL-Bypass, General.");
-
-		SetCursorPosX(GetCursorPosX() + 50);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Beat YT (@Beat-YT): Backend.");
-
-		SetCursorPosX(GetCursorPosX() + 50);
-		SetCursorPosY(GetCursorPosY() + 5);
-
-		Text("Irma (@omairma): Frontend, Internals.");
+		Text(XOR("Irma (@omairma): Frontend, Internals."));
 		
 		EndTabItem();
 	}

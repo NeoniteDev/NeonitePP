@@ -1,4 +1,5 @@
 #pragma once
+#include "settings.h"
 #include "util.h"
 #include "GUI/gui.h"
 
@@ -12,7 +13,7 @@ namespace launcher
 	inline void init()
 	{
 		std::string exchange = exchangeCode;
-		std::string altPath = gameDir;
+		std::string altPath = path;
 		std::string fnPath;
 
 		if (altPath.empty())
@@ -49,6 +50,9 @@ namespace launcher
 				console.AddLog("[x] Couldn't find Fortnite directory.");
 				return;
 			}
+			
+			strncpy(path, fnPath.c_str(), fnPath.size() + 1);
+			settings::config(true);
 		}
 		else
 		{
@@ -60,13 +64,13 @@ namespace launcher
 		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
 		std::string szEACFile =
 		fnPath +
-		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_EAC.exe";
+		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_BE.exe";
 
 		std::ostringstream oss;
 		if (exchange.empty())
 		{
 			oss <<
-			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -AUTH_LOGIN="
+			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=10ga222d803bh65851660E3d -AUTH_LOGIN="
 			<< name
 			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
 		}

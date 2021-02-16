@@ -14,17 +14,28 @@ namespace Hooks
 	inline bool curl()
 	{
 		//cURL Hooking.
-		//Works on all versions
-		auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::CurlEasySetOpt, Masks::Curl::CurlEasySetOpt);
-		VALIDATE_ADDRESS(CurlEasyAdd, XOR("Failed to find Curl Easy Address."));
+		auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlEasySetOpt, Masks::Curl::Oldies::CurlEasySetOpt);
 
-		auto CurlSetAdd = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
-		VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
+		if (CurlEasyAdd)
+		{
+			CurlSetAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlSetOpt, Masks::Curl::Oldies::CurlSetOpt);
+			VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
 
-		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
-		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
+			CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
+			CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
 
-		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
+			VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
+		}
+		else
+		{
+			CurlSetAdd = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
+			VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
+
+			CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
+			
+			VEH::EnableHook(CurlSetOpt, CurlSetOptDetour);
+		}
+
 		return true;
 	}
 
@@ -91,7 +102,7 @@ namespace Hooks
 		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
 
 		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
-		
+
 
 		//Used to construct objects, mostly used for console stuff.
 		//Tested from 12.41 to latest

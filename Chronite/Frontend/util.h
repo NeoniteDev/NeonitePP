@@ -19,15 +19,11 @@ inline ULONG pid = 0;
 
 //config
 inline char name[33] = "NeoniteUser";
-inline char gameDir[MAX_PATH];
+inline char path[MAX_PATH];
 inline char exchangeCode[33];
-inline int seasonLevel = 100;
-inline int vbucks = 100000;
 
-//locker
-inline char ID[125];
 inline std::vector<std::string> IDs;
-inline std::vector<std::string> LockerBackup;
+
 
 
 namespace util

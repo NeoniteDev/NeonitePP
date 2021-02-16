@@ -15,118 +15,118 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	auto nObj = GetObjectFirstName(pObj);
 	auto nFunc = GetObjectFirstName(pFunc);
 
-	if (!ProdMode)
+
+	//If the game requested matchmaking we open the game mode
+	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 	{
-		//If the game requested matchmaking we open the game mode
-		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+matchmaking:
+		printf(XOR("\n\n[NeoRoyale] Start!"));
+
+		//TODO: clean this mess;
+		std::string url = gUrl;
+		gUrl.clear();
+		std::string query = url.erase(0, url.find("%3A") + 1);
+		query.erase(url.find("&"), url.size());
+		query.erase(0, url.find("playlist"));
+		std::string PlaylistName = query + "." + query;
+		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
+
+		auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+		auto Map = APOLLO_TERRAIN;
+
+		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
 		{
-			printf(XOR("\n\n[NeoRoyale] Start!"));
-
-			//TODO: clean this mess;
-			std::string url = gUrl;
-			gUrl.clear();
-			std::string query = url.erase(0, url.find("%3A") + 1);
-			query.erase(url.find("&"), url.size());
-			query.erase(0, url.find("playlist"));
-			std::string PlaylistName = query + "." + query;
-			const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
-
-			auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
-			auto Map = APOLLO_TERRAIN;
-
-			if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
-			{
-				Map = APOLLO_PAPAYA;
-			}
-
-			if (Playlist && !gPlaylist)
-			{
-				gPlaylist = Playlist;
-			}
-			else if (!Playlist && !gPlaylist)
-			{
-				gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-			}
-
-			if (HWID::Validate())
-			{
-				Start(Map);
-			}
-			else
-			{
-				MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
-			}
+			Map = APOLLO_PAPAYA;
 		}
 
-		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
+		if (Playlist && !gPlaylist)
 		{
-			printf(XOR("\n[NeoRoyale] Init!\n"));
-			Init();
+			gPlaylist = Playlist;
+		}
+		else if (!Playlist && !gPlaylist)
+		{
+			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
 
-		//Destroy all HLODs after the loading screen.
-		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
+		if (HWID::Validate())
 		{
-			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+			Start(Map);
 		}
-
-		if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
+		else
 		{
-			return nullptr;
-		}
-
-		if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
-		{
-			return nullptr;
-		}
-
-		//Toggle our fly function on "fly" command.
-		if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
-		{
-			NeoPlayer.Fly(bIsFlying);
-			bIsFlying = !bIsFlying;
-		}
-
-		// NOTE: (irma) This is better.
-		if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
-		{
-			NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-			NeoPlayer.Respawn();
-		}
-
-		if (bIsInit)
-		{
-			if (bWantsToJump)
-			{
-				NeoPlayer.Jump();
-				bWantsToJump = false;
-			}
-
-			else if (bWantsToOpenGlider)
-			{
-				NeoPlayer.ForceOpenParachute();
-				bWantsToOpenGlider = false;
-			}
-
-			else if (bWantsToSkydive)
-			{
-				if (!bHasJumpedFromBus)
-				{
-					auto currentLocation = NeoPlayer.GetLocation();
-					UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
-					bHasJumpedFromBus = !bHasJumpedFromBus;
-				}
-				NeoPlayer.Skydive();
-				bWantsToSkydive = false;
-			}
-
-			else if (bWantsToShowPickaxe)
-			{
-				NeoPlayer.ShowPickaxe();
-				bWantsToShowPickaxe = false;
-			}
+			MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
 		}
 	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
+	{
+		printf(XOR("\n[NeoRoyale] Init!\n"));
+		Init();
+	}
+
+	//Destroy all HLODs after the loading screen.
+	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
+	{
+		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
+	{
+		return nullptr;
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
+	{
+		return nullptr;
+	}
+
+	//Toggle our fly function on "fly" command.
+	if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
+	{
+		NeoPlayer.Fly(bIsFlying);
+		bIsFlying = !bIsFlying;
+	}
+
+	// NOTE: (irma) This is better.
+	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
+	{
+		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+		NeoPlayer.Respawn();
+	}
+
+	if (bIsInit)
+	{
+		if (bWantsToJump)
+		{
+			NeoPlayer.Jump();
+			bWantsToJump = false;
+		}
+
+		else if (bWantsToOpenGlider)
+		{
+			NeoPlayer.ForceOpenParachute();
+			bWantsToOpenGlider = false;
+		}
+
+		else if (bWantsToSkydive)
+		{
+			if (!bHasJumpedFromBus)
+			{
+				auto currentLocation = NeoPlayer.GetLocation();
+				UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
+				bHasJumpedFromBus = !bHasJumpedFromBus;
+			}
+			NeoPlayer.Skydive();
+			bWantsToSkydive = false;
+		}
+
+		else if (bWantsToShowPickaxe)
+		{
+			NeoPlayer.ShowPickaxe();
+			bWantsToShowPickaxe = false;
+		}
+	}
+
 
 	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
@@ -235,6 +235,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
+				goto matchmaking;
 				break;
 			}
 
