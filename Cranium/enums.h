@@ -15,15 +15,14 @@
 #define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
 
 
-const wchar_t* CheatScriptHelp = XOR(
-LR"(
+const wchar_t* CheatScriptHelp =
+	LR"(
 Custom Cheatscript Commands
 ---------------------------
 cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
 cheatscript debugcamera - Toggles a custom version of the debug camera.
 cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
 cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
-cheatscript bot - Spawns a bot.
 cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
 cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
 cheatscript setplaylist <Playlist> - Overrides the current playlist.
@@ -36,7 +35,52 @@ cheatscript dump - Dumps a list of all GObjects.
 cheatscript dumpbps - Dumps all blueprints.
 fly - Toggles flying.
 enablecheats - Enables cheatmanager.
-)");
+)";
+
+enum ECommands
+{
+	HELP,
+	ACTIVATE,
+	EVENT,
+	DEBUG_CAMERA,
+	SKYDIVE,
+	EQUIP,
+	SET_GRAVITY,
+	SET_SPEED,
+	SET_PLAYLIST,
+	RESPAWN,
+	SET_HEALTH,
+	SET_SHIELD,
+	SET_MAX_HEALTH,
+	SET_MAX_SHIELD,
+	DUMP,
+	DUMPBPS,
+	TEST,
+	NONE
+};
+
+auto str2enum(const std::wstring& str)
+{
+	if (str.starts_with(L"event")) return EVENT;
+	else if (str.starts_with(L"help")) return HELP;
+	else if (str.starts_with(L"activate") )return DEBUG_CAMERA;
+	else if (str.starts_with(L"debugcamera")) return DEBUG_CAMERA;
+	else if (str.starts_with(L"skydive")) return SKYDIVE;
+	else if (str.starts_with(L"skydiving")) return SKYDIVE;
+	else if (str.starts_with(L"equip")) return EQUIP;
+	else if (str.starts_with(L"setgravity")) return SET_GRAVITY;
+	else if (str.starts_with(L"setspeed") || str.starts_with(L"speed")) return SET_SPEED;
+	else if (str.starts_with(L"setplaylist")) return SET_PLAYLIST;
+	else if (str.starts_with(L"respawn")) return RESPAWN;
+	else if (str.starts_with(L"sethealth")) return SET_HEALTH;
+	else if (str.starts_with(L"setshield")) return SET_SHIELD;
+	else if (str.starts_with(L"setmaxhealth")) return SET_MAX_HEALTH;
+	else if (str.starts_with(L"setmaxshield")) return SET_MAX_SHIELD;
+	else if (str.starts_with(L"dump")) return DUMP;
+	else if (str.starts_with(L"test")) return TEST;
+	else if (str.starts_with(L"dumpbps")) return DUMPBPS;
+	else return NONE;
+}
 
 
 //Memory

@@ -115,6 +115,7 @@ namespace NeoRoyale
 					if (!bHasShowedPickaxe)
 					{
 						bHasShowedPickaxe = !bHasShowedPickaxe;
+						NeoPlayer.StopMontageIfEmote();
 						bWantsToShowPickaxe = true;
 					}
 				}

@@ -122,7 +122,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			else if (bWantsToShowPickaxe)
 			{
-				NeoPlayer.StopMontageIfEmote();
 				NeoPlayer.ShowPickaxe();
 				bWantsToShowPickaxe = false;
 			}
@@ -212,23 +211,51 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//TODO: move this out of here
 
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
+
 		if (ScriptNameF.IsValid())
 		{
 			std::wstring ScriptNameW = ScriptNameF.ToWString();
 
-			if (wcsstr(ScriptNameW.c_str(), XOR(L"help")))
+			std::wstring arg;
+
+			if (ScriptNameW.find(L" ") != std::wstring::npos)
 			{
-				UFunctions::ConsoleLog(CheatScriptHelp);
+				arg = ScriptNameW.substr(ScriptNameW.find(L" ") + 1);
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"activate")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
+			auto CMD = str2enum(ScriptNameW.c_str());
 
+			switch (CMD)
+			{
+			case HELP:
+			{
+				UFunctions::ConsoleLog(CheatScriptHelp);
+				break;
+			}
+
+			case TEST:
+			{
+				break;
+			}
+
+			case DUMP:
+			{
+				DumpGObjects();
+				break;
+			}
+
+			case DUMPBPS:
+			{
+				DumpBPs();
+				break;
+			}
+
+			case ACTIVATE:
+			{
 				if (!arg.empty())
 				{
-					if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str()))) 
-					{ 
+					if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
+					{
 						UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
 					}
 				}
@@ -236,28 +263,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					UFunctions::ConsoleLog(XOR(L"Please input your activation key!."));
 				}
+				break;
 			}
 
-			else if (ScriptNameW == XOR(L"dumpbps"))
-			{
-				DumpBPs();
-			}
-
-			else if (ScriptNameW == XOR(L"dump"))
-			{
-				DumpGObjects();
-			}
-
-			else if (ScriptNameW == XOR(L"dump"))
-			{
-				DumpGObjects();
-			}
-
-			else if (ScriptNameW == XOR(L"test"))
-			{
-			}
-
-			else if (ScriptNameW == XOR(L"event"))
+			case EVENT:
 			{
 				if (gVersion == XOR("14.60"))
 				{
@@ -275,18 +284,18 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 				}
+				break;
 			}
 
-			else if (ScriptNameW == XOR(L"debugcamera"))
+			case DEBUG_CAMERA:
 			{
 				bIsDebugCamera = !bIsDebugCamera;
+				break;
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"equip")))
+			case EQUIP:
 			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"equip") && !arg.empty())
+				if (!arg.empty())
 				{
 					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
 					{
@@ -301,103 +310,96 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
+				break;
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"setmaxhealth")))
+			case SET_MAX_HEALTH:
 			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setmaxhealth") && !arg.empty())
+				if (!arg.empty())
 				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetMaxHealth(newgav);
+					auto n = std::stof(arg);
+					NeoPlayer.SetMaxHealth(n);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument, e.g: (cheatscript setmaxhealth 1000)"));
+				}
+				break;
+			}
+
+			case SET_MAX_SHIELD:
+			{
+				if (!arg.empty())
+				{
+					auto n = std::stof(arg);
+					NeoPlayer.SetMaxShield(n);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setmaxshield 1000)"));
+				}
+				break;
+			}
+
+			case SET_HEALTH:
+			{
+				if (!arg.empty())
+				{
+					auto n = std::stof(arg);
+					NeoPlayer.SetHealth(n);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript sethealth 1000)"));
+				}
+				break;
+			}
+
+			case SET_SHIELD:
+			{
+				if (!arg.empty())
+				{
+					auto n = std::stof(arg);
+					NeoPlayer.SetShield(n);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshiled 1000)"));
+				}
+				break;
+			}
+
+			case SET_SPEED:
+			{
+				if (!arg.empty())
+				{
+					auto n = std::stof(arg);
+					NeoPlayer.SetMovementSpeed(n);
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setspeed 1000)"));
+				}
+				break;
+			}
+
+			case SET_GRAVITY:
+			{
+				if (!arg.empty())
+				{
+					auto n = std::stof(arg);
+					NeoPlayer.SetPawnGravityScale(n);
 				}
 				else
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
+				break;
 			}
 
-			else if (ScriptNameW.starts_with(XOR(L"setmaxshield")))
+			case SET_PLAYLIST:
 			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setmaxshield") && !arg.empty())
-				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetMaxShield(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"sethealth")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"sethealth") && !arg.empty())
-				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetHealth(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setshield")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setshield") && !arg.empty())
-				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetShield(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setspeed")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setspeed") && !arg.empty())
-				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetMovementSpeed(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setgravity")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setgravity") && !arg.empty())
-				{
-					auto newgav = std::stof(arg);
-					NeoPlayer.SetPawnGravityScale(newgav);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			else if (ScriptNameW.starts_with(XOR(L"setplaylist")))
-			{
-				auto arg = ScriptNameW.erase(0, ScriptNameW.find(XOR(L" ")) + 1);
-
-				if (ScriptNameW != XOR(L"setplaylist") && !arg.empty())
+				if (!arg.empty())
 				{
 					auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
 					if (Playlist)
@@ -413,17 +415,28 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
+				break;
 			}
 
-			else if (ScriptNameW == XOR(L"skydive"))
+			case SKYDIVE:
 			{
-				NeoPlayer.StartSkydiving(500.0f);
+				NeoPlayer.StartSkydiving(0);
+				NeoPlayer.StartSkydiving(0);
+				NeoPlayer.StartSkydiving(0);
+				NeoPlayer.StartSkydiving(1500.0f);
+				break;
 			}
 
-			else if (ScriptNameW == XOR(L"respawn"))
+			case RESPAWN:
 			{
 				NeoPlayer.Respawn();
 			}
+
+			default:
+				break;
+			}
+
+			goto out;
 		}
 	}
 
@@ -451,6 +464,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
 #endif
+
+out:
 
 	return ProcessEvent(pObj, pFunc, pParams);
 }

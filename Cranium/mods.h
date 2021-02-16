@@ -8,7 +8,7 @@ inline bool ForceSettings()
 {
 	auto FortGameUserSetttings = FindObject<UObject*>(XOR(L"FortGameUserSettings /Engine/Transient.FortGameUserSettings_"));
 
-	if(FortGameUserSetttings)
+	if (FortGameUserSetttings)
 	{
 		auto SetFullscreenMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings:SetFullscreenMode"));
 
@@ -16,12 +16,12 @@ inline bool ForceSettings()
 		SetFullscreenMode_Params.InFullscreenMode = EWindowMode::WindowedFullscreen;
 
 		ProcessEvent(FortGameUserSetttings, SetFullscreenMode, &SetFullscreenMode_Params);
-		
+
 
 		auto SaveSettings = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings:SaveSettings"));
 
 		ProcessEvent(FortGameUserSetttings, SaveSettings, nullptr);
-		
+
 		return true;
 	}
 
@@ -350,12 +350,9 @@ namespace UFunctions
 
 	inline void DestoryActor(UObject* actor)
 	{
-		if (!Util::IsBadReadPtr(actor))
-		{
-			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
-			ProcessEvent(actor, fn, nullptr);
-		}
+		ProcessEvent(actor, fn, nullptr);
 	}
 }
 
