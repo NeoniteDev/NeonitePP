@@ -35,7 +35,7 @@ void dllMain()
 #ifdef HOOKS
 	while (true)
 	{
-		if (isReady || GetAsyncKeyState(VK_F9))
+		if (isReady)
 		{
 			if (Hooks::Misc(gVersion) && Console::Unlock() && ForceSettings())
 			{

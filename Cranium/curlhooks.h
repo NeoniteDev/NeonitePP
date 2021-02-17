@@ -19,16 +19,26 @@ CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
 CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
 CURLcode CurlSetOptDetour(struct Curl_easy* data, CURLoption tag, ...);
 
+inline uintptr_t CurlVsetoptAddress;
+inline VEH::Hook* CurlVsetoptHook;
+
 CURLcode CurlSetOpt_(struct Curl_easy* data, CURLoption option, ...)
 {
 	va_list arg;
 	va_start(arg, option);
 
-	VEH::DisableHook();
+	CurlVsetoptHook->~Hook();
+
+	printf("uhh");
 
 	CURLcode result = CurlSetOpt(data, option, arg);
 
-	VEH::EnableHook(reinterpret_cast<void*>(CurlSetAdd), CurlSetOptDetour);
+	CurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlSetOptDetour));
+	if (!CurlVsetoptHook->bSuccess)
+	{
+		printf("Reinstalling hook for CurlVsetopt has failed, exiting immediately!\n");
+		exit(EXIT_FAILURE);
+	}
 
 	va_end(arg);
 	return result;
@@ -155,7 +165,7 @@ CURLcode CurlSetOptDetour(struct Curl_easy* data, CURLoption tag, ...)
 		break;
 	}
 
-	default: // Everything else.
+	default:
 		result = CurlSetOpt(data, tag, arg);
 		break;
 	}

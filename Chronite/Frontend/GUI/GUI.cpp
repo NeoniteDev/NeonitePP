@@ -115,6 +115,7 @@ void ImGui::ShowLoader(bool* p_open)
 					try
 					{
 						TerminateProcess(hEAC, 1);
+						TerminateProcess(hFortniteLauncher, 1);
 					}
 					catch (...)
 					{

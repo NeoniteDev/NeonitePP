@@ -5,6 +5,7 @@
 
 
 inline HANDLE hLauncher = INVALID_HANDLE_VALUE;
+inline HANDLE hFortniteLauncher = INVALID_HANDLE_VALUE;
 inline HANDLE hEAC = INVALID_HANDLE_VALUE;
 inline HANDLE hClient = INVALID_HANDLE_VALUE;
 
@@ -64,13 +65,17 @@ namespace launcher
 		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
 		std::string szEACFile =
 		fnPath +
-		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_BE.exe";
+		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_EAC.exe";
+
+		std::string szLauncherFile =
+			fnPath +
+			"\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe";
 
 		std::ostringstream oss;
 		if (exchange.empty())
 		{
 			oss <<
-			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=10ga222d803bh65851660E3d -AUTH_LOGIN="
+			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=e3f8edf7fbfd25h811hbc3b5 -AUTH_LOGIN="
 			<< name
 			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
 		}
@@ -86,6 +91,9 @@ namespace launcher
 
 		hEAC = util::startup(szEACFile.c_str(), args);
 		util::suspend(hEAC);
+
+		hFortniteLauncher = util::startup(szLauncherFile.c_str(), args);
+		util::suspend(hFortniteLauncher);
 
 		hClient = util::startup(szClientFile.c_str(), args);
 
