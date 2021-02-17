@@ -98,11 +98,6 @@ inline void initStatics()
 		res.status = 204;
 	});
 
-	app.Post(R"(/api/v1/assets/Fortnite/(.*))", [](const Request& req, Response& res)
-	{
-		res.status = 204;
-	});
-
 	app.Get(R"(/fortnite/api/game/v2/matchmakingservice/ticket/(.*))", [](const Request& req, Response& res)
 	{
 		res.status = 204;

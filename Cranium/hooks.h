@@ -32,9 +32,9 @@ namespace Hooks
 			CurlVsetoptAddress = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
 			VALIDATE_ADDRESS(CurlVsetoptAddress, XOR("Failed to find Curl SetOpt Address."));
 
-			CurlSetOpt = decltype(CurlSetOpt)(CurlVsetoptAddress);
+			CurlVsetopt_ = reinterpret_cast<decltype(CurlVsetopt_)>(CurlVsetoptAddress);
 			
-		    CurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
+		    hCurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
 		//}
 
 		return true;

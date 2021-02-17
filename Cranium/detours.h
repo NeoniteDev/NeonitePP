@@ -19,7 +19,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	//If the game requested matchmaking we open the game mode
 	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 	{
-matchmaking:
 		printf(XOR("\n\n[NeoRoyale] Start!"));
 
 		//TODO: clean this mess;
@@ -235,7 +234,6 @@ matchmaking:
 
 			case TEST:
 			{
-				goto matchmaking;
 				break;
 			}
 

@@ -136,22 +136,6 @@ inline void initDynamics()
 		res.set_content(j.dump(), "application/json");
 	});
 
-	app.Get(R"(/socialban/api/public/v1/(.*))", [](const Request& req, Response& res)
-	{
-		const auto j =
-		R"(
-		{
-			"id": "aabbccddeeff11223344556677889900",
-			"slug": "neonite++",
-			"displayName": "neonite++",
-			"status": "ACTIVE",
-			"verified": true
-		}
-		)"_json;
-		// sorry ytrs :pepelaugh: -kemo
-		res.set_content(j.dump(), "application/json");
-	});
-
 	app.Get(R"(/party/api/v1/Fortnite/user/(.*))", [](const Request& req, Response& res)
 	{
 		const auto j = R"({ "current": [], "pending": [], "invites": [], "pings": [] })"_json;
@@ -166,5 +150,22 @@ inline void initDynamics()
 	app.Get("/fortnite/api/cloudstorage/system/config", [](const Request& req, Response& res)
 	{
 		res.status = 204;
+	});
+
+
+	app.Post(R"(/api/v1/assets/Fortnite/(.*))", [](const Request& req, Response& res)
+	{
+		const auto j =
+		R"(
+		        {
+        "FortPlaylistAthena": {
+        "meta": {
+            "promotion": 0
+          },
+         "assets": {}
+          }
+        }
+		)"_json;
+		res.set_content(j.dump(), "application/json");
 	});
 }
