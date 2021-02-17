@@ -21,7 +21,6 @@
     <ClCompile Include="gui\ImGui\imgui.cpp">
       <Filter>Rendering\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="veh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />

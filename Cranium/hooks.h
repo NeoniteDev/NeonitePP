@@ -14,29 +14,17 @@ namespace Hooks
 	inline bool curl()
 	{
 		//cURL Hooking.
-		/*auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlEasySetOpt, Masks::Curl::Oldies::CurlEasySetOpt);
+		//Works on all versions
+		auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlEasySetOpt, Masks::Curl::Oldies::CurlEasySetOpt);
+		VALIDATE_ADDRESS(CurlEasyAdd, XOR("Failed to find Curl Easy Address."));
 
-		if (CurlEasyAdd)
-		{
-			
-			CurlVsetoptAddress = Util::FindPattern(Patterns::Curl::Oldies::CurlSetOpt, Masks::Curl::Oldies::CurlSetOpt);
-			VALIDATE_ADDRESS(CurlVsetoptAddress, XOR("Failed to find Curl SetOpt Address."));
+		auto CurlSetAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlSetOpt, Masks::Curl::Oldies::CurlSetOpt);
+		VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
 
-			CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
-			CurlSetOpt = decltype(CurlSetOpt)(CurlVsetoptAddress);
+		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
+		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
 
-			//m_pCurlVsetoptHook = new Hook(m_pCurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
-		}
-		else
-		{*/
-			CurlVsetoptAddress = Util::FindPattern(Patterns::Curl::CurlSetOpt, Masks::Curl::CurlSetOpt);
-			VALIDATE_ADDRESS(CurlVsetoptAddress, XOR("Failed to find Curl SetOpt Address."));
-
-			CurlVsetopt_ = reinterpret_cast<decltype(CurlVsetopt_)>(CurlVsetoptAddress);
-			
-		    hCurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
-		//}
-
+		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
 		return true;
 	}
 

@@ -41,11 +41,20 @@ public:
 		return NULL;
 	}
 
-	static __forceinline uintptr_t FindPattern(LPCSTR lpPattern, LPCSTR lpMask)
+	static __forceinline uintptr_t FindPattern(LPCSTR lpPattern, LPCSTR lpMask, BOOL SleepBetween = false)
 	{
 		MODULEINFO info = {nullptr};
 		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &info, sizeof(info));
-		return FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
+
+		uintptr_t pAddr = 0;
+
+		do {
+			pAddr = FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
+
+			Sleep(50);
+		} while (!pAddr);
+
+		return pAddr;
 	}
 
 	static __forceinline std::wstring sSplit(std::wstring s, std::wstring delimiter)
@@ -74,5 +83,3 @@ public:
 		return true;
 	}
 };
-
-

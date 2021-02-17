@@ -128,6 +128,7 @@ namespace launcher
 			TerminateProcess(hLauncher, 1);
 			hEAC = INVALID_HANDLE_VALUE;
 			hLauncher = INVALID_HANDLE_VALUE;
+			hFortniteLauncher = INVALID_HANDLE_VALUE;
 			hClient = INVALID_HANDLE_VALUE;
 		}
 	}

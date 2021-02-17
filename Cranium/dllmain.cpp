@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "curlhooks.h"
 #include "hooks.h"
 #include "gui/gui.h"
@@ -26,6 +26,8 @@ void dllMain()
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	//freopen_s(&fDummy, "ProcessEvent.log", "w", stdout);
+
+	printf(XOR("[=]Hang tight, it's not borken the game is just loading lol.\nMade by kemo (@xkem0x on twitter, credit me owo)"));
 #endif
 
 #ifdef SSL_BYPASS
