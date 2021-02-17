@@ -18,6 +18,8 @@ bool WINAPI ImguiThread()
 
 void dllMain()
 {
+	Sleep(5000);
+	
 #ifdef CONSOLE
 	FILE* fDummy;
 	AllocConsole();

@@ -48,6 +48,6 @@ namespace server
 		});
 #endif
 
-		app.listen(XOR("localhost"), 5595);
+		app.listen(XOR("127.0.0.1"), 5595);
 	}
 }

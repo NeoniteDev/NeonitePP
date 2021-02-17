@@ -153,6 +153,19 @@ namespace UFunctions
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
 	}
 
+	//Read the name lol
+	inline void StartMatch()
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
+		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
+		Empty_Params params;
+		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+		printf("\n[Neoroyale] Match started!.\n");
+	}
+
 	//Simulates the server telling the game that it's ready to start match
 	inline void ServerReadyToStartMatch()
 	{

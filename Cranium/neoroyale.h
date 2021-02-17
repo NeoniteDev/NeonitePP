@@ -156,6 +156,7 @@ namespace NeoRoyale
 
 			//LOL
 			NeoPlayer.ExecuteConsoleCommand(XOR(L"god"));
+			NeoPlayer.SetMovementSpeed(1.1);
 
 			auto PlaylistName = GetObjectFirstName(gPlaylist);
 
@@ -190,6 +191,8 @@ namespace NeoRoyale
 				UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 			}
 
+			UFunctions::StartMatch();
+			
 			UFunctions::ServerReadyToStartMatch();
 
 			InitCombos();

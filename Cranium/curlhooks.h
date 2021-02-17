@@ -1,10 +1,12 @@
 #pragma once
+#include <regex>
+
 #include "curl.h"
 #include "url.h"
 #include "veh.h"
 
 #define URL_PROTOCOL XOR("http")
-#define URL_HOST XOR("localhost")
+#define URL_HOST XOR("127.0.0.1")
 #define URL_PORT XOR("5595")
 
 inline bool isReady = false;
@@ -15,20 +17,21 @@ static bool ProdMode = false;
 static bool bIsProdMode;
 static bool bIsVersionFound;
 
-
 inline uintptr_t CurlVsetoptAddress;
 inline VEH::Hook* hCurlVsetoptHook;
 
-INT(*CurlVsetopt_)(LPVOID, INT, va_list) = NULL;
-INT CurlVsetoptHook(LPVOID lpContext, INT iOption, va_list param); // Forward declaring this is necessary!!
+CURLcode (*CurlVsetopt_)(LPVOID, CURLoption, va_list) = nullptr;
 
-INT CurlVsetopt(LPVOID lpContext, INT iOption, va_list param)
+CURLcode CurlVsetoptHook(LPVOID lpContext, CURLoption iOption, va_list param); // Forward declaring this is necessary!!
+
+CURLcode CurlVsetopt(LPVOID lpContext, CURLoption iOption, va_list param)
 {
 	hCurlVsetoptHook->~Hook();
 
-	INT iResult = CurlVsetopt_(lpContext, iOption, param);
+	CURLcode iResult = CurlVsetopt_(lpContext, iOption, param);
 
 	hCurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
+
 	if (!hCurlVsetoptHook->bSuccess)
 	{
 		printf("Reinstalling hook for CurlVsetopt has failed, exiting immediately!\n");
@@ -37,35 +40,35 @@ INT CurlVsetopt(LPVOID lpContext, INT iOption, va_list param)
 
 	return iResult;
 }
-INT CurlVsetoptVa(LPVOID lpContext, INT iOption, ...)
+
+CURLcode CurlVsetoptVa(LPVOID lpContext, CURLoption iOption, ...)
 {
 	va_list list{};
 	va_start(list, iOption);
 
-	INT iResult = CurlVsetopt(lpContext, iOption, list);
+	CURLcode iResult = CurlVsetopt(lpContext, iOption, list);
 
 	va_end(list);
 
 	return iResult;
 }
 
-INT CurlVsetoptHook(LPVOID data, INT tag, va_list param)
+CURLcode CurlVsetoptHook(LPVOID data, CURLoption tag, va_list param)
 {
 	va_list arg;
 	va_copy(arg, param);
 
-	INT result;
+	CURLcode result;
 
-	switch (tag)
-	{
-		
-	case CURLOPT_SSL_VERIFYPEER:
+	if (!data) return CURLE_BAD_FUNCTION_ARGUMENT;
+
+	if (tag == CURLOPT_SSL_VERIFYPEER)
 	{
 		result = CurlVsetoptVa(data, tag, 0);
-		break;
 	}
 
-	case CURLOPT_URL: // CURLOPT_URL
+		//URL redirection
+	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
 		gUrl = url;
@@ -84,34 +87,30 @@ INT CurlVsetoptHook(LPVOID data, INT tag, va_list param)
 
 #endif
 		result = CurlVsetoptVa(data, tag, url.c_str());
-		break;
 	}
 
-	case CURLOPT_HTTPHEADER:
+		//Version determination
+	else if (tag == CURLOPT_HTTPHEADER && !bIsVersionFound)
 	{
-		if (!bIsVersionFound)
-		{
-			auto list = va_arg(arg, curl_slist*);;
+		auto list = va_arg(arg, curl_slist*);;
 
-			while (list->next != nullptr && list->data)
+
+		while (list->next != nullptr && list->data)
+		{
+			std::string data = list->data;
+			if (data.starts_with("User-Agent:"))
 			{
-				std::string data = list->data;
-				if (data.starts_with("User-Agent:"))
-				{
-					auto version = data.erase(0, 44).erase(5, data.size() - 5);
-					gVersion = version;
-					bIsVersionFound = !bIsVersionFound;
-				}
-				list = list->next;
+				auto version = data.erase(0, 44).erase(5, data.size() - 5);
+				gVersion = version;
+				bIsVersionFound = !bIsVersionFound;
 			}
+			list = list->next;
 		}
-		//result = CurlVsetopt(data, tag, arg);
-		break;
 	}
 
-	default:
+	else
+	{
 		result = CurlVsetopt(data, tag, arg);
-		break;
 	}
 
 	va_end(arg);

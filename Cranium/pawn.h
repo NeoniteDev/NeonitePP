@@ -533,7 +533,7 @@ public:
 			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
 
 			ProcessEvent(this->Pawn, fn, nullptr);
-		}
+		}*/
 
 		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
 
@@ -541,7 +541,7 @@ public:
 		params.bFromBus = true;
 
 		ProcessEvent(this->Pawn, fn, &params);
-		*/
+		
 		this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 

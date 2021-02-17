@@ -193,6 +193,7 @@ void ImGui::ShowLoader(bool* p_open)
 	{
 		TerminateProcess(hClient, 0);
 		TerminateProcess(hEAC, 0);
+		TerminateProcess(hFortniteLauncher, 0);
 		TerminateThread(hLauncher, 0);
 		TerminateThread(hServer, 0);
 		exit(1);

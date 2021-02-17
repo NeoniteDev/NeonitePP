@@ -122,7 +122,9 @@ namespace launcher
 				if (WaitForSingleObject(hClient, 10) != WAIT_TIMEOUT) break;
 			}
 			util::resume(hEAC);
+			util::resume(hFortniteLauncher);
 			TerminateProcess(hEAC, 1);
+			TerminateProcess(hFortniteLauncher, 1);
 			TerminateProcess(hLauncher, 1);
 			hEAC = INVALID_HANDLE_VALUE;
 			hLauncher = INVALID_HANDLE_VALUE;
