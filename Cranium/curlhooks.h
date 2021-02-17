@@ -27,7 +27,7 @@ CURLcode CurlVsetoptHook(LPVOID lpContext, CURLoption iOption, va_list param); /
 CURLcode CurlVsetopt(LPVOID lpContext, CURLoption iOption, va_list param)
 {
 	hCurlVsetoptHook->~Hook();
-
+	
 	CURLcode iResult = CurlVsetopt_(lpContext, iOption, param);
 
 	hCurlVsetoptHook = new VEH::Hook(CurlVsetoptAddress, reinterpret_cast<uintptr_t>(CurlVsetoptHook));
@@ -63,6 +63,21 @@ CURLcode CurlVsetoptHook(LPVOID data, CURLoption tag, va_list param)
 	if (!data) return CURLE_BAD_FUNCTION_ARGUMENT;
 
 	if (tag == CURLOPT_SSL_VERIFYPEER)
+	{
+		result = CurlVsetoptVa(data, tag, 0);
+	}
+
+	if (tag == CURLOPT_SSL_VERIFYHOST)
+	{
+		result = CurlVsetoptVa(data, tag, 0);
+	}
+
+	if (tag == CURLOPT_PROXY_SSL_VERIFYPEER)
+	{
+		result = CurlVsetoptVa(data, tag, 0);
+	}
+
+	if (tag == CURLOPT_PROXY_SSL_VERIFYHOST)
 	{
 		result = CurlVsetoptVa(data, tag, 0);
 	}
