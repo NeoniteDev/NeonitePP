@@ -184,6 +184,9 @@
     <ClInclude Include="gui\gui.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="server.h">
+      <Filter>Server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">
@@ -209,6 +212,9 @@
     </Filter>
     <Filter Include="Rendering\ImGui">
       <UniqueIdentifier>{4f2eb4c3-d3f2-4594-9dc9-1fad499762d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{f99337fe-0d5c-4b0b-abb5-7aef485b297f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

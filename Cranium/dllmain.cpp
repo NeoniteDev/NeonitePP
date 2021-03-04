@@ -20,14 +20,15 @@ void dllMain()
 {
 	
 #ifdef CONSOLE
+#ifndef PROD
 	FILE* fDummy;
 	AllocConsole();
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	//freopen_s(&fDummy, "ProcessEvent.log", "w", stdout);
-
-	printf(XOR("[=]Hang tight, it's not borken the game is just loading lol.\nMade by kemo (@xkem0x on twitter, credit me owo)"));
+#endif
+	printf(XOR("[=]Hang tight, it's not broken the game is just loading lol.\nMade by kemo (@xkem0x on twitter, credit me owo)"));
 #endif
 
 #ifdef SSL_BYPASS
@@ -39,14 +40,14 @@ void dllMain()
 	while (true)
 	{
 		if (isReady)
-		{
-			if (Hooks::Misc(gVersion) && Console::Unlock() && ForceSettings())
+		{													//Deprecated
+			if (Hooks::Misc(gVersion) && Console::Unlock()) //&& ForceSettings())
 			{
 				ImguiThread();
 				break;
 			}
 		}
-		Sleep(1000 / 30); //30 fps 
+		Sleep(1000 / 30); //30 fps  
 	}
 }
 #endif

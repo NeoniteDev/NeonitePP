@@ -327,46 +327,58 @@ R"(
             {
                "validFrom":"2020-12-16T00:29:34.857Z",
                "activeEvents":[
-                  {
-                     "eventType":"EventFlag.BBPromo.Quests",
-                     "activeUntil":"2090-02-14T00:00:00.000Z",
-                     "activeSince":"2019-11-19T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Phoenix.Winterfest.Quests",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Season11.WinterFest.Quests.Phase1",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Winterfest.EnableEnemyVariants",
-                     "activeUntil":"2021-01-25T00:00:00.000Z",
-                     "activeSince":"2020-11-21T00:00:00.000Z"
-                  },
+                 
                   {
                      "eventType":"EventFlag.LobbySeason15",
                      "activeUntil":"2021-03-31T13:00:00.000Z",
                      "activeSince":"2020-11-30T14:00:00.000Z"
                   },
-                  {
-                     "eventType":"EventFlag.LTQ_S15_Legendary_Week_02",
-                     "activeUntil":"2020-12-17T14:00:00.000Z",
-                     "activeSince":"2020-12-10T14:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Frostnite.Week3",
-                     "activeUntil":"2020-12-19T00:00:00.000Z",
-                     "activeSince":"2020-12-12T00:00:00.000Z"
-                  },
-                  {
-                     "eventType":"EventFlag.Event_HiddenRole",
-                     "activeUntil":"2021-01-12T21:00:00.000Z",
-                     "activeSince":"2020-12-15T14:00:00.000Z"
-                  }
+                   {
+                            "eventType": "TPICK01",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "TPICK02",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        },
+                        {
+                            "eventType": "SPICK01",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "SPICK02",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        },{
+                            "eventType": "MPICK01",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "MPICK02",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "WPICK01",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "WPICK02",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "CPICK01",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "CPICK02",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }, {
+                            "eventType": "DZP",
+                            "activeUntil": "2021-10-18T17:06:33.568Z",
+                            "activeSince": "2020-11-18T17:06:33.568Z"
+                        }
                ],
                "state":{
                   "activeStorefronts":[
@@ -376,22 +388,6 @@ R"(
                      
                   },
                   "activeEvents":[
-                     {
-                        "instanceId":"6inu3pgg11mucstq78auuf7a7q[2]0",
-                        "devName":"S15 Legendary Quest Week 2",
-                        "eventName":"CalendarEvent_Season15_Legendary_Week_02",
-                        "eventStart":"2020-12-10T14:00:00Z",
-                        "eventEnd":"2020-12-17T14:00:00Z",
-                        "eventType":"EventFlag.LTQ_S15_Legendary_Week_02"
-                     },
-                     {
-                        "instanceId":"5jbu63r0ldvrapuopak52eigqq[2]0",
-                        "devName":"Event_HiddenRole_Challenges",
-                        "eventName":"CalendarEvent_Season15_HiddenRole",
-                        "eventStart":"2020-12-15T14:00:00Z",
-                        "eventEnd":"2021-01-12T21:00:00Z",
-                        "eventType":"EventFlag.Event_HiddenRole"
-                     }
                   ],
                   "seasonNumber":15,
                   "seasonTemplateId":"AthenaSeason:athenaseason15",

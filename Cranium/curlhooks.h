@@ -14,8 +14,8 @@ static bool ProdMode = false;
 static bool bIsProdMode;
 static bool bIsVersionFound;
 
-inline CURLcode(*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
-inline CURLcode(*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
+inline CURLcode (*CurlSetOpt)(struct Curl_easy*, CURLoption, va_list) = nullptr;
+inline CURLcode (*CurlEasySetOpt)(struct Curl_easy*, CURLoption, ...) = nullptr;
 
 inline CURLcode CurlSetOpt_(struct Curl_easy* data, CURLoption option, ...)
 {
@@ -37,12 +37,19 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 
 	if (!data) return CURLE_BAD_FUNCTION_ARGUMENT;
 
+	//Ssl bypass
 	if (tag == CURLOPT_SSL_VERIFYPEER)
 	{
 		result = CurlSetOpt_(data, tag, 0);
 	}
 
-	//URL redirection
+	//Disable Proxy
+	if (tag == CURLOPT_PROXY)
+	{
+		result = CurlSetOpt_(data, tag, "");
+	}
+
+		//URL redirection
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
@@ -54,16 +61,20 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 
 		if (!ProdMode || url.find(XOR("cloudstorage")) != std::string::npos)
 		{
-			//printf("LogURL: %s\n", url.c_str());
 			Uri uri = Uri::Parse(url);
-			url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+
+			if (uri.Host.ends_with(XOR("ol.epicgames.com")) || uri.Host.ends_with(XOR(".akamaized.net")) || uri.Host.ends_with(XOR("on.epicgames.com")))
+			{
+				//printf("LogURL: %s\n", url.c_str());
+				url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, uri.Path, uri.QueryString);
+			}
 		}
 
 #endif
 		result = CurlSetOpt_(data, tag, url.c_str());
 	}
 
-	//Version determination
+		//Version determination
 	else if (tag == CURLOPT_HTTPHEADER && !bIsVersionFound)
 	{
 		auto list = va_arg(arg, curl_slist*);;
@@ -71,7 +82,7 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 		while (list->next != nullptr && list->data)
 		{
 			std::string listData = list->data;
-			if (listData.starts_with("User-Agent:"))
+			if (listData.starts_with(XOR("User-Agent:")))
 			{
 				const auto version = listData.erase(0, 44).erase(5, listData.size() - 5);
 				gVersion = version;

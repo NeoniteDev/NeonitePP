@@ -23,6 +23,7 @@ inline void initProfile()
 			         {
 				         if (IDs.size() > 0)
 				         {
+#ifndef PROD
 					         //TODO: auto updateing.
 					         for (const auto& id : IDs)
 					         {
@@ -43,6 +44,7 @@ inline void initProfile()
 						         };
 						         profileData["items"][id] = item;
 					         }
+#endif
 				         }
 			         }
 		         }

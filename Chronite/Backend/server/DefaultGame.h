@@ -19,7 +19,7 @@ bBattleRoyaleMatchmakingEnabled=true
 +FrontEndPlaylistData=(PlaylistName=Playlist_Fortnite, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_SolidGold_Duos, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_16_Coop, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_16_8v8, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
++FrontEndPlaylistData=(PlaylistName=Playlist_Fluoride_Solo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 	)"
 	R"(
 +FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_Squad_Battle_16, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))

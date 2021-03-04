@@ -75,14 +75,14 @@ namespace launcher
 		if (exchange.empty())
 		{
 			oss <<
-			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=e3f8edf7fbfd25h811hbc3b5 -AUTH_LOGIN="
+			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -AUTH_LOGIN="
 			<< name
 			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
 		}
 		else
 		{
 			oss <<
-			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod -noeac -nobe -fltoken=8c4aa8a9b77acdcbd918874b -epicportal -epiclocale=en-us -AUTH_PASSWORD="
+			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod-nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -epicportal -epiclocale=en-us -AUTH_PASSWORD="
 			<< exchange;
 		}
 		std::string s = oss.str();
@@ -92,7 +92,7 @@ namespace launcher
 		hEAC = util::startup(szEACFile.c_str(), args);
 		util::suspend(hEAC);
 
-		hFortniteLauncher = util::startup(szLauncherFile.c_str(), args);
+	    hFortniteLauncher = util::startup(szLauncherFile.c_str(), args);
 		util::suspend(hFortniteLauncher);
 
 		hClient = util::startup(szClientFile.c_str(), args);

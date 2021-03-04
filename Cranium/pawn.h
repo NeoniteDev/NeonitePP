@@ -53,6 +53,7 @@ public:
 			{
 				this->Possess();
 				this->ShowSkin();
+				this->ShowPickaxe();
 				this->UpdateAnimInstance();
 			}
 		}
@@ -245,6 +246,7 @@ public:
 		auto CharacterParts = reinterpret_cast<TArray<UObject*>*>(reinterpret_cast<uintptr_t>(Hero) + ObjectFinder::FindOffset(
 			XOR(L"Class /Script/FortniteGame.FortHero"), XOR(L"CharacterParts")));
 
+
 		if (SkinOverride == L"Thanos")
 		{
 			CharacterParts->operator[](1) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Heads/Dev_TestAsset_Head_M_XL.Dev_TestAsset_Head_M_XL"));
@@ -256,8 +258,16 @@ public:
 				XOR(L"CustomCharacterPart /Game/Characters/CharacterParts/Male/Medium/Heads/CP_Athena_Head_M_AshtonMilo.CP_Athena_Head_M_AshtonMilo"));
 			CharacterParts->operator[](0) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/CP_Athena_Body_M_AshtonMilo.CP_Athena_Body_M_AshtonMilo"));
 		}
+#ifndef PROD
 		else return;
+#else
+		else
+		{
+			CharacterParts->operator[](1) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Heads/Dev_TestAsset_Head_M_XL.Dev_TestAsset_Head_M_XL"));
+			CharacterParts->operator[](0) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/Dev_TestAsset_Body_M_XL.Dev_TestAsset_Body_M_XL"));
+		}
 
+#endif
 
 		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
 		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
@@ -343,14 +353,6 @@ public:
 			this->UpdateAnimInstance();
 		}
 
-		auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
-
-		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
-
-		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
-
-		auto AnimInstance = GetAnimInstance_Params.ReturnValue;
-
 		if (EmoteDef && !Util::IsBadReadPtr(EmoteDef))
 		{
 			//Emote Def is valid, now we grab the animation montage
@@ -375,7 +377,7 @@ public:
 			params.InTimeToStartMontageAt = 0;
 			params.bStopAllMontages = true;
 
-			ProcessEvent(AnimInstance, FUNC_Montage_Play, &params);
+			ProcessEvent(this->AnimInstance, FUNC_Montage_Play, &params);
 		}
 		else
 		{
@@ -498,7 +500,7 @@ public:
 		auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
 		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
-		// the offset has 8 bits (a bitfield), bools are only one bit as it's only 0\1 so we have a struct with 8 bools to be able to edit that specific bool
+		// the offset has 8 bits (a bitfield), bools are only one bit as it's only 0\1 so we have a struct with 8 bools (1 byte) to be able to edit that specific bool
 		auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(this->Controller) + bEnableVoiceChatPTTOffset);
 
 		PlayerControllerBools->bInfiniteAmmo = true;
@@ -535,13 +537,13 @@ public:
 			ProcessEvent(this->Pawn, fn, nullptr);
 		}*/
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+		/*auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
 
 		AFortPlayerPawn_BeginSkydiving_Params params;
 		params.bFromBus = true;
 
-		ProcessEvent(this->Pawn, fn, &params);
-		
+		ProcessEvent(this->Pawn, fn, &params);*/
+
 		this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 
@@ -571,7 +573,8 @@ public:
 		return params.ReturnValue;
 	}
 
-	auto ShowPickaxe()
+
+	void ShowPickaxe()
 	{
 		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
 		{

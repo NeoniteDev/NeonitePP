@@ -142,13 +142,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 		{
 			PushItemWidth(GetFontSize() * -12);
 
-			if (BeginTabBar("Neonite"), ImGuiTabBarFlags_AutoSelectNewTabs)
+			if (BeginTabBar(XOR("Neonite")), ImGuiTabBarFlags_AutoSelectNewTabs)
 			{
 				if (NeoPlayer.Pawn)
 				{
 					if (BeginTabItem("World"))
 					{
-						if (Button("Start Event"))
+						/*if (Button("Start Event"))
 						{
 							if (gVersion == XOR("14.60"))
 							{
@@ -166,7 +166,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							{
 								UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
 							}
-						}
+						}*/
 
 						static int timeOfDay = 1;
 						static int currentTimeOfDay = 1;
@@ -288,7 +288,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetMovementSpeed(speed);
 							currentSpeed = speed;
 						}
-						SliderFloat("Speed Multiplier", &speed, 1.0f, 5.0f, "%.1f", 10.000001f);
+						SliderFloat(XOR("Speed Multiplier"), &speed, 1.0f, 5.0f, "%.1f", 10.000001f);
 
 						NewLine();
 
@@ -330,11 +330,15 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						EndTabItem();
 					}
 
-					if (BeginTabItem("Modifiers"))
+					if (BeginTabItem("Helpers"))
 					{
 						static std::wstring currentItem;
 						static std::wstring currentBlueprint;
 						static std::wstring currentMesh;
+
+						Text(XOR("Any item selected from the combos below will be copied to your clipboard, everything is generated at runtime."));
+
+						NewLine();
 
 						if (BeginCombo("Weapons", std::string(currentItem.begin(), currentItem.end()).c_str()))
 						{
@@ -345,7 +349,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 								if (Selectable(wid.c_str(), is_selected))
 								{
 									currentItem = gWeapons[n];
-									NeoPlayer.EquipWeapon(gWeapons[n].c_str());
+									Util::CopyToClipboard(wid);
 								}
 								if (is_selected)
 								{
@@ -364,7 +368,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 								if (Selectable(blueprint.c_str(), is_selected))
 								{
 									currentBlueprint = gBlueprints[n];
-									NeoPlayer.Summon(gBlueprints[n].c_str());
+									Util::CopyToClipboard(blueprint);
 								}
 								if (is_selected)
 								{
@@ -396,7 +400,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						NewLine();
 
-						Text(XOR("DICLAIMER: Stuff here may cause crashes."));
+						Text(XOR("DICLAIMER: Changing Skeletal Mesh may cause crashes."));
+
+						NewLine();
+
+						if (Button("Bots Grenade"))
+						{
+							Util::CopyToClipboard("WID_Athena_FrenchYedoc_JWFriendly");
+						}
 
 						EndTabItem();
 					}
@@ -427,21 +438,35 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 				if (BeginTabItem("Help"))
 				{
-					if (CollapsingHeader("CheatScript"))
-					{
-						SetCursorPosX(GetCursorPosX() + 50);
-						SetCursorPosY(GetCursorPosY() + 5);
+					SetCursorPosX(GetCursorPosX() + 50);
+					SetCursorPosY(GetCursorPosY() + 5);
 
-						Text(XOR("Cheatscript help placeholder"));
-					}
+					Text(R"(
+Commands
+---------------------------
+cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, Flatter).
+cheatscript debugcamera - Toggles a custom version of the debug camera.
+cheatscript skydive | skydiving - Puts you in a skydive with deploy at 1500m above the ground.
+cheatscript equip <WID | AGID> - Equips a weapon / pickaxe. (You can get them from the modifers tap)
+cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
+cheatscript setplaylist <Playlist> - Overrides the current playlist.
+cheatscript respawn - Respawns the player (duh)
+cheatscript sethealth <NewHealthFloat> - Changes your health value.
+cheatscript setshield <NewShieldFloat> - Changes your shield value.
+cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
+cheatscript dump - Dumps a list of all GObjects. (output at win64 folder)
+cheatscript dumpbps - Dumps a list all blueprints. (output at win64 folder)
+fly - Toggles flying.
+enablecheats - Enables cheatmanager.
+summon <BlueprintClass> - Summons a blueprint class. (You can get them from the helpers tap)
+---------------------------
+` (backquote key) - Open console
+<> - Argument (e.g: <NewHealthFloat> is replaced with 1.0)
+| - Or
+)");
 
-					if (CollapsingHeader("GUI"))
-					{
-						SetCursorPosX(GetCursorPosX() + 50);
-						SetCursorPosY(GetCursorPosY() + 5);
-
-						Text(XOR("gui help placeholder"));
-					}
 
 					EndTabItem();
 				}

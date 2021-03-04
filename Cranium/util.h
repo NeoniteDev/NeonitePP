@@ -48,11 +48,13 @@ public:
 
 		uintptr_t pAddr = 0;
 
-		do {
+		do
+		{
 			pAddr = FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
 
 			Sleep(50);
-		} while (!pAddr);
+		}
+		while (!pAddr);
 
 		return pAddr;
 	}
@@ -67,6 +69,23 @@ public:
 			return token;
 		}
 		return token;
+	}
+
+	static __forceinline void CopyToClipboard(const std::string& s)
+	{
+		OpenClipboard(nullptr);
+		EmptyClipboard();
+		const auto hg = GlobalAlloc(GMEM_MOVEABLE, s.size() + 1);
+		if (!hg)
+		{
+			CloseClipboard();
+			return;
+		}
+		memcpy(GlobalLock(hg), s.c_str(), s.size() + 1);
+		GlobalUnlock(hg);
+		SetClipboardData(CF_TEXT, hg);
+		CloseClipboard();
+		GlobalFree(hg);
 	}
 
 	static __forceinline bool IsBadReadPtr(void* p)

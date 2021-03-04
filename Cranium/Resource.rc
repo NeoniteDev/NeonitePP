@@ -67,11 +67,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "WorkingRobot"
+            VALUE "CompanyName", "Neonite"
             VALUE "FileDescription", "Cranium"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "Cranium.dll"
-            VALUE "LegalCopyright", "Cranium (c) by Aleks Margarian (WorkingRobot)"
+            VALUE "LegalCopyright", "Cranium (c) by kemo#1337 (@xkem0x)"
             VALUE "OriginalFilename", "Cranium.dll"
             VALUE "ProductName", "Cranium"
             VALUE "ProductVersion", "1.0.0.0"

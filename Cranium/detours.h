@@ -10,6 +10,7 @@ using namespace NeoRoyale;
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
 
+
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
 	auto nObj = GetObjectFirstName(pObj);
@@ -24,9 +25,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		//TODO: clean this mess;
 		std::string url = gUrl;
 		gUrl.clear();
-		std::string query = url.erase(0, url.find("%3A") + 1);
+		std::string query = url.erase(0, url.find(XOR("%3A")) + 1);
 		query.erase(url.find("&"), url.size());
-		query.erase(0, url.find("playlist"));
+		query.erase(0, url.find(XOR("playlist")));
 		std::string PlaylistName = query + "." + query;
 		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
@@ -47,6 +48,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
 
+#ifndef PROD
 		if (HWID::Validate())
 		{
 			Start(Map);
@@ -55,6 +57,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		{
 			MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
 		}
+#else
+		Start(Map);
+#endif
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
@@ -91,6 +96,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
 		NeoPlayer.Respawn();
+		auto currentLocation = NeoPlayer.GetLocation();
+		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
 	}
 
 	if (bIsInit)
@@ -109,12 +116,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		else if (bWantsToSkydive)
 		{
-			if (!bHasJumpedFromBus)
-			{
-				auto currentLocation = NeoPlayer.GetLocation();
-				UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
-				bHasJumpedFromBus = !bHasJumpedFromBus;
-			}
 			NeoPlayer.Skydive();
 			bWantsToSkydive = false;
 		}
@@ -125,7 +126,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			bWantsToShowPickaxe = false;
 		}
 	}
-
 
 	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
@@ -248,7 +248,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				DumpBPs();
 				break;
 			}
-
+#ifndef PROD
 			case ACTIVATE:
 			{
 				if (!arg.empty())
@@ -264,7 +264,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				break;
 			}
-
+#endif
 			case EVENT:
 			{
 				if (gVersion == XOR("14.60"))
@@ -440,6 +440,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 #ifdef LOGGING
+#ifndef PROD
 	//Logging
 	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 		!wcsstr(nFunc.c_str(), L"Tick") &&
@@ -463,9 +464,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
 #endif
+#endif
 
 out:
-
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 
@@ -479,7 +480,7 @@ namespace CameraHook
 
 inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass)
 {
-	auto CurrentViewPoint = GetViewPoint(pPlayer, pViewInfo, stereoPass);
+	const auto CurrentViewPoint = GetViewPoint(pPlayer, pViewInfo, stereoPass);
 
 	if (bIsDebugCamera)
 	{

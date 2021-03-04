@@ -585,6 +585,32 @@ struct FMinimalViewInfo
 	TEnumAsByte<ECameraProjectionMode> ProjectionMode;
 };
 
+struct FLinearColor
+{
+	float R;
+	float G;
+	float B;
+	float A;
+
+	FLinearColor()
+		: R(0), G(0), B(0), A(0)
+	{
+	}
+
+	FLinearColor(float r, float g, float b, float a)
+		: R(r),
+		  G(g),
+		  B(b),
+		  A(a)
+	{
+	}
+};
+
+struct FSlateBrush
+{
+	char dataidfc[0x0088];
+};
+
 struct ULevelStreamingDynamic_LoadLevelInstance_Params
 {
 	UObject* WorldContextObject;

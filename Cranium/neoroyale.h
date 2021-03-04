@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "mods.h"
+#include "server.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
@@ -14,9 +15,8 @@ namespace NeoRoyale
 	inline bool bIsPlayerInit;
 
 	inline bool bHasJumped;
-	inline bool bHasJumpedFromBus;
 	inline bool bHasShowedPickaxe;
-
+	
 	inline bool bWantsToJump;
 	inline bool bWantsToSkydive;
 	inline bool bWantsToOpenGlider;
@@ -58,7 +58,7 @@ namespace NeoRoyale
 				auto objectFullName = GetObjectFullName(object);
 				auto objectFirstName = GetObjectFirstName(object);
 
-				if (objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_") && !objectFirstName.starts_with(L"Default__"))
+				if ((objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_")) && !objectFirstName.starts_with(L"Default__"))
 				{
 					gWeapons.push_back(objectFirstName);
 				}
@@ -128,6 +128,7 @@ namespace NeoRoyale
 				Stop();
 				break;
 			}
+			
 			Sleep(1000 / 30);
 		}
 	}
@@ -165,7 +166,7 @@ namespace NeoRoyale
 			{
 				UFunctions::TeleportToSpawn();
 			}
-
+			
 			if (gVersion != "12.41" || gVersion != "14.60" || gVersion != "12.61")
 			{
 				UFunctions::SetPlaylist();
@@ -185,11 +186,6 @@ namespace NeoRoyale
 			{
 				UFunctions::LoadAndStreamInLevel(DEVICE_EVENT_MAP);
 			}
-			else
-			{
-				//UFunctions::LoadAndStreamInLevel(XOR(L"Apollo_Pickle_001"));
-				UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
-			}
 
 			UFunctions::StartMatch();
 			
@@ -198,6 +194,10 @@ namespace NeoRoyale
 			InitCombos();
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
+
+			UFunctions::ConsoleLog(XOR(L"\n\nWelcome to Neonite++\nMade with ♥ By Kemo (@xkem0x on twitter)."));
+
+			//ConnectServer();
 
 			bIsInit = !bIsInit;
 		}
