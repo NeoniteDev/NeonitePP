@@ -92,7 +92,32 @@ R"(
                         "spotlight": false,
                         "websiteURL": "https://discord.gg/DJ6VUmD",
                         "websiteButtonTex" : "Join our discord"
-                    }
+                    },
+{
+          "entryType": "ItemWithVideo",
+          "image": "https://cdn.fortnite-api.com/streams/fortnite-api/Banner_1080.png",
+          "tileImage": "https://cdn.fortnite-api.com/streams/fortnite-api/Banner_1024.png",
+          "hidden": false,
+          "videoMute": false,
+          "tabTitleOverride": "Fortnite-API",
+          "_type": "CommonUI Simple Message MOTD",
+          "title": "Fortnite-API.com",
+          "body": "Welcome to the Fortnite-API headquarters in Jamaica.",
+          "videoLoop": false,
+          "offerAction": "ShowOfferDetails",
+          "videoStreamingEnabled": true,
+          "sortingPriority": 90,
+          "videoUID": "fortnite-api",
+          "buttonTextOverride": "Visit our website",
+          "videoVideoString": "fortnite_api_motd",
+          "offerId": "",
+          "id": "Fortnite-API MOTD",
+          "videoAutoplay": true,
+          "videoFullscreen": true,
+          "spotlight": false,
+          "websiteButtonTex": "Visit our website",
+          "websiteURL": "https://fortnite-api.com/"
+        }
                 ]
                 },
                 "jcr:isCheckedOut": true,

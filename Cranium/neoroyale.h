@@ -16,7 +16,7 @@ namespace NeoRoyale
 
 	inline bool bHasJumped;
 	inline bool bHasShowedPickaxe;
-	
+
 	inline bool bWantsToJump;
 	inline bool bWantsToSkydive;
 	inline bool bWantsToOpenGlider;
@@ -129,7 +129,7 @@ namespace NeoRoyale
 				Stop();
 				break;
 			}
-			
+
 			Sleep(1000 / 30);
 		}
 	}
@@ -167,7 +167,7 @@ namespace NeoRoyale
 			{
 				UFunctions::TeleportToSpawn();
 			}
-			
+
 			if (gVersion != "12.41" || gVersion != "14.60" || gVersion != "12.61")
 			{
 				UFunctions::SetPlaylist();
@@ -189,7 +189,7 @@ namespace NeoRoyale
 			}
 
 			UFunctions::StartMatch();
-			
+
 			UFunctions::ServerReadyToStartMatch();
 
 			InitCombos();
@@ -198,7 +198,6 @@ namespace NeoRoyale
 
 			UFunctions::ConsoleLog(XOR(L"\n\nWelcome to Neonite++\nMade with ♥ By Kemo (@xkem0x on twitter)."));
 
-			
 
 			//ConnectServer();
 

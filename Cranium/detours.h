@@ -77,7 +77,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
-		UFunctions::SetupCustomInventory();
+		if (gVersion != XOR("12.41"))
+		{
+			UFunctions::SetupCustomInventory();
+		}
+
 		UFunctions::PlayCustomPlayPhaseAlert();
 	}
 
