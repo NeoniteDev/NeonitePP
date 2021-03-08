@@ -110,8 +110,8 @@ namespace HWID
 			if (nError != ERROR_FILE_NOT_FOUND)
 			{
 				data = buffer;
-				return data;
 			}
+			return data;
 		}
 	}
 

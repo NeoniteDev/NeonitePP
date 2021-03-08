@@ -142,7 +142,7 @@ void ImGui::ShowLoader(bool* p_open)
 			SameLine(GetWindowWidth() - 465);
 
 			//EndTabItem();
-			
+
 			//InputTextWithHint(" ", "Exchange Code (Enables ProdMode)", exchangeCode, sizeof(exchangeCode));
 
 			SameLine(GetWindowWidth() - 100);
@@ -171,7 +171,12 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
 
-		Text(XOR("Taj (@AthenaBigBoi): Internal, General."));
+		Text(XOR("Darkblade (@DarkbladeEU): Internals, General."));
+
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text(XOR("Taj (@AthenaBigBoi): Internals, General."));
 
 		SetCursorPosX(GetCursorPosX() + 50);
 		SetCursorPosY(GetCursorPosY() + 5);
@@ -182,7 +187,12 @@ void ImGui::ShowLoader(bool* p_open)
 		SetCursorPosY(GetCursorPosY() + 5);
 
 		Text(XOR("Irma (@omairma): Frontend, Internals."));
-		
+
+		SetCursorPosX(GetCursorPosX() + 50);
+		SetCursorPosY(GetCursorPosY() + 5);
+
+		Text(XOR("Project Polaris and Rift: Inspiration."));
+
 		EndTabItem();
 	}
 
@@ -191,11 +201,54 @@ void ImGui::ShowLoader(bool* p_open)
 
 	if (*p_open == false)
 	{
-		TerminateProcess(hClient, 0);
-		TerminateProcess(hEAC, 0);
-		TerminateProcess(hFortniteLauncher, 0);
-		TerminateThread(hLauncher, 0);
-		TerminateThread(hServer, 0);
+		bool EACisTermed;
+		bool LauncherisTermed;
+		DWORD FortniteLauncherPID;
+		DWORD eacPID;
+
+		while (true)
+		{
+			//making sure all processes are terminated
+			eacPID = util::GetProcId("FortniteClient-Win64-Shipping_EAC.exe");
+
+			if (eacPID != 0)
+			{
+				HANDLE EAC = OpenProcess(PROCESS_TERMINATE, false, eacPID);
+
+				TerminateProcess(EAC, 0);
+				eacPID = 0;
+			}
+			else
+			{
+				EACisTermed = true;
+			}
+
+			FortniteLauncherPID = util::GetProcId("FortniteLauncher.exe");
+
+			if (FortniteLauncherPID != GetCurrentProcessId())
+			{
+				HANDLE Launcher = OpenProcess(PROCESS_TERMINATE, false, FortniteLauncherPID);
+
+				TerminateProcess(Launcher, 0);
+				FortniteLauncherPID = 0;
+			}
+			else
+			{
+				LauncherisTermed = true;
+			}
+
+			if (EACisTermed && LauncherisTermed)
+			{
+				TerminateProcess(hFortniteLauncher, 0);
+				TerminateProcess(hEAC, 0);
+				TerminateProcess(hClient, 0);
+				TerminateThread(hLauncher, 0);
+				TerminateThread(hServer, 0);
+				break;
+			}
+		}
+
+
 		exit(1);
 	}
 
@@ -261,5 +314,4 @@ void ImGui::ShowLoader(bool* p_open)
 	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
 		1.00f, 0.98f, 0.95f, 0.73f);
-	
 }

@@ -131,6 +131,10 @@ struct FName
 	void ToString(FString& Out);
 };
 
+struct FText
+{
+	char UnknownData[0x18];
+};
 
 struct UClass;
 
@@ -606,9 +610,28 @@ struct FLinearColor
 	}
 };
 
-struct FSlateBrush
+struct SetBrushFromTextureParams
 {
-	char dataidfc[0x0088];
+	UObject* Texture;
+	bool bMatchSize;
+};
+
+struct SetInventoryPanelOverride_Params
+{
+	UObject* InInventoryPanelOverride;
+};
+
+struct FQosRegionInfo
+{
+	FText DisplayName;
+	FString RegionId;
+};
+
+struct UKismetRenderingLibrary_ImportFileAsTexture2D_Params
+{
+	UObject* WorldContextObject;
+	FString Filename;
+	UObject* ReturnValue;
 };
 
 struct ULevelStreamingDynamic_LoadLevelInstance_Params
@@ -690,6 +713,7 @@ struct UAnimInstance_Montage_Stop_Params
 	UObject* Montage;
 };
 
+
 struct UFortMontageItemDefinitionBase_GetAnimationHardReference_Params
 {
 	TEnumAsByte<EFortCustomBodyType> BodyType;
@@ -706,6 +730,11 @@ struct UAnimInstance_Montage_Play_Params
 	float InTimeToStartMontageAt;
 	bool bStopAllMontages;
 	float ReturnValue;
+};
+
+struct PlayIntroAnim_Params
+{
+	EAthenaGamePhaseStep Step;
 };
 
 struct FFortAthenaLoadout

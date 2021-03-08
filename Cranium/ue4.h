@@ -20,6 +20,8 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
+inline UObject* KismetRenderingLibrary;
+
 inline uintptr_t gProcessEventAdd;
 
 //Frees the memory for the name

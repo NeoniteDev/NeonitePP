@@ -5,11 +5,9 @@ namespace DefaultRuntimeOptions
 #ifdef PROD
 	inline std::string ini =
 		R"([/Script/FortniteGame.FortRuntimeOptions]
-bAllowInGameStore=false
 bMOTDSameNewsForCreative=true
 bForceBRMode=true
 bEnableSavedLoadouts=false
-bInviteUIDisabled=false
 bIsOutOfSeasonMode=true
 !DisabledTabsForOutOfSeason=ClearArray
 +DisabledTabsForOutOfSeason=(TabName="Lobby",TabState=EFortRuntimeOptionTabState::Hidden)
@@ -24,7 +22,6 @@ bIsOutOfSeasonMode=true
 #else
 	inline std::string ini =
 		R"([/Script/FortniteGame.FortRuntimeOptions]
-bAllowInGameStore=false
 bMOTDSameNewsForCreative=true
 bForceBRMode=true
 bEnableSavedLoadouts=false

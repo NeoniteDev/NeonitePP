@@ -71,6 +71,14 @@ public:
 		return token;
 	}
 
+	static __forceinline std::wstring GetRuntimePath()
+	{
+		wchar_t result[MAX_PATH];
+		std::wstring path(result, GetModuleFileNameW(nullptr, result, MAX_PATH));
+		size_t pos = path.find_last_of(L"\\/");
+		return (std::wstring::npos == pos) ? L"" : path.substr(0, pos);
+	}
+
 	static __forceinline void CopyToClipboard(const std::string& s)
 	{
 		OpenClipboard(nullptr);

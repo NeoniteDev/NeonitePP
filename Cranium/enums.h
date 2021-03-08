@@ -245,6 +245,23 @@ enum EInternalObjectFlags
 	AllFlags = ReachableInCluster | ClusterRoot | Native | Async | AsyncLoading | Unreachable | PendingKill | RootSet,
 };
 
+enum class EAthenaGamePhaseStep
+{
+	None,
+	Setup,
+	Warmup,
+	GetReady,
+	BusLocked,
+	BusFlying,
+	StormForming,
+	StormHolding,
+	StormShrinking,
+	Countdown,
+	FinalCountdown,
+	EndGame,
+	Count,
+	EAthenaGamePhaseStep_MAX,
+};
 
 enum class ECameraProjectionMode : uint8_t
 {

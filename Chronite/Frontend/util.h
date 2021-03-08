@@ -25,7 +25,6 @@ inline char exchangeCode[33];
 inline std::vector<std::string> IDs;
 
 
-
 namespace util
 {
 	inline std::string GetEXEPath()
@@ -33,9 +32,7 @@ namespace util
 		char result[MAX_PATH];
 		std::string path(result, GetModuleFileName(nullptr, result, MAX_PATH));
 		size_t pos = path.find_last_of("\\/");
-		return (std::string::npos == pos)
-			       ? ""
-			       : path.substr(0, pos);
+		return (std::string::npos == pos) ? "" : path.substr(0, pos);
 	}
 
 	inline DWORD GetProcId(const char* procName)

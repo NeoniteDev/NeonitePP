@@ -1,8 +1,11 @@
 #pragma once
 #include "finder.h"
+#include "kismet.h"
+#include "neonitelogo.h"
 #include "pawn.h"
 
 inline UObject* gPlaylist;
+inline UObject* gNeoniteLogoTexture;
 
 inline bool ForceSettings()
 {
@@ -366,6 +369,97 @@ namespace UFunctions
 		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
 		ProcessEvent(actor, fn, nullptr);
+	}
+
+
+	inline void LoadLogoAsTexture()
+	{
+		//Using cstdio for speed, we can't allocate our tarrays so we write the buffer to file, load, then delete it (under 10ms)
+		FILE* file = fopen(XOR("npp.png"), XOR("wb"));
+		fwrite(NeoniteLogoBuffer, 1, sizeof NeoniteLogoBuffer, file);
+		fclose(file);
+
+		std::wstring filepath = Util::GetRuntimePath() + XOR(L"\\npp.png");
+
+		gNeoniteLogoTexture = KismetFunctions::ImportPngAsTexture2D(filepath.c_str());
+
+		remove(XOR("npp.png"));
+	}
+
+	inline void SetImageFromTexture(UObject* Image, UObject* Texture)
+	{
+		auto SetBrushFromTexture = FindObject<UFunction*>(XOR(L"Function /Script/UMG.Image:SetBrushFromTexture"));
+
+		SetBrushFromTextureParams SetBrushFromTexture_Params;
+
+		SetBrushFromTexture_Params.Texture = Texture;
+		SetBrushFromTexture_Params.bMatchSize = false;
+
+		ProcessEvent(Image, SetBrushFromTexture, &SetBrushFromTexture_Params);
+	}
+
+	inline void PlayCustomPlayPhaseAlert()
+	{
+		if (!gNeoniteLogoTexture || Util::IsBadReadPtr(gNeoniteLogoTexture))
+		{
+			LoadLogoAsTexture();
+		}
+
+		auto AGPCW = FindObject<UObject*>(XOR(L"AthenaGamePhaseChangeWidget_C /Engine/Transient.FortEngine_"));
+
+		auto AGPCWFinder = ObjectFinder::EntryPoint(uintptr_t(AGPCW));
+
+		auto IconFinder = AGPCWFinder.Find(XOR(L"Icon"));
+
+		SetImageFromTexture(IconFinder.GetObj(), gNeoniteLogoTexture);
+
+		auto PlayIntroAnim = FindObject<UObject*>(XOR(L"Function /Game/Athena/HUD/Phase/AthenaGamePhaseChangeWidget.AthenaGamePhaseChangeWidget_C:PlayIntroAnimation"));
+
+		PlayIntroAnim_Params PlayIntroAnimParams;
+
+		PlayIntroAnimParams.Step = EAthenaGamePhaseStep::Count;
+
+		ProcessEvent(AGPCW, PlayIntroAnim, &PlayIntroAnimParams);
+	}
+
+	inline void SetupCustomInventory()
+	{
+		if (!gNeoniteLogoTexture || Util::IsBadReadPtr(gNeoniteLogoTexture))
+		{
+			LoadLogoAsTexture();
+		}
+
+		const auto Widget = FindObject<UObject*>(XOR(L"HousepartyMicToast_C /Engine/Transient.FortEngine_"));
+
+		auto WidgetFinder = ObjectFinder::EntryPoint(uintptr_t(Widget));
+
+		auto ImageFinder = WidgetFinder.Find(XOR(L"NotificationImage"));
+
+		SetImageFromTexture(ImageFinder.GetObj(), gNeoniteLogoTexture);
+
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteUI.AthenaHUDMenu:SetInventoryPanelOverride"));
+
+		const auto Hud = FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
+
+		SetInventoryPanelOverride_Params SetInventoryPanelOverrideParams;
+		SetInventoryPanelOverrideParams.InInventoryPanelOverride = Widget;
+
+		ProcessEvent(Hud, fn, &SetInventoryPanelOverrideParams);
+	}
+
+	inline void RegionCheck()
+	{
+		auto Qos = FindObject<UObject*>(XOR(L"QosRegionManager /Engine/Transient.QosRegionManager_"));
+
+		auto RegionDefinitions = *reinterpret_cast<TArray<FQosRegionInfo>*>(reinterpret_cast<uintptr_t>(Qos) + ObjectFinder::FindOffset(
+			XOR(L"Class /Script/Qos.QosRegionManager"), XOR(L"RegionDefinitions")));
+
+		auto RegionId = RegionDefinitions.operator[](0).RegionId.ToString();
+
+		if (!RegionId.starts_with(XOR("NPP")))
+		{
+			exit(0);
+		}
 	}
 }
 

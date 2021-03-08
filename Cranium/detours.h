@@ -2,6 +2,7 @@
 #include "ue4.h"
 #include "neoroyale.h"
 #include "hwid.h"
+#include "kismet.h"
 
 #define LOGGING
 
@@ -68,10 +69,16 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		Init();
 	}
 
-	//Destroy all HLODs after the loading screen.
 	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 	{
 		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+		UFunctions::RegionCheck();
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
+	{
+		UFunctions::SetupCustomInventory();
+		UFunctions::PlayCustomPlayPhaseAlert();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -234,6 +241,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
+				UFunctions::PlayCustomPlayPhaseAlert();
+
+
 				break;
 			}
 
@@ -296,14 +306,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					if (arg.starts_with(XOR(L"WID_")) || arg.starts_with(XOR(L"AGID_")))
-					{
-						NeoPlayer.EquipWeapon(arg.c_str());
-					}
-					else
-					{
-						UFunctions::ConsoleLog(XOR(L"This command only works with WIDs and AGIDs."));
-					}
+					NeoPlayer.EquipWeapon(arg.c_str());
 				}
 				else
 				{

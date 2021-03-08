@@ -41,6 +41,7 @@ namespace NeoRoyale
 		NeoPlayer.AnimInstance = nullptr;
 		Bots.clear();
 		gPlaylist = nullptr;
+		gNeoniteLogoTexture = nullptr;
 	}
 
 	inline void InitCombos()
@@ -196,6 +197,8 @@ namespace NeoRoyale
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
 
 			UFunctions::ConsoleLog(XOR(L"\n\nWelcome to Neonite++\nMade with ♥ By Kemo (@xkem0x on twitter)."));
+
+			
 
 			//ConnectServer();
 

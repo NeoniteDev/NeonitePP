@@ -178,6 +178,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						}
 						SliderInt(XOR("Time Of Day"), &timeOfDay, 1.000f, 24.000f, "%.01f");
 
+						NewLine();
+
 						if (Button(XOR("Teleport to Spawn Island")))
 						{
 							UFunctions::TeleportToSpawn();
@@ -193,7 +195,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						static float Y = 1.0f;
 						static float Z = 1.0f;
 
-						NewLine();
 
 						BeginChild(XOR("BugItGo"));
 						PushItemWidth(60);
@@ -215,6 +216,21 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							UFunctions::TeleportToCoords(X, Y, Z);
 						}
+
+						NewLine();
+
+						if (Button("Fill level with water"))
+						{
+							NeoPlayer.Summon(XOR(L"Apollo_Waterbody_Ocean_Parent_C"));
+						}
+
+						SameLine();
+
+						if (Button("Remove water"))
+						{
+							NeoPlayer.ExecuteConsoleCommand(XOR(L"destroyall Apollo_Waterbody_Ocean_Parent_C"));
+						}
+
 						EndChild();
 
 						EndTabItem();
@@ -438,10 +454,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 				if (BeginTabItem("Help"))
 				{
-					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);
 
-					Text(R"(
+					Text(
+						R"(
 Commands
 ---------------------------
 cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, Flatter).
@@ -462,9 +478,10 @@ fly - Toggles flying.
 enablecheats - Enables cheatmanager.
 summon <BlueprintClass> - Summons a blueprint class. (You can get them from the helpers tap)
 ---------------------------
-` (backquote key) - Open console
-<> - Argument (e.g: <NewHealthFloat> is replaced with 1.0)
-| - Or
+F3 - Back to lobby.
+` (backquote key) - Open UE4 console.
+<> - Argument (e.g: <NewHealthFloat> is replaced with 1.0).
+| - Or.
 )");
 
 

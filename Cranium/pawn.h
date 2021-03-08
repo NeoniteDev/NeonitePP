@@ -316,27 +316,30 @@ public:
 		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
 			std::wstring objectName = GetObjectFullName(WeaponData);
-
-			if (objectName.starts_with(L"AthenaGadget"))
+			
+			if (objectName.starts_with(L"FortWeapon"))
 			{
-				auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
-
-				UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
-
-				ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
-
-				if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
+				if (objectName.starts_with(L"AthenaGadget"))
 				{
-					WeaponData = prm_ReturnValue.ReturnValue;
+					auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+
+					UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
+
+					ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
+
+					if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
+					{
+						WeaponData = prm_ReturnValue.ReturnValue;
+					}
 				}
+
+				//weapon found equip it
+				AFortPawn_EquipWeaponDefinition_Params params;
+				params.WeaponData = WeaponData;
+				params.ItemEntryGuid = GUID;
+
+				ProcessEvent(this->Pawn, fn, &params);
 			}
-
-			//weapon found equip it
-			AFortPawn_EquipWeaponDefinition_Params params;
-			params.WeaponData = WeaponData;
-			params.ItemEntryGuid = GUID;
-
-			ProcessEvent(this->Pawn, fn, &params);
 		}
 		else
 		{

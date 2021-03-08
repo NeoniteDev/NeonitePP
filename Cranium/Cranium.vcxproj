@@ -126,7 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Prod|x64'">
-        <ClCompile>
+    <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level1</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -198,8 +198,10 @@
     <ClInclude Include="gui\kiero.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hwid.h" />
+    <ClInclude Include="kismet.h" />
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="mods.h" />
+    <ClInclude Include="neonitelogo.h" />
     <ClInclude Include="neoroyale.h" />
     <ClInclude Include="pawn.h" />
     <ClInclude Include="pch.h" />

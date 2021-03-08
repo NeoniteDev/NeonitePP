@@ -187,6 +187,10 @@
     <ClInclude Include="server.h">
       <Filter>Server</Filter>
     </ClInclude>
+    <ClInclude Include="kismet.h" />
+    <ClInclude Include="neonitelogo.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

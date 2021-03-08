@@ -264,7 +264,7 @@ void Init(LPDIRECT3DDEVICE9 pDevice, HWND hWnd)
 		ImGui_ImplDX9_Init(pDevice);
 
 		ImGui::StyleColorsDark();
-		console.AddLog(XOR("                        [>] Welcome to Neonite! \n"));
+		console.AddLog(XOR("                        [>] Welcome to Neonite++! \n"));
 	}
 }
 
