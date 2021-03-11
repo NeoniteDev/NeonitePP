@@ -122,7 +122,7 @@ public:
 
 	static auto FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
 	{
-		auto Class = FindObject<UClass*>(classToFind.c_str());
+		auto Class = FindObject<UClass*>(classToFind.c_str(), true);
 
 		if (Class)
 		{

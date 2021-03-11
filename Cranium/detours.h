@@ -4,7 +4,9 @@
 #include "hwid.h"
 #include "kismet.h"
 
-#define LOGGING
+#ifndef PROD
+//#define LOGGING
+#endif
 
 using namespace NeoRoyale;
 
@@ -245,8 +247,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
-				UFunctions::PlayCustomPlayPhaseAlert();
-
 
 				break;
 			}
@@ -447,7 +447,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 #ifdef LOGGING
-#ifndef PROD
 	//Logging
 	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 		!wcsstr(nFunc.c_str(), L"Tick") &&
@@ -470,7 +469,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
-#endif
 #endif
 
 out:

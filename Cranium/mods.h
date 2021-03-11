@@ -386,6 +386,20 @@ namespace UFunctions
 		remove(XOR("npp.png"));
 	}
 
+	inline void SetBodyCustomTextureFromPng(const wchar_t* PngFileFullPath)
+	{
+		const auto SetTextureParameterValue = FindObject<UFunction*>(XOR(L"Function /Script/Engine.MaterialInstanceDynamic:SetTextureParameterValue"));
+
+		UMaterialInstanceDynamic_SetTextureParameterValue_Params params;
+		params.ParameterName = KismetFunctions::GetFName(XOR(L"Diffuse"));
+		params.Value = KismetFunctions::ImportPngAsTexture2D(PngFileFullPath);;
+
+		auto MaterialInstanceDynamic = FindObject<UObject*>(
+			XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"), false, false, 2);
+
+		ProcessEvent(MaterialInstanceDynamic, SetTextureParameterValue, &params);
+	}
+
 	inline void SetImageFromTexture(UObject* Image, UObject* Texture)
 	{
 		auto SetBrushFromTexture = FindObject<UFunction*>(XOR(L"Function /Script/UMG.Image:SetBrushFromTexture"));

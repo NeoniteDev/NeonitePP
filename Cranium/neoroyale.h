@@ -144,6 +144,8 @@ namespace NeoRoyale
 
 		NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
+		NeoPlayer.Authorize();
+
 		if (NeoPlayer.Pawn)
 		{
 			NeoPlayer.Possess();
@@ -197,7 +199,6 @@ namespace NeoRoyale
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
 
 			UFunctions::ConsoleLog(XOR(L"\n\nWelcome to Neonite++\nMade with ♥ By Kemo (@xkem0x on twitter)."));
-
 
 			//ConnectServer();
 

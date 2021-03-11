@@ -100,6 +100,11 @@ namespace Hooks
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
+		
+		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
+		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
+
+		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
 
 		//Used for mostly everything.
 		//Tested from 12.41 to latest

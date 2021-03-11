@@ -24,4 +24,21 @@ namespace KismetFunctions
 
 		return params.ReturnValue;
 	}
+
+	inline auto GetFName(const wchar_t* String)
+	{
+		if (!KismetStringLibrary || Util::IsBadReadPtr(KismetStringLibrary))
+		{
+			KismetStringLibrary = FindObject<UObject*>(XOR(L"KismetStringLibrary /Script/Engine.Default__KismetStringLibrary"));
+		}
+
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetStringLibrary:Conv_StringToName"));
+
+		UKismetStringLibrary_Conv_StringToName_Params params;
+		params.inString = String;
+
+		ProcessEvent(KismetStringLibrary, fn, &params);
+
+		return params.ReturnValue;
+	}
 }

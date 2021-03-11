@@ -42,6 +42,19 @@ public:
 		this->AnimInstance = GetAnimInstance_Params.ReturnValue;
 	}
 
+	void Authorize()
+	{
+		const auto LocalRole = reinterpret_cast<TEnumAsByte<ENetRole>*>(reinterpret_cast<uintptr_t>(this->Pawn) + ObjectFinder::FindOffset(
+			XOR(L"Class /Script/Engine.Actor"), XOR(L"Role")));
+
+		*LocalRole = ENetRole::ROLE_Authority;
+
+		const auto RemoteRole = reinterpret_cast<TEnumAsByte<ENetRole>*>(reinterpret_cast<uintptr_t>(this->Pawn) + ObjectFinder::FindOffset(
+			XOR(L"Class /Script/Engine.Actor"), XOR(L"RemoteRole")));
+
+		*RemoteRole = ENetRole::ROLE_Authority;
+	}
+
 	void Respawn()
 	{
 		if (this->Pawn)

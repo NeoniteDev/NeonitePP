@@ -136,6 +136,12 @@ struct FText
 	char UnknownData[0x18];
 };
 
+struct UKismetStringLibrary_Conv_StringToName_Params
+{
+	FString inString;
+	FName ReturnValue;
+};
+
 struct UClass;
 
 struct UObject
@@ -334,6 +340,12 @@ struct USkinnedMeshComponent_SetSkeletalMesh_Params
 {
 	UObject* NewMesh;
 	bool bReinitPose;
+};
+
+struct UMaterialInstanceDynamic_SetTextureParameterValue_Params
+{
+	FName ParameterName;
+	UObject* Value;
 };
 
 struct UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params

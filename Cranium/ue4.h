@@ -20,7 +20,20 @@ inline UObject* (*StaticConstructObject)(
 	bool bAssumeTemplateIsArchetype
 );
 
+inline UObject* (*StaticLoadObject)(
+	UClass* ObjectClass,
+	UObject* InOuter,
+	const TCHAR* InName,
+	const TCHAR* Filename,
+	uint32_t LoadFlags,
+	void* Sandbox,
+	bool bAllowObjectReconciliation,
+	void* InstancingContext
+);
+
+
 inline UObject* KismetRenderingLibrary;
+inline UObject* KismetStringLibrary;
 
 inline uintptr_t gProcessEventAdd;
 
@@ -105,7 +118,7 @@ inline std::wstring GetFieldClassName(FField* obj)
 
 //Find any entity inside the UGlobalObjects array aka. GObjects.
 template <typename T>
-static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false)
+static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
 {
 	for (auto i = 0x0; i < GObjs->NumElements; ++i)
 	{
@@ -127,7 +140,14 @@ static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower =
 		{
 			if (objectFullName.starts_with(name))
 			{
-				return reinterpret_cast<T>(object);
+				if (toSkip > 0)
+				{
+					toSkip--;
+				}
+				else
+				{
+					return reinterpret_cast<T>(object);
+				}
 			}
 		}
 		else

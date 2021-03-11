@@ -1,4 +1,5 @@
 #include "../framework.h"
+#include "../mods.h"
 #include "ImGui/imgui.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -49,6 +50,8 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 bool initgui = false;
 
+FileBrowser fileDialog;
+
 HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
 	if (!initgui)
@@ -64,6 +67,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 			pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &mainRenderTargetView);
 			pBackBuffer->Release();
 			oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
+			fileDialog.SetTypeFilters({".png"});
 			InitImGui();
 			initgui = true;
 		}
@@ -261,6 +265,11 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (Button("Respawn"))
 						{
 							NeoPlayer.Respawn();
+						}
+
+						if (Button("Pick Custom Body Texture"))
+						{
+							fileDialog.Open();
 						}
 
 						NewLine();
@@ -520,6 +529,15 @@ F3 - Back to lobby.
 				}
 			}
 			End();
+
+			fileDialog.Display();
+
+			if (fileDialog.HasSelected())
+			{
+				UFunctions::SetBodyCustomTextureFromPng(fileDialog.GetSelected().wstring().c_str());
+				fileDialog.ClearSelected();
+				fileDialog.Close();
+			}
 		}
 	}
 	ImGui::Render();

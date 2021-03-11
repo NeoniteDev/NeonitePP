@@ -17,7 +17,7 @@
 
 
 const wchar_t* CheatScriptHelp =
-	LR"(
+LR"(
 Custom Cheatscript Commands
 ---------------------------
 cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
@@ -64,7 +64,7 @@ auto str2enum(const std::wstring& str)
 {
 	if (str.starts_with(L"event")) return EVENT;
 	else if (str.starts_with(L"help")) return HELP;
-	else if (str.starts_with(L"activate") )return DEBUG_CAMERA;
+	else if (str.starts_with(L"activate")) return DEBUG_CAMERA;
 	else if (str.starts_with(L"debugcamera")) return DEBUG_CAMERA;
 	else if (str.starts_with(L"skydive")) return SKYDIVE;
 	else if (str.starts_with(L"skydiving")) return SKYDIVE;
@@ -93,7 +93,7 @@ namespace Patterns
 		namespace Oldies
 		{
 			constexpr const char* CurlEasySetOpt = "\x89\x54\x24\x10\x4C\x89\x44\x24\x18\x4C\x89\x4C\x24\x20\x48\x83\xEC\x28\x48\x85\xC9\x75\x08\x8D\x41\x2B\x48\x83\xC4\x28\xC3\x4C";
-            constexpr const char* CurlSetOpt = "\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x10\x48\x89\x74\x24\x18\x57\x48\x83\xEC\x30\x33\xED\x49\x8B\xF0\x48\x8B\xD9";
+			constexpr const char* CurlSetOpt = "\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x10\x48\x89\x74\x24\x18\x57\x48\x83\xEC\x30\x33\xED\x49\x8B\xF0\x48\x8B\xD9";
 		}
 
 		constexpr const char* CurlSetOpt = "\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x10\x48\x89\x74\x24\x18\x48\x89\x7C\x24\x20\x41\x56\x48\x83\xEC\x40\x33\xED\x49\x8B\xF0\x44";
@@ -108,6 +108,8 @@ namespace Patterns
 
 		constexpr const char* SCOI =
 		"\x4C\x89\x44\x24\x18\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\xAC\x24\x00\x00\x00\x00\x48\x81\xEC\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC4";
+
+		constexpr const char* SLOI = "\x4c\x89\x4c\x24\x00\x48\x89\x54\x24\x00\x48\x89\x4c\x24\x00\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8b\xec";
 
 		constexpr const char* ProcessEvent =
 		"\x40\x55\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x81\xEC\x00\x00\x00\x00\x48\x8D\x6C\x24\x00\x48\x89\x9D\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC5\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x0C\x45\x33\xF6\x3B\x05\x00\x00\x00\x00\x4D\x8B\xF8\x48\x8B\xF2\x4C\x8B\xE1\x41\xB8\x00\x00\x00\x00\x7D\x2A";
@@ -169,6 +171,7 @@ namespace Masks
 		constexpr const char* GEngine = "xxx????xxxx????xx";
 		constexpr const char* GObjects = "xxx????xxxx";
 		constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
+		constexpr const char* SLOI = "xxxx?xxxx?xxxx?xxxxxxxxxxxxxxx";
 		constexpr const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
 		constexpr const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
 		constexpr const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
@@ -286,6 +289,15 @@ enum class EAthenaGamePhase : uint8_t
 	EndGame = 5,
 	Count = 6,
 	EAthenaGamePhase_MAX = 7
+};
+
+enum class ENetRole : uint8_t
+{
+	ROLE_None = 0,
+	ROLE_SimulatedProxy = 1,
+	ROLE_AutonomousProxy = 2,
+	ROLE_Authority = 3,
+	ROLE_MAX = 4
 };
 
 enum class EMontagePlayReturnType : uint8_t
