@@ -57,6 +57,7 @@ enum ECommands
 	DUMP,
 	DUMPBPS,
 	TEST,
+	LOADBPC,
 	NONE
 };
 
@@ -80,6 +81,7 @@ auto str2enum(const std::wstring& str)
 	else if (str.starts_with(L"dump")) return DUMP;
 	else if (str.starts_with(L"test")) return TEST;
 	else if (str.starts_with(L"dumpbps")) return DUMPBPS;
+	else if (str.starts_with(L"loadbpc")) return LOADBPC;
 	else return NONE;
 }
 

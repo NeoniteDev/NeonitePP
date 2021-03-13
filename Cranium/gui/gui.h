@@ -50,6 +50,7 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 bool initgui = false;
 
+static bool bIsHead;
 FileBrowser fileDialog;
 
 HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
@@ -152,25 +153,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 				{
 					if (BeginTabItem("World"))
 					{
-						/*if (Button("Start Event"))
-						{
-							if (gVersion == XOR("14.60"))
-							{
-								UFunctions::Play(GALACTUS_EVENT_PLAYER);
-							}
-							else if (gVersion == XOR("12.41"))
-							{
-								UFunctions::Play(JERKY_EVENT_PLAYER);
-							}
-							else if (gVersion == XOR("12.61"))
-							{
-								UFunctions::Play(DEVICE_EVENT_PLAYER);
-							}
-							else
-							{
-								UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
-							}
-						}*/
 
 						static int timeOfDay = 1;
 						static int currentTimeOfDay = 1;
@@ -193,6 +175,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (Button(XOR("Teleport to Main Island")))
 						{
 							UFunctions::TeleportToMain();
+						}
+
+						if (Button(XOR("Pulse Zeropoint")))
+						{
+							const auto zp = FindObject<UObject*>(XOR(L"BP_ZeroPoint_Destabalize_RWs_C /Game/Athena/Apollo/Maps/Apollo_FX.Apollo_FX:PersistentLevel.BP_ZeroPoint_Destabalize_RWs_2"));
+							const auto fn = FindObject<UFunction*>(XOR(L"Function /Game/Athena/Environments/Nexus/Blueprints/BP_ZeroPoint_Destabalize_RWs.BP_ZeroPoint_Destabalize_RWs_C:Pulse"));
+							ProcessEvent(zp, fn, nullptr);
 						}
 
 						static float X = 1.0f;
@@ -271,6 +260,10 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							fileDialog.Open();
 						}
+
+						SameLine();
+
+						Checkbox(XOR("Head"), &bIsHead);
 
 						NewLine();
 
@@ -457,6 +450,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SkinOverride = std::wstring(OverrideName.begin(), OverrideName.end());
 							currentItem = Item;
 						}
+
 						EndTabItem();
 					}
 				}
@@ -534,14 +528,14 @@ F3 - Back to lobby.
 
 			if (fileDialog.HasSelected())
 			{
-				UFunctions::SetBodyCustomTextureFromPng(fileDialog.GetSelected().wstring().c_str());
+				UFunctions::SetBodyCustomTextureFromPng(fileDialog.GetSelected().wstring().c_str(), bIsHead);
 				fileDialog.ClearSelected();
 				fileDialog.Close();
 			}
 		}
 	}
-	ImGui::Render();
 
+	Render();
 
 	pContext->OMSetRenderTargets(1, &mainRenderTargetView, nullptr);
 	ImGui_ImplDX11_RenderDrawData(GetDrawData());

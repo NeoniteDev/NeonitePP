@@ -386,18 +386,34 @@ namespace UFunctions
 		remove(XOR("npp.png"));
 	}
 
-	inline void SetBodyCustomTextureFromPng(const wchar_t* PngFileFullPath)
+	inline void SetBodyCustomTextureFromPng(const wchar_t* PngFileFullPath, bool bIsHead = false)
 	{
 		const auto SetTextureParameterValue = FindObject<UFunction*>(XOR(L"Function /Script/Engine.MaterialInstanceDynamic:SetTextureParameterValue"));
 
 		UMaterialInstanceDynamic_SetTextureParameterValue_Params params;
 		params.ParameterName = KismetFunctions::GetFName(XOR(L"Diffuse"));
-		params.Value = KismetFunctions::ImportPngAsTexture2D(PngFileFullPath);;
+		params.Value = KismetFunctions::ImportPngAsTexture2D(PngFileFullPath);
 
-		auto MaterialInstanceDynamic = FindObject<UObject*>(
-			XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"), false, false, 2);
+		for (auto i = 0; i < 6; i++)
+		{
+			auto MaterialInstanceDynamic = FindObject<UObject*>(
+				XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
+			if (MaterialInstanceDynamic)
+			{
+				auto toFind = XOR(L"CharacterPartSkelMesh_Body");
 
-		ProcessEvent(MaterialInstanceDynamic, SetTextureParameterValue, &params);
+				if (bIsHead)
+				{
+					toFind = XOR(L"CharacterPartSkelMesh_Head");
+				}
+
+				if (GetObjectFullName(MaterialInstanceDynamic).find(toFind) != std::wstring::npos)
+				{
+					ProcessEvent(MaterialInstanceDynamic, SetTextureParameterValue, &params);
+					return;
+				}
+			}
+		}
 	}
 
 	inline void SetImageFromTexture(UObject* Image, UObject* Texture)
@@ -459,6 +475,11 @@ namespace UFunctions
 		SetInventoryPanelOverrideParams.InInventoryPanelOverride = Widget;
 
 		ProcessEvent(Hud, fn, &SetInventoryPanelOverrideParams);
+	}
+
+	inline auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr)
+	{
+		return StaticLoadObject(inClass, inOuter, inName, nullptr, 0, nullptr, false, nullptr);
 	}
 
 	inline void RegionCheck()

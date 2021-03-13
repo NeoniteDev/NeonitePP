@@ -13,7 +13,6 @@ using namespace NeoRoyale;
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
 
-
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
 	auto nObj = GetObjectFirstName(pObj);
@@ -79,12 +78,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
-		if (gVersion != XOR("12.41"))
+		if (gVersion > 14.30f)
 		{
 			UFunctions::SetupCustomInventory();
 		}
 
 		UFunctions::PlayCustomPlayPhaseAlert();
+		LoadMoreClasses();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -218,10 +218,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
+
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
-		//TODO: move this out of here
-
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
 
 		if (ScriptNameF.IsValid())
@@ -247,7 +246,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
-
 				break;
 			}
 
@@ -281,15 +279,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 #endif
 			case EVENT:
 			{
-				if (gVersion == XOR("14.60"))
+				if (gVersion == 14.60f)
 				{
 					UFunctions::Play(GALACTUS_EVENT_PLAYER);
 				}
-				else if (gVersion == XOR("12.41"))
+				else if (gVersion == 12.41f)
 				{
 					UFunctions::Play(JERKY_EVENT_PLAYER);
 				}
-				else if (gVersion == XOR("12.61"))
+				else if (gVersion == 12.61f)
 				{
 					UFunctions::Play(DEVICE_EVENT_PLAYER);
 				}
@@ -438,11 +436,23 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				NeoPlayer.Respawn();
 			}
 
+			case LOADBPC:
+			{
+				if (!arg.empty())
+				{
+					const auto BPGClass = FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+
+					UFunctions::StaticLoadObjectEasy(BPGClass, arg.c_str());
+				}
+				else
+				{
+					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+				}
+			}
+
 			default:
 				break;
 			}
-
-			goto out;
 		}
 	}
 

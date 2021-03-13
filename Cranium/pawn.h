@@ -330,7 +330,7 @@ public:
 		{
 			std::wstring objectName = GetObjectFullName(WeaponData);
 			
-			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget"))
+			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
 			{
 				if (objectName.starts_with(L"AthenaGadget"))
 				{

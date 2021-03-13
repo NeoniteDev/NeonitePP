@@ -8,7 +8,7 @@
 
 inline bool isReady = false;
 inline std::string gUrl;
-inline std::string gVersion;
+inline float gVersion;
 
 static bool ProdMode = false;
 static bool bIsProdMode;
@@ -84,8 +84,8 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 			std::string listData = list->data;
 			if (listData.starts_with(XOR("User-Agent:")))
 			{
-				const auto version = listData.erase(0, 44).erase(5, listData.size() - 5);
-				gVersion = version;
+				const auto version = listData.erase(0, listData.find_first_of("0123456789")); //find first number
+				gVersion = std::stof(version); 
 				bIsVersionFound = !bIsVersionFound;
 			}
 			list = list->next;

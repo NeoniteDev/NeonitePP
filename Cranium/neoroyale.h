@@ -44,6 +44,31 @@ namespace NeoRoyale
 		gNeoniteLogoTexture = nullptr;
 	}
 
+	inline void LoadMoreClasses()
+	{
+		const auto BPGClass = FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+
+		//Mech
+		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Athena/DrivableVehicles/Mech/TestMechVehicle.TestMechVehicle_C"));
+
+		//Husks
+		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/Husk/Blueprints/HuskPawn.HuskPawn_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/DudeBro/Blueprints/DUDEBRO_Pawn.DUDEBRO_Pawn_C"));
+		
+
+		//CameraFilters
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_FilmNoir.PP_FilmNoir_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Crazy.PP_Crazy_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Dark.PP_Dark_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_HappyPlace.PP_HappyPlace_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Oak.PP_Oak_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Pixelizer.PP_Pixelizer_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Red.PP_Red_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Retro.PP_Retro_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Sepia.PP_Sepia_C"));
+		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Spooky.PP_Spooky_C"));
+	}
+
 	inline void InitCombos()
 	{
 		for (auto i = 0x0; i < GObjs->NumElements; ++i)
@@ -170,31 +195,31 @@ namespace NeoRoyale
 				UFunctions::TeleportToSpawn();
 			}
 
-			if (gVersion != "12.41" || gVersion != "14.60" || gVersion != "12.61")
+			if(gVersion > 14.60f)
 			{
 				UFunctions::SetPlaylist();
 
 				UFunctions::SetGamePhase();
 			}
 
-			if (gVersion == XOR("14.60"))
+			if (gVersion == 14.60f)
 			{
 				UFunctions::LoadAndStreamInLevel(GALACTUS_EVENT_MAP);
 			}
-			else if (gVersion == XOR("12.41"))
+			else if (gVersion == 12.41f)
 			{
 				UFunctions::LoadAndStreamInLevel(JERKY_EVENT_MAP);
 			}
-			else if (gVersion == XOR("12.61"))
+			else if (gVersion == 12.61f)
 			{
 				UFunctions::LoadAndStreamInLevel(DEVICE_EVENT_MAP);
 			}
 
+			InitCombos();
+
 			UFunctions::StartMatch();
 
 			UFunctions::ServerReadyToStartMatch();
-
-			InitCombos();
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
 

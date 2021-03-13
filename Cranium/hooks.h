@@ -30,8 +30,9 @@ namespace Hooks
 
 #endif
 
-	inline bool Misc(std::string version)
+	inline bool Misc(float version)
 	{
+		
 		if (MH_Initialize() != MH_OK)
 		{
 			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
@@ -62,7 +63,7 @@ namespace Hooks
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
 		//Used for getting UObjects full names.
-		if (gVersion == "12.41" || gVersion == "12.50" || gVersion == "12.61" || gVersion == "13.00")
+		if (gVersion < 14.30f)
 		{
 			//Tested only on 12.41 and 12.61.
 			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
@@ -100,7 +101,8 @@ namespace Hooks
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
-		
+		//Used to load objects.
+        //Tested from 12.41 to latest
 		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
 		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
 
@@ -126,14 +128,8 @@ namespace Hooks
 
 		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
 		//Author: @nyamimi
-		DWORD dwProtection;
-		VirtualProtect(reinterpret_cast<void*>(AbilityPatchAdd), 16, PAGE_EXECUTE_READWRITE, &dwProtection);
-
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
-
-		DWORD dwTemp;
-		VirtualProtect(reinterpret_cast<void*>(AbilityPatchAdd), 16, dwProtection, &dwTemp);
 
 		//Process Event Hooking.
 		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
