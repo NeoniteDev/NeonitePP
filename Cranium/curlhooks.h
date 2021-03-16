@@ -55,7 +55,7 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 		std::string url = va_arg(arg, char*);
 		gUrl = url;
 
-		if (url.find(XOR("ClientQuest")) != std::string::npos) isReady = !isReady;
+		if (url.find("ClientQuest") != std::string::npos) isReady = !isReady;
 
 #ifdef URL_HOST
 

@@ -51,7 +51,7 @@ inline std::wstring GetObjectFirstName(UObject* object)
 
 	std::wstring name(internalName.ToWString());
 
-	Free((void*)internalName.ToWString());
+	//Free((void*)internalName.ToWString());
 
 	return name;
 }

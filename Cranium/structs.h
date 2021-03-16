@@ -2,12 +2,20 @@
 #include "enums.h"
 #include <set>
 
+
+struct UObject;
+
 template <class T>
 struct TArray
 {
 	friend struct FString;
 
 public:
+
+	T* Data;
+	int32_t Count;
+	int32_t Max;
+
 	TArray()
 	{
 		Data = nullptr;
@@ -34,10 +42,14 @@ public:
 		return i < Num();
 	}
 
-private:
-	T* Data;
-	int32_t Count;
-	int32_t Max;
+	int Add(UObject* NewItem)
+	{
+		Count = Count + 1;
+		Max = Max + 1;
+		Data = static_cast<UObject**>(malloc(Count * sizeof(UObject*)));
+		Data[Count - 1] = NewItem;
+		return Count;
+	}
 };
 
 struct FString : private TArray<wchar_t>
@@ -152,6 +164,13 @@ struct UObject
 	UClass* Class;
 	FName NamePrivate;
 	UObject* Outer;
+
+	void ProcessEvent(void* fn, void* parms)
+	{
+		auto vtable = *(void***)(this);
+		auto processEventFn = (void(*)(void*, void*, void*))(vtable[0x44]);
+		processEventFn(this, fn, parms);
+	}
 
 	bool IsA(UClass* cmp) const
 	{
@@ -304,6 +323,22 @@ struct UFortKismetLibrary_ApplyCharacterCosmetics_Params
 	TArray<UObject*> CharacterParts;
 	UObject* PlayerState;
 	bool bSuccess;
+};
+
+struct PickupActor_Params
+{
+	UObject* PickupTarget;
+	UObject* PlacementDecoItemDefinition;
+};
+
+struct APlayerController_ClientSetCameraMode_Params
+{
+	FName NewCamMode;
+};
+
+struct UPrimitiveComponent_SetOwnerNoSee_Params
+{
+	bool bNewOwnerNoSee;
 };
 
 struct AFortPlayerPawn_BeginSkydiving_Params
@@ -643,6 +678,13 @@ struct UKismetRenderingLibrary_ImportFileAsTexture2D_Params
 {
 	UObject* WorldContextObject;
 	FString Filename;
+	UObject* ReturnValue;
+};
+
+struct UFortItemDefinition_CreateTemporaryItemInstanceBP_Params
+{
+	int Count;
+	int Level;
 	UObject* ReturnValue;
 };
 

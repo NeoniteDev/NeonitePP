@@ -195,7 +195,7 @@ namespace NeoRoyale
 				UFunctions::TeleportToSpawn();
 			}
 
-			if(gVersion > 14.60f)
+			if(gVersion > 14.60)
 			{
 				UFunctions::SetPlaylist();
 

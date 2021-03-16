@@ -310,6 +310,18 @@ public:
 		printf(XOR("\n[NeoRoyale] Character Parts should be visible now!.\n"));
 	}
 
+	auto PickupActor(UObject* PlacementDecoItemDefinition, UObject* PickupTarget = nullptr)
+	{
+
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:PickUpActor"));
+
+		PickupActor_Params params;
+		params.PickupTarget = PickupTarget;
+		params.PlacementDecoItemDefinition = PlacementDecoItemDefinition;
+
+		ProcessEvent(this->Pawn, fn, &params);
+	}
+
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
 	{
 		FGuid GUID;
@@ -329,7 +341,7 @@ public:
 		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
 			std::wstring objectName = GetObjectFullName(WeaponData);
-			
+
 			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
 			{
 				if (objectName.starts_with(L"AthenaGadget"))
@@ -352,6 +364,10 @@ public:
 				params.ItemEntryGuid = GUID;
 
 				ProcessEvent(this->Pawn, fn, &params);
+			}
+			else if(objectName.starts_with(L"FortTrap"))
+			{
+				this->PickupActor(WeaponData);
 			}
 		}
 		else
@@ -589,6 +605,27 @@ public:
 		return params.ReturnValue;
 	}
 
+	void HideHead(bool bIsHidden)
+	{
+		auto Mesh = FindObject<UObject*>(XOR(L"SkeletalMeshComponentBudgeted /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"));
+
+		auto SetOwnerNoSee = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PrimitiveComponent:SetOwnerNoSee"));
+
+		UPrimitiveComponent_SetOwnerNoSee_Params SetOwnerNoSee_Params;
+		SetOwnerNoSee_Params.bNewOwnerNoSee = bIsHidden;
+
+		ProcessEvent(Mesh, SetOwnerNoSee, &SetOwnerNoSee_Params);
+	}
+
+	void SetCameraMode(const wchar_t* NewMode)
+	{
+		auto ClientSetCameraMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:ClientSetCameraMode"));
+
+		APlayerController_ClientSetCameraMode_Params ClientSetCameraMode_Params;
+		ClientSetCameraMode_Params.NewCamMode = KismetFunctions::GetFName(NewMode);
+
+		ProcessEvent(this->Controller, ClientSetCameraMode, &ClientSetCameraMode_Params);
+	}
 
 	void ShowPickaxe()
 	{

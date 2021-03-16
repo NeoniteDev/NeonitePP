@@ -75,14 +75,14 @@ namespace launcher
 		if (exchange.empty())
 		{
 			oss <<
-			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -AUTH_LOGIN="
+			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=7ce411021b27b4343a44fdg8 -AUTH_LOGIN="
 			<< name
 			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
 		}
 		else
 		{
 			oss <<
-			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod-nobe -fromfl=eac -fltoken=3db3ba5dcbd2e16703f3978d -epicportal -epiclocale=en-us -AUTH_PASSWORD="
+			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod -noeac -fromfl=be -fltoken=7ce411021b27b4343a44fdg8 -epicportal -epiclocale=en-us -AUTH_PASSWORD="
 			<< exchange;
 		}
 		std::string s = oss.str();

@@ -17,7 +17,7 @@ bBattleRoyaleMatchmakingEnabled=true
 +FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_SolidGold_Solo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Bodyguard_Squads, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Fortnite, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_SolidGold_Duos, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
++FrontEndPlaylistData=(PlaylistName=Playlist_Yogurt, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_ShowdownTournament_16_Coop, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_Fluoride_Solo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 	)"

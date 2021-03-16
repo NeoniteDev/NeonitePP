@@ -18,7 +18,6 @@ bool WINAPI ImguiThread()
 
 void dllMain()
 {
-	
 #ifdef CONSOLE
 #ifndef PROD
 	FILE* fDummy;
@@ -39,9 +38,10 @@ void dllMain()
 #ifdef HOOKS
 	while (true)
 	{
-		if (isReady)
-		{													//Deprecated
-			if (Hooks::Misc(gVersion) && Console::Unlock()) //&& ForceSettings())
+		if (isReady || GetAsyncKeyState(VK_F3))
+		{
+			 //Deprecated
+			if (Hooks::Misc(gVersion)) //&& Console::Unlock()) //&& ForceSettings())
 			{
 				ImguiThread();
 				break;

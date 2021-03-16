@@ -153,7 +153,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 				{
 					if (BeginTabItem("World"))
 					{
-
 						static int timeOfDay = 1;
 						static int currentTimeOfDay = 1;
 
@@ -264,6 +263,23 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						SameLine();
 
 						Checkbox(XOR("Head"), &bIsHead);
+
+						NewLine();
+
+						if (Button(XOR("First Person Camera")))
+						{
+							NeoPlayer.SetCameraMode(L"FirstPerson");
+							NeoPlayer.HideHead(true);
+						}
+
+						//Commented becuase i don't know the custom thirdperson cameara mode name ;-;
+						/*SameLine();
+
+						if (Button(XOR("Third Person Camera")))
+						{
+							NeoPlayer.SetCameraMode(L"FortCameraMode_ThirdPerson");
+							NeoPlayer.HideHead(false);
+						}*/
 
 						NewLine();
 
@@ -450,6 +466,17 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SkinOverride = std::wstring(OverrideName.begin(), OverrideName.end());
 							currentItem = Item;
 						}
+
+						NewLine();
+
+						if (Button("Pick Custom Body Texture"))
+						{
+							fileDialog.Open();
+						}
+
+						SameLine();
+
+						Checkbox(XOR("Head"), &bIsHead);
 
 						EndTabItem();
 					}

@@ -5,7 +5,7 @@
 #include "kismet.h"
 
 #ifndef PROD
-//#define LOGGING
+#define LOGGING
 #endif
 
 using namespace NeoRoyale;
@@ -78,9 +78,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
-		if (gVersion > 14.30f)
+		if (gVersion > 14.30)
 		{
-			UFunctions::SetupCustomInventory();
+			//UFunctions::SetupCustomInventory();
 		}
 
 		UFunctions::PlayCustomPlayPhaseAlert();
@@ -246,6 +246,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
+				gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+				auto Map = APOLLO_TERRAIN;
+				Start(Map);
 				break;
 			}
 
@@ -464,6 +467,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
 		!wcsstr(nFunc.c_str(), L"OnMouse") &&
 		!wcsstr(nFunc.c_str(), L"Pulse") &&
+		!wcsstr(nFunc.c_str(), L"IsAcceptablePositionForPlacement") &&
+		!wcsstr(nFunc.c_str(), L"OnContextualReticleChanged") &&
+		!wcsstr(nFunc.c_str(), L"OnUpdateVisuals") &&
+		!wcsstr(nFunc.c_str(), L"OnUpdateScale") &&
+		!wcsstr(nFunc.c_str(), L"SetScalarParameterValueOnAllPreviewMIDs") &&
 		!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
 		!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
 		!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
