@@ -34,11 +34,17 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
 		auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
-		auto Map = APOLLO_TERRAIN_YOGURT;
+		auto Map = APOLLO_TERRAIN;
 
 		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
 		{
 			Map = APOLLO_PAPAYA;
+		}
+
+		if (PlaylistNameW.find(XOR(L"yogurt")) != std::string::npos && !gPlaylist)
+		{
+			Map = APOLLO_TERRAIN_YOGURT;
+			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
 
 		if (Playlist && !gPlaylist)
@@ -107,7 +113,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 	// NOTE: (irma) This is better.
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
-		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+		//Console::ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
 		NeoPlayer.Respawn();
 		auto currentLocation = NeoPlayer.GetLocation();
 		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
@@ -139,7 +145,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			bWantsToShowPickaxe = false;
 		}
 	}
-	
+
 	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
 		Console::CheatManager();
@@ -219,9 +225,9 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 	}
 
 
-	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
+	if (wcsstr(nFunc.c_str(), XOR(L"ExecuteConsoleCommand")))
 	{
-		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
+		FString ScriptNameF = static_cast<UKismetSystemLibrary_ExecuteConsoleCommand_Params*>(pParams)->Command;
 
 		if (ScriptNameF.IsValid())
 		{

@@ -1,5 +1,6 @@
 #include "../framework.h"
 #include "../mods.h"
+#include "../console.h"
 #include "ImGui/imgui.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -213,7 +214,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (Button("Remove water"))
 						{
-							NeoPlayer.ExecuteConsoleCommand(XOR(L"destroyall Apollo_Waterbody_Ocean_Parent_C"));
+							Console::ExecuteConsoleCommand(XOR(L"destroyall Apollo_Waterbody_Ocean_Parent_C"));
 						}
 
 						EndChild();
@@ -294,7 +295,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (currentFov != fov)
 						{
 							std::wstring command(L"fov " + std::to_wstring(fov));
-							NeoPlayer.ExecuteConsoleCommand(command.c_str());
+							Console::ExecuteConsoleCommand(command.c_str());
 							currentFov = fov;
 						}
 						SliderInt(XOR("FOV"), &fov, 20, 200, "%.03f");
@@ -441,7 +442,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						{
 							std::string commandS(command);
 							const std::wstring coammndW(commandS.begin(), commandS.end());
-							Player::ExecuteConsoleCommand(coammndW.c_str());
+							Console::ExecuteConsoleCommand(coammndW.c_str());
 						}
 						
 						NewLine();

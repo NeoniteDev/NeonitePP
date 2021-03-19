@@ -198,7 +198,6 @@ namespace NeoRoyale
 			NeoPlayer.ApplyOverride();
 
 			//LOL
-			NeoPlayer.ExecuteConsoleCommand(XOR(L"god"));
 			NeoPlayer.SetMovementSpeed(1.1);
 
 			auto PlaylistName = gPlaylist->GetName();
