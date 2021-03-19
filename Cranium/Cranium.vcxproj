@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="console.h" />
     <ClInclude Include="cryptolens\ActivateError.hpp" />
     <ClInclude Include="cryptolens\ActivationData.hpp" />
     <ClInclude Include="cryptolens\api.hpp" />
@@ -203,7 +204,7 @@
     <ClInclude Include="mods.h" />
     <ClInclude Include="neonitelogo.h" />
     <ClInclude Include="neoroyale.h" />
-    <ClInclude Include="pawn.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="server.h" />

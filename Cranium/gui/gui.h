@@ -176,13 +176,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							UFunctions::TeleportToMain();
 						}
 
-						if (Button(XOR("Pulse Zeropoint")))
-						{
-							const auto zp = FindObject<UObject*>(XOR(L"BP_ZeroPoint_Destabalize_RWs_C /Game/Athena/Apollo/Maps/Apollo_FX.Apollo_FX:PersistentLevel.BP_ZeroPoint_Destabalize_RWs_2"));
-							const auto fn = FindObject<UFunction*>(XOR(L"Function /Game/Athena/Environments/Nexus/Blueprints/BP_ZeroPoint_Destabalize_RWs.BP_ZeroPoint_Destabalize_RWs_C:Pulse"));
-							ProcessEvent(zp, fn, nullptr);
-						}
-
 						static float X = 1.0f;
 						static float Y = 1.0f;
 						static float Z = 1.0f;

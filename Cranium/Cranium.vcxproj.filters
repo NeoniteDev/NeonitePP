@@ -152,7 +152,6 @@
     <ClInclude Include="cryptolens\SignatureVerifier_v20190401_to_v20180502.hpp">
       <Filter>Auth Library</Filter>
     </ClInclude>
-    <ClInclude Include="pawn.h" />
     <ClInclude Include="neoroyale.h" />
     <ClInclude Include="gui\kiero.h">
       <Filter>Rendering\Kiero</Filter>
@@ -191,6 +190,8 @@
     <ClInclude Include="neonitelogo.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="player.h" />
+    <ClInclude Include="console.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cURL">

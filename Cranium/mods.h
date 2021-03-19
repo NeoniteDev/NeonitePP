@@ -2,7 +2,7 @@
 #include "finder.h"
 #include "kismet.h"
 #include "neonitelogo.h"
-#include "pawn.h"
+#include "player.h"
 
 inline UObject* gPlaylist;
 inline UObject* gNeoniteLogoTexture;
