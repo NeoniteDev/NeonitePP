@@ -232,7 +232,6 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 
 			switch (CMD)
 			{
-
 			case TEST:
 			{
 				break;

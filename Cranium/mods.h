@@ -280,11 +280,35 @@ namespace UFunctions
 
 	inline void DestoryActor(UObject* actor)
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
+		const auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
 
 		ProcessEvent(actor, fn, nullptr);
 	}
 
+	inline void DestroyAll(UClass* Class)
+	{
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+
+		auto GameplayStatics = UE4::FindObject<UObject*>(XOR(L"GameplayStatics /Script/Engine.Default__GameplayStatics"));
+		auto GetAllActorsOfClass = UE4::FindObject<UClass*>(XOR(L"Function /Script/Engine.GameplayStatics.GetAllActorsOfClass"));
+
+		GetAllActorsOfClass_Params params;
+		params.ActorClass = Class;
+		params.WorldContextObject = WorldFinder.GetObj();
+
+		ProcessEvent(GameplayStatics, GetAllActorsOfClass, &params);
+
+		auto Actors = params.OutActors;
+
+		const auto K2_DestroyActor = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
+
+		for (auto i = 0; i < Actors.Num(); i++)
+		{
+			ProcessEvent(Actors[i], K2_DestroyActor, nullptr);;
+		}
+	}
 
 	inline void LoadLogoAsTexture()
 	{

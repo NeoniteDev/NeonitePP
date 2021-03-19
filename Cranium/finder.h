@@ -217,34 +217,4 @@ public:
 
 		return nullptr;
 	}
-
-	static void DestroyActor(std::wstring name)
-	{
-		ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
-
-		const DWORD AActors = 0x98;
-
-		for (auto i = 0x00; i < READ_DWORD(PersistentLevelFinder.GetObj(), AActors + sizeof(void*)); i++)
-		{
-			auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
-
-			auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
-
-
-			if (pActor != nullptr)
-			{
-
-				if (pActor->GetFullName().starts_with(name))
-				{
-					auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
-
-					ProcessEvent(pActor, fn, nullptr);
-					printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());
-				}
-			}
-		}
-	}
 };

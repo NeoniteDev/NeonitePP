@@ -848,10 +848,17 @@ struct FLatentActionInfo
 struct UGameplayStatics_LoadStreamLevel_Params
 {
 	UObject* WorldContextObject;
-	struct FName LevelName;
+	FName LevelName;
 	bool bMakeVisibleAfterLoad;
 	bool bShouldBlockOnLoad;
 	FLatentActionInfo LatentInfo;
+};
+
+struct GetAllActorsOfClass_Params
+{
+	UObject* WorldContextObject;
+	UObject* ActorClass; //AActor
+	TArray<UObject*> OutActors; //AActor
 };
 
 struct UFortKismetLibrary_SetTimeOfDay_Params
