@@ -34,7 +34,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
 		auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
-		auto Map = APOLLO_TERRAIN;
+		auto Map = APOLLO_TERRAIN_YOGURT;
 
 		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
 		{

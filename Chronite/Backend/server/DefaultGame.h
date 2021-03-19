@@ -7,7 +7,7 @@ namespace DefaultGame
 [/Script/FortniteGame.FortGameInstance]
 bBattleRoyaleMatchmakingEnabled=true
 +FrontEndPlaylistData=(PlaylistName=Playlist_DefaultSolo, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
-+FrontEndPlaylistData=(PlaylistName=Playlist_Blitz_Squads, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
++FrontEndPlaylistData=(PlaylistName=Playlist_Yogurt, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 +FrontEndPlaylistData=(PlaylistName=Playlist_5x20, PlaylistAccess=(bEnabled=true, CategoryIndex=0, DisplayPriority=-999))
 	)"
 

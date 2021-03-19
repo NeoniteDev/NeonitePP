@@ -260,9 +260,6 @@
       </MapFileName>
       <TargetMachine>NotSet</TargetMachine>
     </Link>
-        <PostBuildEvent>
-      <Command>"$(SolutionDir)Tools\upx.exe" "$(TargetPath)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Prod|x64'">
     <ClCompile>

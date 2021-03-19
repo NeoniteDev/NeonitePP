@@ -443,6 +443,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							const std::wstring coammndW(commandS.begin(), commandS.end());
 							Player::ExecuteConsoleCommand(coammndW.c_str());
 						}
+						
+						NewLine();
+
+						if (Button("Test"))
+						{
+							UFunctions::Play(YOUGURT_EVENT_PLAYER);
+						}
 
 						if (Button("Bots Grenade"))
 						{
