@@ -7,10 +7,10 @@ namespace KismetFunctions
 	{
 		if (!KismetRenderingLibrary || Util::IsBadReadPtr(KismetRenderingLibrary))
 		{
-			KismetRenderingLibrary = FindObject<UObject*>(XOR(L"KismetRenderingLibrary /Script/Engine.Default__KismetRenderingLibrary"));
+			KismetRenderingLibrary = UE4::FindObject<UObject*>(XOR(L"KismetRenderingLibrary /Script/Engine.Default__KismetRenderingLibrary"));
 		}
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetRenderingLibrary.ImportFileAsTexture2D"));
+		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetRenderingLibrary.ImportFileAsTexture2D"));
 
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
@@ -29,10 +29,10 @@ namespace KismetFunctions
 	{
 		if (!KismetStringLibrary || Util::IsBadReadPtr(KismetStringLibrary))
 		{
-			KismetStringLibrary = FindObject<UObject*>(XOR(L"KismetStringLibrary /Script/Engine.Default__KismetStringLibrary"));
+			KismetStringLibrary = UE4::FindObject<UObject*>(XOR(L"KismetStringLibrary /Script/Engine.Default__KismetStringLibrary"));
 		}
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetStringLibrary.Conv_StringToName"));
+		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetStringLibrary.Conv_StringToName"));
 
 		UKismetStringLibrary_Conv_StringToName_Params params;
 		params.inString = String;

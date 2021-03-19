@@ -34,129 +34,135 @@ inline UObject* (*StaticLoadObject)(
 inline UObject* KismetRenderingLibrary;
 inline UObject* KismetStringLibrary;
 
-inline uintptr_t gProcessEventAdd;
 
-//Frees the memory for the name
-inline void Free(void* buffer)
+namespace UE4
 {
-	//FreeInternal(buffer);
-}
-
-//The same as above but for FFields.
-inline std::wstring GetFirstName(FField* object)
-{
-	FString s;
-	GetFullName(object, s, nullptr, EObjectFullNameFlags::None);
-	std::wstring objectNameW = s.ToWString();
-
-	std::wstring token;
-	while (token != objectNameW)
+	inline auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr)
 	{
-		token = objectNameW.substr(0, objectNameW.find_first_of(L":"));
-		objectNameW = objectNameW.substr(objectNameW.find_first_of(L":") + 1);
+		return StaticLoadObject(inClass, inOuter, inName, nullptr, 0, nullptr, false, nullptr);
 	}
 
-	Free((void*)s.ToWString());
-
-	return objectNameW;
-}
-
-
-//Returns FField's type.
-inline std::wstring GetFieldClassName(FField* obj)
-{
-	FString s;
-	GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
-	const std::wstring objectName = s.ToWString();
-	auto className = Util::sSplit(objectName, L" ");
-
-	Free((void*)s.ToWString());
-
-	return className;
-}
-
-//Find any entity inside the UGlobalObjects array aka. GObjects.
-template <typename T>
-static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
-{
-	for (auto i = 0x0; i < GObjs->NumElements; ++i)
+	//Frees the memory for the name
+	inline void Free(void* buffer)
 	{
-		auto object = GObjs->GetByIndex(i);
-		if (object == nullptr)
+		//FreeInternal(buffer);
+	}
+
+	//The same as above but for FFields.
+	inline std::wstring GetFirstName(FField* object)
+	{
+		FString s;
+		GetFullName(object, s, nullptr, EObjectFullNameFlags::None);
+		std::wstring objectNameW = s.ToWString();
+
+		std::wstring token;
+		while (token != objectNameW)
 		{
-			continue;
+			token = objectNameW.substr(0, objectNameW.find_first_of(L":"));
+			objectNameW = objectNameW.substr(objectNameW.find_first_of(L":") + 1);
 		}
 
-		std::wstring objectFullName = object->GetFullName();
+		Free((void*)s.ToWString());
 
-		if (to_lower)
-		{
-			std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
-			               [](const unsigned char c) { return std::tolower(c); });
-		}
+		return objectNameW;
+	}
 
-		if (!ends_with)
+
+	//Returns FField's type.
+	inline std::wstring GetFieldClassName(FField* obj)
+	{
+		FString s;
+		GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
+		const std::wstring objectName = s.ToWString();
+		auto className = Util::sSplit(objectName, L" ");
+
+		Free((void*)s.ToWString());
+
+		return className;
+	}
+
+	//Find any entity inside the UGlobalObjects array aka. GObjects.
+	template <typename T>
+	static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
+	{
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
 		{
-			if (objectFullName.starts_with(name))
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
 			{
-				if (toSkip > 0)
+				continue;
+			}
+
+			std::wstring objectFullName = object->GetFullName();
+
+			if (to_lower)
+			{
+				std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
+				               [](const unsigned char c) { return std::tolower(c); });
+			}
+
+			if (!ends_with)
+			{
+				if (objectFullName.starts_with(name))
 				{
-					toSkip--;
+					if (toSkip > 0)
+					{
+						toSkip--;
+					}
+					else
+					{
+						return reinterpret_cast<T>(object);
+					}
 				}
-				else
+			}
+			else
+			{
+				if (objectFullName.ends_with(name))
 				{
 					return reinterpret_cast<T>(object);
 				}
 			}
 		}
-		else
+		return nullptr;
+	}
+
+	inline void DumpGObjects()
+	{
+		std::wofstream log("GObjects.log");
+
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
 		{
-			if (objectFullName.ends_with(name))
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
 			{
-				return reinterpret_cast<T>(object);
+				continue;
+			}
+			std::wstring className = object->Class->GetFullName();
+			std::wstring objectName = object->GetFullName();
+			std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
+			log << item;
+		}
+	}
+
+	inline void DumpBPs()
+	{
+		std::wofstream log("Blueprints.log");
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
+		{
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
+			{
+				continue;
+			}
+
+			auto ClassName = object->Class->GetName();
+
+			if (ClassName == XOR(L"BlueprintGeneratedClass"))
+			{
+				auto objectNameW = object->GetName();
+				log << objectNameW + L"\n";
 			}
 		}
+		log.flush();
 	}
-	return nullptr;
-}
-
-
-inline void DumpGObjects()
-{
-	std::wofstream log("GObjects.log");
-
-	for (auto i = 0x0; i < GObjs->NumElements; ++i)
-	{
-		auto object = GObjs->GetByIndex(i);
-		if (object == nullptr)
-		{
-			continue;
-		}
-		std::wstring className = object->Class->GetFullName();
-		std::wstring objectName = object->GetFullName();
-		std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
-		log << item;
-	}
-}
-
-inline void DumpBPs()
-{
-	std::wofstream log("Blueprints.log");
-	for (auto i = 0x0; i < GObjs->NumElements; ++i)
-	{
-		auto object = GObjs->GetByIndex(i);
-		if (object == nullptr)
-		{
-			continue;
-		}
-
-		auto ClassName = object->Class->GetName();
-
-		if (ClassName == XOR(L"BlueprintGeneratedClass"))
-		{
-			auto objectNameW = object->GetName();
-			log << objectNameW + L"\n";
-		}
-	}
-	log.flush();
 }

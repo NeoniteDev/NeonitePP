@@ -56,7 +56,7 @@ namespace Hooks
 
 
 		//A work around instead of using a pattern.
-		GEngine = FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
+		GEngine = UE4::FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
 
 
 		uintptr_t ProcessEventAdd;

@@ -33,7 +33,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		std::string PlaylistName = query + "." + query;
 		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
-		auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+		auto Playlist = UE4::FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
 		auto Map = APOLLO_TERRAIN;
 
 		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
@@ -44,7 +44,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		if (PlaylistNameW.find(XOR(L"yogurt")) != std::string::npos && !gPlaylist)
 		{
 			Map = APOLLO_TERRAIN_YOGURT;
-			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
 
 		if (Playlist && !gPlaylist)
@@ -53,7 +53,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		}
 		else if (!Playlist && !gPlaylist)
 		{
-			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
 
 #ifndef PROD
@@ -103,13 +103,6 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		return nullptr;
 	}
 
-	//Toggle our fly function on "fly" command.
-	if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
-	{
-		NeoPlayer.Fly(bIsFlying);
-		bIsFlying = !bIsFlying;
-	}
-
 	// NOTE: (irma) This is better.
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
@@ -144,11 +137,6 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			NeoPlayer.ShowPickaxe();
 			bWantsToShowPickaxe = false;
 		}
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
-	{
-		Console::CheatManager();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
@@ -213,7 +201,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			Bot.TeleportTo(HitLocation, Rotation);
 
 			Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
-			Bot.Emote(FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
+			Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
 
 			Bots.push_back(Bot);
 		}
@@ -244,11 +232,6 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 
 			switch (CMD)
 			{
-			case HELP:
-			{
-				UFunctions::ConsoleLog(CheatScriptHelp);
-				break;
-			}
 
 			case TEST:
 			{
@@ -257,13 +240,13 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 
 			case DUMP:
 			{
-				DumpGObjects();
+				UE4::DumpGObjects();
 				break;
 			}
 
 			case DUMPBPS:
 			{
-				DumpBPs();
+				UE4::DumpBPs();
 				break;
 			}
 #ifndef PROD
@@ -310,8 +293,14 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 
 			case DEBUG_CAMERA:
 			{
-				bIsDebugCamera = !bIsDebugCamera;
+				//bIsDebugCamera = !bIsDebugCamera;
 				break;
+			}
+
+			case FLY:
+			{
+				NeoPlayer.Fly(bIsFlying);
+				bIsFlying = !bIsFlying;
 			}
 
 			case EQUIP:
@@ -415,7 +404,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
+					auto Playlist = UE4::FindObject<UObject*>(ScriptNameW.c_str());
 					if (Playlist)
 					{
 						gPlaylist = Playlist;
@@ -450,9 +439,9 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					const auto BPGClass = FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+					const auto BPGClass = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
 
-					UFunctions::StaticLoadObjectEasy(BPGClass, arg.c_str());
+					UE4::StaticLoadObjectEasy(BPGClass, arg.c_str());
 				}
 				else
 				{

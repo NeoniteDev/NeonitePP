@@ -59,7 +59,7 @@ class ObjectFinder
 		GameObject* next = inObject->GetNext();
 		if (next == nullptr) return nullptr;
 
-		auto firstPropertyName = GetFirstName(reinterpret_cast<FField*>(inObject));
+		auto firstPropertyName = UE4::GetFirstName(reinterpret_cast<FField*>(inObject));
 
 		//printf("\n firstPropertyName: %ls \n", firstPropertyName.c_str());
 
@@ -70,7 +70,7 @@ class ObjectFinder
 
 		while (next)
 		{
-			std::wstring nextName = GetFirstName(reinterpret_cast<FField*>(next));
+			std::wstring nextName = UE4::GetFirstName(reinterpret_cast<FField*>(next));
 
 			//printf("\n nextName: %ls \n", nextName.c_str());
 
@@ -122,7 +122,7 @@ public:
 
 	static auto FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
 	{
-		auto Class = FindObject<UClass*>(classToFind.c_str(), true);
+		auto Class = UE4::FindObject<UClass*>(classToFind.c_str(), true);
 
 		if (Class)
 		{
@@ -163,7 +163,7 @@ public:
 
 		GameObject* valuePtr = resolveValuePointer(m_object, propertyFound);
 
-		const std::wstring type = GetFieldClassName(reinterpret_cast<FField*>(propertyFound));
+		const std::wstring type = UE4::GetFieldClassName(reinterpret_cast<FField*>(propertyFound));
 
 		if (type == XOR(L"ArrayProperty"))
 		{
@@ -239,7 +239,7 @@ public:
 
 				if (pActor->GetFullName().starts_with(name))
 				{
-					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
+					auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
 
 					ProcessEvent(pActor, fn, nullptr);
 					printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());

@@ -3,7 +3,7 @@
 
 namespace Console
 {
-	//This is a hac
+	//This is a hacky way to handle custom commands
 	auto ExecuteConsoleCommand(const wchar_t* command)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
@@ -12,8 +12,8 @@ namespace Console
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary.ExecuteConsoleCommand"));
+		auto KismetSysLib = UE4::FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
+		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary.ExecuteConsoleCommand"));
 
 		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();

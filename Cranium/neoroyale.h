@@ -46,27 +46,27 @@ namespace NeoRoyale
 
 	inline void LoadMoreClasses()
 	{
-		const auto BPGClass = FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+		const auto BPGClass = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
 
 		//Mech
-		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Athena/DrivableVehicles/Mech/TestMechVehicle.TestMechVehicle_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Athena/DrivableVehicles/Mech/TestMechVehicle.TestMechVehicle_C"));
 
 		//Husks
-		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/Husk/Blueprints/HuskPawn.HuskPawn_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/DudeBro/Blueprints/DUDEBRO_Pawn.DUDEBRO_Pawn_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Characters/Enemies/Husk/Blueprints/HuskPawn.HuskPawn_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Characters/Enemies/DudeBro/Blueprints/DUDEBRO_Pawn.DUDEBRO_Pawn_C"));
 
 
 		//CameraFilters
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_FilmNoir.PP_FilmNoir_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Crazy.PP_Crazy_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Dark.PP_Dark_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_HappyPlace.PP_HappyPlace_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Oak.PP_Oak_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Pixelizer.PP_Pixelizer_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Red.PP_Red_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Retro.PP_Retro_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Sepia.PP_Sepia_C"));
-		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Spooky.PP_Spooky_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_FilmNoir.PP_FilmNoir_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Crazy.PP_Crazy_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Dark.PP_Dark_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_HappyPlace.PP_HappyPlace_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Oak.PP_Oak_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Pixelizer.PP_Pixelizer_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Red.PP_Red_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Retro.PP_Retro_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Sepia.PP_Sepia_C"));
+		UE4::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Spooky.PP_Spooky_C"));
 	}
 
 	inline void InitCombos()
@@ -161,27 +161,9 @@ namespace NeoRoyale
 
 	inline void Init()
 	{
-		//Console::CheatManager();
+		ObjectFinder::DestroyActor(XOR(L"FortHLODSMActor"));
 
-		//UFunctions::DestroyAllHLODs();
-
-		FTransform Transform;
-		Transform.Scale3D = FVector(1, 1, 1);
-		Transform.Translation = FVector();
-		Transform.Rotation = FQuat();
-
-
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-
-		NeoPlayer.Pawn = SpawnActor(
-			WorldFinder.GetObj(),
-			FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")),
-			&Transform,
-			FActorSpawnParameters()
-		);
-
+		UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")));
 
 		NeoPlayer.Authorize();
 
@@ -197,7 +179,6 @@ namespace NeoRoyale
 
 			NeoPlayer.ApplyOverride();
 
-			//LOL
 			NeoPlayer.SetMovementSpeed(1.1);
 
 			auto PlaylistName = gPlaylist->GetName();

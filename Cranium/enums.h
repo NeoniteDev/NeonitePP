@@ -18,36 +18,14 @@
 #define YOUGURT_EVENT_PLAYER XOR(L"LevelSequencePlayer /Yogurt/Levels/YogurtLoaderLevel.YogurtLoaderLevel.PersistentLevel.Yogurt_Master_2.AnimationPlayer")
 
 
-const wchar_t* CheatScriptHelp =
-LR"(
-Custom Cheatscript Commands
----------------------------
-cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
-cheatscript debugcamera - Toggles a custom version of the debug camera.
-cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
-cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
-cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
-cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
-cheatscript setplaylist <Playlist> - Overrides the current playlist.
-cheatscript respawn - Respawns the player (duh)
-cheatscript sethealth <NewHealthFloat> - Changes your health value.
-cheatscript setshield <NewShieldFloat> - Changes your shield value.
-cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
-cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
-cheatscript dump - Dumps a list of all GObjects.
-cheatscript dumpbps - Dumps all blueprints.
-fly - Toggles flying.
-enablecheats - Enables cheatmanager.
-)";
-
 enum ECommands
 {
-	HELP,
 	ACTIVATE,
 	EVENT,
 	DEBUG_CAMERA,
 	SKYDIVE,
 	EQUIP,
+	FLY,
 	SET_GRAVITY,
 	SET_SPEED,
 	SET_PLAYLIST,
@@ -66,9 +44,9 @@ enum ECommands
 auto str2enum(const std::wstring& str)
 {
 	if (str.starts_with(L"event")) return EVENT;
-	else if (str.starts_with(L"help")) return HELP;
 	else if (str.starts_with(L"activate")) return DEBUG_CAMERA;
 	else if (str.starts_with(L"debugcamera")) return DEBUG_CAMERA;
+	else if (str.starts_with(L"fly")) return FLY;
 	else if (str.starts_with(L"skydive")) return SKYDIVE;
 	else if (str.starts_with(L"skydiving")) return SKYDIVE;
 	else if (str.starts_with(L"equip")) return EQUIP;
