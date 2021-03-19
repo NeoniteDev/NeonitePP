@@ -27,3 +27,4 @@ OLDBACKEND/
 *.db-wal
 *.db-shm
 *.opendb
+*.lib

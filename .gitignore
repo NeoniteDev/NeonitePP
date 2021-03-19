@@ -34,3 +34,4 @@ OLDBACKEND/
 *.pdb
 *.res
 *.log
+*.lib
