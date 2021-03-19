@@ -127,6 +127,10 @@ private:
 	uint8_t value;
 };
 
+struct FName;
+
+void (*FNameToString)(FName* pThis, FString& out);
+
 struct FName
 {
 	uint32_t ComparisonIndex;
@@ -140,7 +144,13 @@ struct FName
 		ComparisonIndex = (name & 0xFFFFFFFFLL);
 	};
 
-	void ToString(FString& Out);
+	auto ToString()
+	{
+		FString temp;
+		FNameToString(this, temp);
+
+		return temp.ToWString();
+	}
 };
 
 struct FText
@@ -167,8 +177,8 @@ struct UObject
 
 	void ProcessEvent(void* fn, void* parms)
 	{
-		auto vtable = *(void***)(this);
-		auto processEventFn = (void(*)(void*, void*, void*))(vtable[0x44]);
+		auto vtable = *reinterpret_cast<void***>(this);
+		auto processEventFn = static_cast<void(*)(void*, void*, void*)>(vtable[0x44]);
 		processEventFn(this, fn, parms);
 	}
 
@@ -179,6 +189,24 @@ struct UObject
 			return true;
 		}
 		return false;
+	}
+
+	std::wstring GetName()
+	{
+		return NamePrivate.ToString();
+	}
+
+	std::wstring GetFullName()
+	{
+		std::wstring temp;
+
+		for (auto outer = Outer; outer; outer = outer->Outer)
+		{
+			temp = outer->GetName() + L"." + temp;
+		}
+
+		temp = reinterpret_cast<UObject*>(Class)->GetName() + L" " + temp + this->GetName();
+		return temp;
 	}
 
 	FName GetFName() const

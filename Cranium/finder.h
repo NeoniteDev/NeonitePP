@@ -198,9 +198,9 @@ public:
 
 			if (pActor != nullptr)
 			{
-				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
+				//printf("\n[Actor %i] %ls\n", i, pActor->GetFullName().c_str());
 
-				if (GetObjectFullName(pActor).starts_with(name))
+				if (pActor->GetFullName().starts_with(name))
 				{
 					if (toSkip > 0)
 					{
@@ -236,11 +236,10 @@ public:
 
 			if (pActor != nullptr)
 			{
-				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-				if (GetObjectFullName(pActor).starts_with(name))
+				if (pActor->GetFullName().starts_with(name))
 				{
-					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
 
 					ProcessEvent(pActor, fn, nullptr);
 					printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());

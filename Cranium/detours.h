@@ -5,7 +5,7 @@
 #include "kismet.h"
 
 #ifndef PROD
-#define LOGGING
+//#define LOGGING
 #endif
 
 using namespace NeoRoyale;
@@ -13,10 +13,10 @@ using namespace NeoRoyale;
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
 
-inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
+inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 {
-	auto nObj = GetObjectFirstName(pObj);
-	auto nFunc = GetObjectFirstName(pFunc);
+	auto nObj = pObj->GetName();
+	auto nFunc = pFunc->GetName();
 
 
 	//If the game requested matchmaking we open the game mode
@@ -246,9 +246,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case TEST:
 			{
-				gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-				auto Map = APOLLO_TERRAIN;
-				Start(Map);
 				break;
 			}
 
@@ -293,6 +290,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				else if (gVersion == 12.61f)
 				{
 					UFunctions::Play(DEVICE_EVENT_PLAYER);
+				}
+				else if (gVersion == 16.00f)
+				{
+					UFunctions::Play(YOUGURT_EVENT_PLAYER);
 				}
 				else
 				{
@@ -485,7 +486,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
-		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+		printf(XOR("[Object]: %ws [Function]: %ws\n"), nObj.c_str(), nFunc.c_str());
 	}
 #endif
 

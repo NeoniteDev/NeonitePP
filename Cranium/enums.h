@@ -11,9 +11,10 @@
 #define JERKY_EVENT_MAP XOR(L"JerkySequenceMap")
 #define DEVICE_EVENT_MAP XOR(L"FritterSequenceLevel")
 
-#define GALACTUS_EVENT_PLAYER XOR(L"LevelSequencePlayer /Junior/Levels/Junior_Map_LevelInstance_1.Junior_Map:PersistentLevel.Junior_Master_Rep_2.AnimationPlayer")
-#define JERKY_EVENT_PLAYER XOR(L"LevelSequencePlayer /CycloneJerky/Levels/JerkySequenceMap_LevelInstance_1.JerkySequenceMap:PersistentLevel.Jerky.AnimationPlayer")
-#define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel:PersistentLevel.Fritter_2.AnimationPlayer")
+#define GALACTUS_EVENT_PLAYER XOR(L"LevelSequencePlayer /Junior/Levels/Junior_Map_LevelInstance_1.Junior_Map.PersistentLevel.Junior_Master_Rep_2.AnimationPlayer")
+#define JERKY_EVENT_PLAYER XOR(L"LevelSequencePlayer /CycloneJerky/Levels/JerkySequenceMap_LevelInstance_1.JerkySequenceMap.PersistentLevel.Jerky.AnimationPlayer")
+#define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel.PersistentLevel.Fritter_2.AnimationPlayer")
+#define YOUGURT_EVENT_PLAYER XOR(L"LevelSequencePlayer /Yogurt/Levels/YogurtLoaderLevel.YogurtLoaderLevel.PersistentLevel.Yogurt_Master_2.AnimationPlayer")
 
 
 const wchar_t* CheatScriptHelp =
@@ -105,7 +106,8 @@ namespace Patterns
 	namespace New
 	{
 		constexpr const char* GEngine = "\x48\x89\x05\x00\x00\x00\x00\x48\x85\xF6\x74\x08\x48\x8B\xCE\xE8";
-		constexpr const char* GONI = "\xE8\x00\x00\x00\x00\x8B\x4D\xB8\x48\x8B\x5D\xB0\x85\xC9";
+		constexpr const char* FNameToString = "\x75\x28\x48\x8B\xD3\xE8\x00\x00\x00\x00";
+		constexpr const char* ProcessEvent = "\x75\x00\x4c\x8b\xc5\x48\x8b\xd7\x48\x8b\xcb\xe8\x00\x00\x00\x00\x48\x8b\x5c\x24";
 	}
 
 	//Works on 10.40^
@@ -188,7 +190,8 @@ namespace Masks
 	namespace New
 	{
 		constexpr const char* GEngine = "xxx????xxxxxxxxx";
-		constexpr const char* GONI = "x????xxxxxxxxx";
+		constexpr const char* FNameToString = "xxxxxx????";
+		constexpr const char* ProcessEvent = "x?xxxxxxxxxx????xxxx";
 	}
 
 	namespace bGlobal

@@ -1,13 +1,7 @@
 #pragma once
 
 inline void* (*ProcessEvent)(void*, void*, void*);
-
-struct UWorld
-{
-	char padding[0x7b0];
-};
-
-inline UObject* (*SpawnActor)(UWorld* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
+inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*FreeInternal)(void*);
@@ -45,20 +39,7 @@ inline uintptr_t gProcessEventAdd;
 //Frees the memory for the name
 inline void Free(void* buffer)
 {
-	FreeInternal(buffer);
-}
-
-//Returns the very first name of the object (E.G: BP_PlayButton).
-inline std::wstring GetObjectFirstName(UObject* object)
-{
-	const FString internalName = GetObjectNameInternal(object);
-	if (!internalName.ToWString()) return L"";
-
-	std::wstring name(internalName.ToWString());
-
-	//Free((void*)internalName.ToWString());
-
-	return name;
+	//FreeInternal(buffer);
 }
 
 //The same as above but for FFields.
@@ -80,33 +61,6 @@ inline std::wstring GetFirstName(FField* object)
 	return objectNameW;
 }
 
-//Returns Object Name (NOT FULL NAME, MORE LIKE A PATH).
-inline std::wstring GetObjectName(UObject* object)
-{
-	std::wstring name(L"");
-	for (auto i = 0; object; object = object->Outer, ++i)
-	{
-		FString internalName = GetObjectNameInternal(object);
-		if (!internalName.ToWString()) break;
-		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
-
-		Free((void*)internalName.ToWString());
-	}
-
-	return name;
-}
-
-//Return FULL Object name including it's type.
-inline std::wstring GetObjectFullName(UObject* object)
-{
-	FString s;
-	GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
-	std::wstring objectNameW = s.ToWString();
-
-	Free((void*)s.ToWString());
-
-	return objectNameW;
-}
 
 //Returns FField's type.
 inline std::wstring GetFieldClassName(FField* obj)
@@ -133,7 +87,7 @@ static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower =
 			continue;
 		}
 
-		auto objectFullName = GetObjectFullName(object);
+		std::wstring objectFullName = object->GetFullName();
 
 		if (to_lower)
 		{
@@ -166,6 +120,7 @@ static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower =
 	return nullptr;
 }
 
+
 inline void DumpGObjects()
 {
 	std::wofstream log("GObjects.log");
@@ -177,12 +132,11 @@ inline void DumpGObjects()
 		{
 			continue;
 		}
-		std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
-		std::wstring objectName = GetObjectFullName(object).c_str();
+		std::wstring className = object->Class->GetFullName();
+		std::wstring objectName = object->GetFullName();
 		std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
 		log << item;
 	}
-	log.flush();
 }
 
 inline void DumpBPs()
@@ -196,11 +150,11 @@ inline void DumpBPs()
 			continue;
 		}
 
-		auto ClassName = GetObjectFirstName(object->Class);
+		auto ClassName = object->Class->GetName();
 
 		if (ClassName == XOR(L"BlueprintGeneratedClass"))
 		{
-			auto objectNameW = GetObjectFirstName(object);
+			auto objectNameW = object->GetName();
 			log << objectNameW + L"\n";
 		}
 	}

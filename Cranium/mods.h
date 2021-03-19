@@ -13,7 +13,7 @@ inline bool ForceSettings()
 
 	if (FortGameUserSetttings)
 	{
-		auto SetFullscreenMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings:SetFullscreenMode"));
+		auto SetFullscreenMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings.SetFullscreenMode"));
 
 		UGameUserSettings_SetFullscreenMode_Params SetFullscreenMode_Params;
 		SetFullscreenMode_Params.InFullscreenMode = EWindowMode::WindowedFullscreen;
@@ -21,7 +21,7 @@ inline bool ForceSettings()
 		ProcessEvent(FortGameUserSetttings, SetFullscreenMode, &SetFullscreenMode_Params);
 
 
-		auto SaveSettings = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings:SaveSettings"));
+		auto SaveSettings = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings.SaveSettings"));
 
 		ProcessEvent(FortGameUserSetttings, SaveSettings, nullptr);
 
@@ -41,7 +41,7 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
 		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:SetTimeOfDay"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary.SetTimeOfDay"));
 
 		UFortKismetLibrary_SetTimeOfDay_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
@@ -59,7 +59,7 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
 
 		UCheatManager_BugItGo_Params params;
 		params.X = -156128.36;
@@ -83,7 +83,7 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
 
 		UCheatManager_BugItGo_Params params;
 		params.X = 0;
@@ -105,7 +105,7 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
 
 		UCheatManager_BugItGo_Params params;
 		params.X = X;
@@ -127,7 +127,7 @@ namespace UFunctions
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.DestroyAll"));
 
 		auto HLODSMActor = FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
@@ -146,7 +146,7 @@ namespace UFunctions
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController.SwitchLevel"));
 
 		const FString URL = url;
 
@@ -163,7 +163,7 @@ namespace UFunctions
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode.StartMatch"));
 		Empty_Params params;
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
 		printf("\n[Neoroyale] Match started!.\n");
@@ -177,7 +177,7 @@ namespace UFunctions
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:ServerReadyToStartMatch"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController.ServerReadyToStartMatch"));
 
 		Empty_Params params;
 
@@ -199,7 +199,7 @@ namespace UFunctions
 		CurrentPlaylistInfo->BasePlaylist = gPlaylist;
 		CurrentPlaylistInfo->OverridePlaylist = gPlaylist;
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena.OnRep_CurrentPlaylistInfo"));
 
 		Empty_Params params;
 
@@ -221,7 +221,7 @@ namespace UFunctions
 
 		*GamePhase = EAthenaGamePhase::None;
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena.OnRep_GamePhase"));
 
 		AFortGameStateAthena_OnRep_GamePhase_Params params;
 		params.OldGamePhase = EAthenaGamePhase::Setup;
@@ -241,7 +241,7 @@ namespace UFunctions
 		ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
 
 		//Loading the level instance in memory
-		auto LoadLevelInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreamingDynamic:LoadLevelInstance"));
+		auto LoadLevelInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreamingDynamic.LoadLevelInstance"));
 		auto LevelStreamingDynamic = FindObject<UObject*>(XOR(L"LevelStreamingDynamic /Script/Engine.Default__LevelStreamingDynamic"));
 
 		FRotator WorldRotation;
@@ -261,7 +261,7 @@ namespace UFunctions
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
 		auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary.ExecuteConsoleCommand"));
 
 		std::wstring command = L"streamlevelin " + std::wstring(EventSequenceMap);
 
@@ -275,7 +275,7 @@ namespace UFunctions
 
 	inline void Play(const wchar_t* AnimationPlayerFullName)
 	{
-		auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer:Play"));
+		auto Play = FindObject<UFunction*>(XOR(L"Function /Script/MovieScene.MovieSceneSequencePlayer.Play"));
 
 		auto Sequence = FindObject<void*>(AnimationPlayerFullName);
 
@@ -289,7 +289,7 @@ namespace UFunctions
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 		ObjectFinder GameModeFinder = WorldFinder.Find(XOR(L"AuthorityGameMode"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:Say"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode.Say"));
 
 		const FString Msg = message.c_str();
 		AGameMode_Say_Params params;
@@ -300,7 +300,7 @@ namespace UFunctions
 
 	inline void DestoryActor(UObject* actor)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
 
 		ProcessEvent(actor, fn, nullptr);
 	}
@@ -322,7 +322,7 @@ namespace UFunctions
 
 	inline void SetBodyCustomTextureFromPng(const wchar_t* PngFileFullPath, bool bIsHead = false)
 	{
-		const auto SetTextureParameterValue = FindObject<UFunction*>(XOR(L"Function /Script/Engine.MaterialInstanceDynamic:SetTextureParameterValue"));
+		const auto SetTextureParameterValue = FindObject<UFunction*>(XOR(L"Function /Script/Engine.MaterialInstanceDynamic.SetTextureParameterValue"));
 
 		UMaterialInstanceDynamic_SetTextureParameterValue_Params params;
 		params.ParameterName = KismetFunctions::GetFName(XOR(L"Diffuse"));
@@ -331,12 +331,12 @@ namespace UFunctions
 		for (auto i = 0; i < 6; i++)
 		{
 			auto MaterialInstanceDynamic = FindObject<UObject*>(
-				XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
+				XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain.PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
 
 			if (!MaterialInstanceDynamic)
 			{
 				MaterialInstanceDynamic = FindObject<UObject*>(
-					XOR(L"MaterialInstanceDynamic /Game/Maps/Frontend.Frontend:PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
+					XOR(L"MaterialInstanceDynamic /Game/Maps/Frontend.Frontend.PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
 			}
 
 			if (MaterialInstanceDynamic)
@@ -348,7 +348,7 @@ namespace UFunctions
 					toFind = XOR(L"CharacterPartSkelMesh_Head");
 				}
 
-				if (GetObjectFullName(MaterialInstanceDynamic).find(toFind) != std::wstring::npos)
+				if (MaterialInstanceDynamic->GetFullName().find(toFind) != std::wstring::npos)
 				{
 					ProcessEvent(MaterialInstanceDynamic, SetTextureParameterValue, &params);
 					return;
@@ -360,7 +360,7 @@ namespace UFunctions
 
 	inline void SetImageFromTexture(UObject* Image, UObject* Texture)
 	{
-		auto SetBrushFromTexture = FindObject<UFunction*>(XOR(L"Function /Script/UMG.Image:SetBrushFromTexture"));
+		auto SetBrushFromTexture = FindObject<UFunction*>(XOR(L"Function /Script/UMG.Image.SetBrushFromTexture"));
 
 		SetBrushFromTextureParams SetBrushFromTexture_Params;
 
@@ -385,7 +385,7 @@ namespace UFunctions
 
 		SetImageFromTexture(IconFinder.GetObj(), gNeoniteLogoTexture);
 
-		auto PlayIntroAnim = FindObject<UObject*>(XOR(L"Function /Game/Athena/HUD/Phase/AthenaGamePhaseChangeWidget.AthenaGamePhaseChangeWidget_C:PlayIntroAnimation"));
+		auto PlayIntroAnim = FindObject<UObject*>(XOR(L"Function /Game/Athena/HUD/Phase/AthenaGamePhaseChangeWidget.AthenaGamePhaseChangeWidget_C.PlayIntroAnimation"));
 
 		PlayIntroAnim_Params PlayIntroAnimParams;
 
@@ -409,7 +409,7 @@ namespace UFunctions
 
 		SetImageFromTexture(ImageFinder.GetObj(), gNeoniteLogoTexture);
 
-		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteUI.AthenaHUDMenu:SetInventoryPanelOverride"));
+		const auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteUI.AthenaHUDMenu.SetInventoryPanelOverride"));
 
 		const auto Hud = FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
 

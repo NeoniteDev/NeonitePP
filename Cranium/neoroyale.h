@@ -54,7 +54,7 @@ namespace NeoRoyale
 		//Husks
 		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/Husk/Blueprints/HuskPawn.HuskPawn_C"));
 		UFunctions::StaticLoadObjectEasy(BPGClass,XOR(L"/Game/Characters/Enemies/DudeBro/Blueprints/DUDEBRO_Pawn.DUDEBRO_Pawn_C"));
-		
+
 
 		//CameraFilters
 		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_FilmNoir.PP_FilmNoir_C"));
@@ -81,8 +81,8 @@ namespace NeoRoyale
 
 			if (!Util::IsBadReadPtr(object))
 			{
-				auto objectFullName = GetObjectFullName(object);
-				auto objectFirstName = GetObjectFirstName(object);
+				auto objectFullName = object->GetFullName();
+				auto objectFirstName = object->GetName();
 
 				if ((objectFullName.starts_with(L"AthenaGadget") || objectFirstName.starts_with(L"WID_")) && !objectFirstName.starts_with(L"Default__"))
 				{
@@ -176,7 +176,7 @@ namespace NeoRoyale
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
 		NeoPlayer.Pawn = SpawnActor(
-			(UWorld*)WorldFinder.GetObj(),
+			WorldFinder.GetObj(),
 			FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")),
 			&Transform,
 			FActorSpawnParameters()
@@ -201,7 +201,7 @@ namespace NeoRoyale
 			NeoPlayer.ExecuteConsoleCommand(XOR(L"god"));
 			NeoPlayer.SetMovementSpeed(1.1);
 
-			auto PlaylistName = GetObjectFirstName(gPlaylist);
+			auto PlaylistName = gPlaylist->GetName();
 
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
@@ -209,7 +209,7 @@ namespace NeoRoyale
 				UFunctions::TeleportToSpawn();
 			}
 
-			if(gVersion > 14.60)
+			if (gVersion > 14.60)
 			{
 				UFunctions::SetPlaylist();
 

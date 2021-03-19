@@ -33,7 +33,7 @@ public:
 			this->UpdateMesh();
 		}
 
-		auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+		auto FUNC_GetAnimInstance = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent.GetAnimInstance"));
 
 		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
 
@@ -74,7 +74,7 @@ public:
 
 	void TeleportTo(FVector Location, FRotator Rotation)
 	{
-		const auto FUNC_K2_TeleportTo = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_TeleportTo"));
+		const auto FUNC_K2_TeleportTo = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_TeleportTo"));
 
 		AActor_K2_TeleportTo_Params K2_TeleportTo_Params;
 		K2_TeleportTo_Params.DestLocation = Location;
@@ -94,7 +94,7 @@ public:
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.Summon"));
 
 		const FString ClassName = ClassToSummon;
 
@@ -112,7 +112,7 @@ public:
 			UpdatePlayerController();
 		}
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller.Possess"));
 
 		AController_Possess_Params params;
 		params.InPawn = this->Pawn;
@@ -123,7 +123,7 @@ public:
 
 	auto StartSkydiving(float height)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena.TeleportToSkyDive"));
 
 		AFortPlayerPawnAthena_TeleportToSkyDive_Params params;
 		params.HeightAboveGround = height;
@@ -134,7 +134,7 @@ public:
 
 	auto IsJumpProvidingForce()
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character.IsJumpProvidingForce"));
 
 		ACharacter_IsJumpProvidingForce_Params params;
 
@@ -151,7 +151,7 @@ public:
 			this->UpdateAnimInstance();
 		}
 
-		auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
+		auto FUNC_GetCurrentActiveMontage = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance.GetCurrentActiveMontage"));
 
 		UAnimInstance_GetCurrentActiveMontage_Params GetCurrentActiveMontage_Params;
 
@@ -159,9 +159,9 @@ public:
 
 		auto CurrentPlayingMontage = GetCurrentActiveMontage_Params.ReturnValue;
 
-		if (CurrentPlayingMontage && GetObjectFirstName(CurrentPlayingMontage).starts_with(XOR(L"Emote_")))
+		if (CurrentPlayingMontage && CurrentPlayingMontage->GetName().starts_with(XOR(L"Emote_")))
 		{
-			auto FUNC_Montage_Stop = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
+			auto FUNC_Montage_Stop = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance.Montage_Stop"));
 
 			UAnimInstance_Montage_Stop_Params Montage_Stop_Params;
 			Montage_Stop_Params.InBlendOutTime = 0;
@@ -173,7 +173,7 @@ public:
 
 	auto IsSkydiving()
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.IsSkydiving"));
 
 		ACharacter_IsSkydiving_Params params;
 
@@ -184,7 +184,7 @@ public:
 
 	auto IsParachuteOpen()
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.IsParachuteOpen"));
 
 		ACharacter_IsParachuteOpen_Params params;
 
@@ -195,7 +195,7 @@ public:
 
 	auto IsParachuteForcedOpen()
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.IsParachuteForcedOpen"));
 
 		ACharacter_IsParachuteForcedOpen_Params params;
 
@@ -206,7 +206,7 @@ public:
 
 	auto Jump()
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character.Jump"));
 
 		Empty_Params params;
 
@@ -246,7 +246,7 @@ public:
 			this->UpdateMesh();
 		}
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent.SetSkeletalMesh"));
 
 		std::wstring MeshName = meshname;
 
@@ -309,7 +309,7 @@ public:
 #endif
 
 		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary.ApplyCharacterCosmetics"));
 
 		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
@@ -327,7 +327,7 @@ public:
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
 		auto KismetLib = FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary.UpdatePlayerCustomCharacterPartsVisualization"));
 
 		UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params params;
 		params.PlayerState = PlayerStateFinder.GetObj();
@@ -338,8 +338,7 @@ public:
 
 	auto PickupActor(UObject* PlacementDecoItemDefinition, UObject* PickupTarget = nullptr)
 	{
-
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:PickUpActor"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.PickUpActor"));
 
 		PickupActor_Params params;
 		params.PickupTarget = PickupTarget;
@@ -356,7 +355,7 @@ public:
 		GUID.C = guid;
 		GUID.D = guid;
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:EquipWeaponDefinition"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.EquipWeaponDefinition"));
 
 		std::wstring WeaponName = weaponname;
 
@@ -366,13 +365,13 @@ public:
 
 		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
-			std::wstring objectName = GetObjectFullName(WeaponData);
+			std::wstring objectName = WeaponData->GetFullName();
 
 			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
 			{
 				if (objectName.starts_with(L"AthenaGadget"))
 				{
-					auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+					auto FUN_weapondef = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition.GetWeaponItemDefinition"));
 
 					UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
@@ -391,7 +390,7 @@ public:
 
 				ProcessEvent(this->Pawn, fn, &params);
 			}
-			else if(objectName.starts_with(L"FortTrap"))
+			else if (objectName.starts_with(L"FortTrap"))
 			{
 				this->PickupActor(WeaponData);
 			}
@@ -414,7 +413,7 @@ public:
 		if (EmoteDef && !Util::IsBadReadPtr(EmoteDef))
 		{
 			//Emote Def is valid, now we grab the animation montage
-			auto FUNC_GetAnimationHardReference = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortMontageItemDefinitionBase:GetAnimationHardReference"));
+			auto FUNC_GetAnimationHardReference = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortMontageItemDefinitionBase.GetAnimationHardReference"));
 
 			UFortMontageItemDefinitionBase_GetAnimationHardReference_Params GetAnimationHardReference_Params;
 			GetAnimationHardReference_Params.BodyType = EFortCustomBodyType::All;
@@ -426,7 +425,7 @@ public:
 			auto Animation = GetAnimationHardReference_Params.ReturnValue;
 
 			//got the animation, now play :JAM:
-			auto FUNC_Montage_Play = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Play"));
+			auto FUNC_Montage_Play = FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance.Montage_Play"));
 
 			UAnimInstance_Montage_Play_Params params;
 			params.MontageToPlay = Animation;
@@ -445,7 +444,7 @@ public:
 
 	auto GetLocation() -> FVector
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_GetActorLocation"));
 
 		AActor_K2_GetActorLocation_Params params;
 
@@ -460,7 +459,7 @@ public:
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent.SetMovementMode"));
 
 		UCharacterMovementComponent_SetMovementMode_Params params;
 
@@ -495,7 +494,7 @@ public:
 
 	auto SetHealth(float SetHealthInput)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetHealth"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.SetHealth"));
 
 		AFortPawn_SetHealth_Params params;
 
@@ -506,7 +505,7 @@ public:
 
 	auto SetShield(float SetShieldInput)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetShield"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.SetShield"));
 
 		AFortPawn_SetShield_Params params;
 
@@ -517,7 +516,7 @@ public:
 
 	auto SetMaxHealth(float SetMaxHealthInput)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxHealth"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.SetMaxHealth"));
 
 		AFortPawn_SetMaxHealth_Params params;
 
@@ -528,7 +527,7 @@ public:
 
 	auto SetMaxShield(float SetMaxShieldInput)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMaxShield"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.SetMaxShield"));
 
 		AFortPawn_SetMaxShield_Params params;
 
@@ -539,7 +538,7 @@ public:
 
 	auto SetMovementSpeed(float SetMovementSpeedInput)
 	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn:SetMovementSpeed"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPawn.SetMovementSpeed"));
 
 		AFortPawn_SetMovementSpeedMultiplier_Params params;
 
@@ -567,19 +566,21 @@ public:
 		printf(XOR("\n[NeoRoyale] You should have infinite ammo now!\n"));
 	}
 
-	auto ExecuteConsoleCommand(const wchar_t* command)
+	static auto ExecuteConsoleCommand(const wchar_t* command)
 	{
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
 		auto KismetSysLib = FindObject<UObject*>(XOR(L"KismetSystemLibrary /Script/Engine.Default__KismetSystemLibrary"));
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary:ExecuteConsoleCommand"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.KismetSystemLibrary.ExecuteConsoleCommand"));
 
 		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
 		params.Command = command;
-		params.SpecificPlayer = this->Controller;
+		params.SpecificPlayer = PlayerControllerFinder.GetObj();
 
 		ProcessEvent(KismetSysLib, fn, &params);
 		printf(XOR("\n[NeoRoyale] Executed a console command!\n"));
@@ -590,12 +591,12 @@ public:
 		/*
 		if (this->IsSkydiving())
 		{
-			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
+			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.EndSkydiving"));
 
 			ProcessEvent(this->Pawn, fn, nullptr);
 		}*/
 
-		/*auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
+		/*auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.BeginSkydiving"));
 
 		AFortPlayerPawn_BeginSkydiving_Params params;
 		params.bFromBus = true;
@@ -608,7 +609,7 @@ public:
 	auto ForceOpenParachute()
 	{
 		/*
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn.BP_ForceOpenParachute"));
 
 		Empty_Params params;
 
@@ -624,7 +625,7 @@ public:
 			UpdatePlayerController();
 		}
 
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController.IsInAircraft"));
 		ACharacter_IsInAircraft_Params params;
 
 		ProcessEvent(this->Controller, fn, &params);
@@ -633,9 +634,9 @@ public:
 
 	void HideHead(bool bIsHidden)
 	{
-		auto Mesh = FindObject<UObject*>(XOR(L"SkeletalMeshComponentBudgeted /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"));
+		auto Mesh = FindObject<UObject*>(XOR(L"SkeletalMeshComponentBudgeted /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain.PersistentLevel.PlayerPawn_Athena_C_"));
 
-		auto SetOwnerNoSee = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PrimitiveComponent:SetOwnerNoSee"));
+		auto SetOwnerNoSee = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PrimitiveComponent.SetOwnerNoSee"));
 
 		UPrimitiveComponent_SetOwnerNoSee_Params SetOwnerNoSee_Params;
 		SetOwnerNoSee_Params.bNewOwnerNoSee = bIsHidden;
@@ -645,7 +646,7 @@ public:
 
 	void SetCameraMode(const wchar_t* NewMode)
 	{
-		auto ClientSetCameraMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:ClientSetCameraMode"));
+		auto ClientSetCameraMode = FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController.ClientSetCameraMode"));
 
 		APlayerController_ClientSetCameraMode_Params ClientSetCameraMode_Params;
 		ClientSetCameraMode_Params.NewCamMode = KismetFunctions::GetFName(NewMode);
@@ -670,7 +671,7 @@ public:
 
 			auto WeaponDefFinder = PickaxeFinder.Find(XOR(L"WeaponDefinition"));
 
-			auto Weapon = GetObjectFirstName(WeaponDefFinder.GetObj());
+			auto Weapon = WeaponDefFinder.GetObj()->GetName();
 
 			this->EquipWeapon(Weapon.c_str());
 
