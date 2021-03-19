@@ -139,7 +139,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			bWantsToShowPickaxe = false;
 		}
 	}
-
+	
 	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
 		Console::CheatManager();

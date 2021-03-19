@@ -161,13 +161,27 @@ namespace NeoRoyale
 
 	inline void Init()
 	{
-		Console::CheatManager();
+		//Console::CheatManager();
 
-		UFunctions::DestroyAllHLODs();
+		//UFunctions::DestroyAllHLODs();
 
-		NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
+		FTransform Transform;
+		Transform.Scale3D = FVector(1, 1, 1);
+		Transform.Translation = FVector();
+		Transform.Rotation = FQuat();
 
-		NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
+
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+
+		NeoPlayer.Pawn = SpawnActor(
+			(UWorld*)WorldFinder.GetObj(),
+			FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")),
+			&Transform,
+			FActorSpawnParameters()
+		);
+
 
 		NeoPlayer.Authorize();
 

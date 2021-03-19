@@ -121,6 +121,9 @@ namespace Patterns
 
 		constexpr const char* SLOI = "\x4c\x89\x4c\x24\x00\x48\x89\x54\x24\x00\x48\x89\x4c\x24\x00\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8b\xec";
 
+		constexpr const char* SpawnActorInternal =
+		"\x48\x8b\xc4\x55\x53\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8d\xa8\x00\x00\x00\x00\x48\x81\xec\x00\x00\x00\x00\x0f\x29\x70\x00\x0f\x29\x78\x00\x44\x0f\x29\x40\x00\x44\x0f\x29\x88\x00\x00\x00\x00\x44\x0f\x29\x90\x00\x00\x00\x00\x44\x0f\x29\x98\x00\x00\x00\x00\x44\x0f\x29\xa0\x00\x00\x00\x00\x44\x0f\x29\xa8\x00\x00\x00\x00\x44\x0f\x29\xb0\x00\x00\x00\x00\x44\x0f\x29\xb8\x00\x00\x00\x00\x48\x8b\x05\x00\x00\x00\x00\x48\x33\xc4\x48\x89\x45\x00\x45\x33\xed";
+
 		//Dead
 		constexpr const char* ProcessEvent =
 		"\x40\x55\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x81\xEC\x00\x00\x00\x00\x48\x8D\x6C\x24\x00\x48\x89\x9D\x00\x00\x00\x00\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC5\x48\x89\x85\x00\x00\x00\x00\x8B\x41\x0C\x45\x33\xF6\x3B\x05\x00\x00\x00\x00\x4D\x8B\xF8\x48\x8B\xF2\x4C\x8B\xE1\x41\xB8\x00\x00\x00\x00\x7D\x2A";
@@ -144,7 +147,6 @@ namespace Patterns
 
 		//Dead
 		constexpr const char* FreeInternal = "\x48\x85\xC9\x74\x2E\x53\x48\x83\xEC\x20\x48\x8B\xD9\x48\x8B\x0D\x00\x00\x00\x00\x48\x85\xC9\x75\x0C";
-
 	}
 
 
@@ -195,6 +197,7 @@ namespace Masks
 		constexpr const char* GObjects = "xxx????xxxx";
 		constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
 		constexpr const char* SLOI = "xxxx?xxxx?xxxx?xxxxxxxxxxxxxxx";
+		constexpr const char* SpawnActorInternal = "xxxxxxxxxxxxxxxxxx????xxx????xxx?xxx?xxxx?xxxx????xxxx????xxxx????xxxx????xxxx????xxxx????xxxx????xxx????xxxxxx?xxx";
 		constexpr const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
 		constexpr const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
 		constexpr const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
@@ -269,6 +272,16 @@ enum EInternalObjectFlags
 	RootSet = 1 << 30,
 	GarbageCollectionKeepFlags = Native | Async | AsyncLoading,
 	AllFlags = ReachableInCluster | ClusterRoot | Native | Async | AsyncLoading | Unreachable | PendingKill | RootSet,
+};
+
+enum class ESpawnActorCollisionHandlingMethod : uint8_t
+{
+	Undefined,
+	AlwaysSpawn,
+	AdjustIfPossibleButAlwaysSpawn,
+	AdjustIfPossibleButDontSpawnIfColliding,
+	DontSpawnIfColliding,
+	ESpawnActorCollisionHandlingMethod_MAX,
 };
 
 enum class EAthenaGamePhaseStep

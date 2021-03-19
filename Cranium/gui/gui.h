@@ -438,6 +438,19 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						NewLine();
 
+
+						static char command[1024];
+						InputText(XOR("Command"), command, sizeof command);
+
+						SameLine();
+
+						if (Button("Execute"))
+						{
+							std::string commandS(command);
+							const std::wstring coammndW(commandS.begin(), commandS.end());
+							Player::ExecuteConsoleCommand(coammndW.c_str());
+						}
+
 						if (Button("Bots Grenade"))
 						{
 							Util::CopyToClipboard("WID_Athena_FrenchYedoc_JWFriendly");

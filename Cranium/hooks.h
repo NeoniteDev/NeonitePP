@@ -32,126 +32,84 @@ namespace Hooks
 
 	inline bool Misc(float version)
 	{
-		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
+		if (MH_Initialize() != MH_OK)
+		{
+			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
+			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
+		}
+
+
+		//GObject Array
 		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+
+		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString, Masks::New::FNameToString);
+		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+
+		auto offset = *reinterpret_cast<int32_t*>(FNameToStringAdd + 6);
+		FNameToStringAdd = FNameToStringAdd + 10 + offset;
+
+		FNameToString = decltype(FNameToString)(FNameToStringAdd);
+
+
+		//A work around instead of using a pattern.
+		GEngine = FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
+
+
+		uintptr_t ProcessEventAdd;
 		if (version >= 16.00f)
 		{
-			auto GONIAdd = Util::FindPattern(Patterns::New::GONI, Masks::New::GONI);
-			VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
+			ProcessEventAdd = Util::FindPattern(Patterns::New::ProcessEvent, Masks::New::ProcessEvent);
+			VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 
-			int32_t offset = *(int32_t*)(GONIAdd + 1);
-			auto fnAddress = GONIAdd + 5 + offset;
-
-			GetObjectNameInternal = decltype(GetObjectNameInternal)(fnAddress);
-		}
-
-		MessageBoxW(nullptr, std::to_wstring(GObjs->NumElements).c_str(), L"test", MB_OK);
-
-		for (auto i = 0x0; i < GObjs->NumElements; ++i)
-		{
-			auto object = GObjs->GetByIndex(i);
-			if (object == nullptr)
-			{
-				continue;
-			}
-
-			auto objectFullName = GetObjectFirstName(object);
-
-			printf("\n%ls\n", objectFullName.c_str());
-			Sleep(10);
-		}
-
-		/*
-		//Used for ProcessEvent Hooking.
-		//Should work on everything
-		auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
-		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
-		MessageBoxW(nullptr, L"ProcessEvent", L"test", MB_OK);
-
-		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-
-		gProcessEventAdd = ProcessEventAdd;
-
-		//Used for Camera Hooking.
-		//Tested from 12.41 to latest
-		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
-		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
-		MessageBoxW(nullptr, L"GetViewPoint", L"test", MB_OK);
-
-		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
-
-		//Used for getting UObjects names.
-		//Tested from 12.41 to latest
-		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
-		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
-		MessageBoxW(nullptr, L"GetObjectName", L"test", MB_OK);
-
-		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
-
-		//Used for getting UObjects full names.
-		if (gVersion < 14.30)
-		{
-			//Tested only on 12.41 and 12.61.
-			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
-			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
-
-			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
+			auto offset = *reinterpret_cast<int32_t*>(ProcessEventAdd + 12);
+			ProcessEventAdd = ProcessEventAdd + 16 + offset;
 		}
 		else
 		{
-			//14.30^
-			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
-			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
-			MessageBoxW(nullptr, L"GetObjectFullName", L"test", MB_OK);
-
-			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
+			ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
+			VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 		}
+
+		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
+
 
 		//Used for getting FFields full names.
 		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
 		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
-		MessageBoxW(nullptr, L"GetFullName", L"test", MB_OK);
 
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
-
-
-		//Used to free the memory for names.
-		auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
-		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
-		MessageBoxW(nullptr, L"Free", L"test", MB_OK);
-
-		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
 
 
 		//Used to construct objects, mostly used for console stuff.
 		//Tested from 12.41 to latest
 		auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
-		MessageBoxW(nullptr, L"SCOI", L"test", MB_OK);
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
+
 		//Used to load objects.
-        //Tested from 12.41 to latest
 		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
 		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
-		MessageBoxW(nullptr, L"SLOI", L"test", MB_OK);
 
 		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
 
-		//Used for mostly everything.
-		//Tested from 12.41 to latest
-		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
-		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
-		MessageBoxW(nullptr, L"GEngine", L"test", MB_OK);
 
-		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
+		//Used to spawn actors
+		auto SpawnActorAdd = Util::FindPattern(Patterns::bGlobal::SpawnActorInternal, Masks::bGlobal::SpawnActorInternal);
+		VALIDATE_ADDRESS(SpawnActorAdd, XOR("Failed to find SpawnActor Address."));
+
+		SpawnActor = decltype(SpawnActor)(SpawnActorAdd);
 
 
+		//Commented out as of s16
+		/*
 		auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
 		MessageBoxW(nullptr, L"abilitypatch", L"test", MB_OK);
@@ -161,23 +119,18 @@ namespace Hooks
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
 
-		if (MH_Initialize() != MH_OK)
-		{
-			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
-			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
-		}
+		//Used for Camera Hooking.
+		//Tested from 12.41 to latest
+		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
+		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
+		
 
-		MessageBoxW(nullptr, L"MH_Initialize", L"test", MB_OK);
+		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
-		//Process Event Hooking.
-		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
-		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
-
-		//GetViewPoint Hooking.
+	    //GetViewPoint Hooking.
 		MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
 		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));
-
-		MessageBoxW(nullptr, std::to_wstring(version).c_str(), L"test", MB_OK);*/
+		*/
 
 		return true;
 	}

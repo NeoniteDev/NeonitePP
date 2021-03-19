@@ -1,10 +1,15 @@
 #pragma once
 
 inline void* (*ProcessEvent)(void*, void*, void*);
+
+struct UWorld
+{
+	char padding[0x7b0];
+};
+
+inline UObject* (*SpawnActor)(UWorld* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
-inline FString (*GetObjectNameInternal)(PVOID);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
-inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline UEngine* GEngine;

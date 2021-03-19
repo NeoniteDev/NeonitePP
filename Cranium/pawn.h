@@ -213,6 +213,32 @@ public:
 		ProcessEvent(this->Pawn, fn, &params);
 	}
 
+	auto Move()
+	{
+		struct FHitResult
+		{
+			char padding[0x88];
+		};
+		
+		struct test
+		{
+			FVector DeltaLocation;
+			bool bSweep;
+			FHitResult SweepHitResult;
+			bool bTeleport;
+		};
+
+		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_AddActorLocalOffset"));
+
+		test params;
+		params.DeltaLocation = FVector(10, 0, 0);
+		params.bSweep = true;
+		params.SweepHitResult = FHitResult();
+		params.bTeleport = false;
+
+		ProcessEvent(this->Pawn, fn, &params);
+	}
+
 	auto SetSkeletalMesh(const wchar_t* meshname)
 	{
 		if (!this->Mesh || !Util::IsBadReadPtr(this->Mesh))
