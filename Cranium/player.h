@@ -59,8 +59,7 @@ public:
 	{
 		if (this->Pawn)
 		{
-			this->Summon(XOR(L"PlayerPawn_Athena_C"));
-			this->Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
+			this->Pawn = UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")));
 
 			if (this->Pawn)
 			{
@@ -72,7 +71,7 @@ public:
 		}
 	}
 
-	void TeleportTo(FVector Location, FRotator Rotation)
+	void TeleportTo(FVector Location, FRotator Rotation = FRotator())
 	{
 		const auto FUNC_K2_TeleportTo = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_TeleportTo"));
 
@@ -83,26 +82,9 @@ public:
 		ProcessEvent(this->Pawn, FUNC_K2_TeleportTo, &K2_TeleportTo_Params);
 	}
 
-	void Summon(const wchar_t* ClassToSummon)
+	void TeleportToSpawn()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
-
-		ObjectFinder PlayerControllerFinder = ObjectFinder::EntryPoint(uintptr_t(this->Controller));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.Summon"));
-
-		const FString ClassName = ClassToSummon;
-
-		UCheatManager_Summon_Params params;
-		params.ClassName = ClassName;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf("\n[NeoRoyale] %ls was summoned!\n", ClassToSummon);
+		TeleportTo(FVector(-156128.36, -159492.78, -2996.30));
 	}
 
 	void Possess()

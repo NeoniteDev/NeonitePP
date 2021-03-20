@@ -50,74 +50,6 @@ namespace UFunctions
 		ProcessEvent(KismetLib, fn, &params);
 	}
 
-	inline void TeleportToSpawn()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
-
-		UCheatManager_BugItGo_Params params;
-		params.X = -156128.36;
-		params.Y = -159492.78;
-		params.Z = -2996.30;
-		params.Pitch = 0;
-		params.Yaw = 0;
-		params.Roll = 0;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-
-		printf(XOR("\n[NeoRoyale] Teleported to spawn island.\n"));
-	}
-
-	inline void TeleportToMain()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
-
-		UCheatManager_BugItGo_Params params;
-		params.X = 0;
-		params.Y = 0;
-		params.Z = 0;
-		params.Pitch = 0;
-		params.Yaw = 0;
-		params.Roll = 0;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-	}
-
-	inline void TeleportToCoords(float X, float Y, float Z)
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager.BugItGo"));
-
-		UCheatManager_BugItGo_Params params;
-		params.X = X;
-		params.Y = Y;
-		params.Z = Z;
-		params.Pitch = 0;
-		params.Yaw = 0;
-		params.Roll = 0;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-	}
-
 	//travel to a url
 	inline void Travel(const wchar_t* url)
 	{
@@ -436,27 +368,5 @@ namespace UFunctions
 		{
 			exit(0);
 		}
-	}
-}
-
-namespace UE4
-{
-	inline auto SpawnActorEasy(UClass* Class, FVector Location = FVector(), FQuat Rotation = FQuat())
-	{
-		FTransform Transform;
-		Transform.Scale3D = FVector(1, 1, 1);
-		Transform.Translation = Location;
-		Transform.Rotation = Rotation;
-
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-
-		return SpawnActor(
-			WorldFinder.GetObj(),
-			Class,
-			&Transform,
-			FActorSpawnParameters()
-		);
 	}
 }

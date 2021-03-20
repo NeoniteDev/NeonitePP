@@ -7,6 +7,8 @@
 #include "ue4.h"
 #include "veh.h"
 
+
+
 namespace Hooks
 {
 #ifdef SSL_BYPASS
@@ -25,6 +27,7 @@ namespace Hooks
 		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
 
 		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
+
 		return true;
 	}
 
@@ -32,13 +35,13 @@ namespace Hooks
 
 	inline bool Misc(float version)
 	{
+
 		if (MH_Initialize() != MH_OK)
 		{
 			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
 			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
 		}
-
-
+		
 		//GObject Array
 		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));

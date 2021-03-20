@@ -162,7 +162,7 @@ namespace NeoRoyale
 	inline void Init()
 	{
 		UFunctions::DestroyAll(UE4::FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor")));
-		
+
 		NeoPlayer.Pawn = UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")));
 
 		NeoPlayer.Authorize();
@@ -186,7 +186,7 @@ namespace NeoRoyale
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))
 			{
-				UFunctions::TeleportToSpawn();
+				NeoPlayer.TeleportToSpawn();
 			}
 
 			if (gVersion > 14.60)

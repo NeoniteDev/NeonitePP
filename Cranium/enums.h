@@ -84,7 +84,6 @@ namespace Patterns
 	//16.60
 	namespace New
 	{
-		constexpr const char* GEngine = "\x48\x89\x05\x00\x00\x00\x00\x48\x85\xF6\x74\x08\x48\x8B\xCE\xE8";
 		constexpr const char* FNameToString = "\x75\x28\x48\x8B\xD3\xE8\x00\x00\x00\x00";
 		constexpr const char* ProcessEvent = "\x75\x00\x4c\x8b\xc5\x48\x8b\xd7\x48\x8b\xcb\xe8\x00\x00\x00\x00\x48\x8b\x5c\x24";
 	}
@@ -168,7 +167,6 @@ namespace Masks
 
 	namespace New
 	{
-		constexpr const char* GEngine = "xxx????xxxxxxxxx";
 		constexpr const char* FNameToString = "xxxxxx????";
 		constexpr const char* ProcessEvent = "x?xxxxxxxxxx????xxxx";
 	}

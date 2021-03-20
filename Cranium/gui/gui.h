@@ -168,13 +168,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (Button(XOR("Teleport to Spawn Island")))
 						{
-							UFunctions::TeleportToSpawn();
+							NeoPlayer.TeleportToSpawn();
 						}
 
 						SameLine(0.0f, 20.0f);
 						if (Button(XOR("Teleport to Main Island")))
 						{
-							UFunctions::TeleportToMain();
+							NeoPlayer.TeleportTo(FVector());
 						}
 
 						static float X = 1.0f;
@@ -200,14 +200,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						if (Button(XOR("Teleport")))
 						{
-							UFunctions::TeleportToCoords(X, Y, Z);
+							NeoPlayer.TeleportTo(FVector(X, Y, Z));
 						}
 
 						NewLine();
 
 						if (Button("Fill level with water"))
 						{
-							NeoPlayer.Summon(XOR(L"Apollo_Waterbody_Ocean_Parent_C"));
+							//NeoPlayer.Summon(XOR(L"Apollo_Waterbody_Ocean_Parent_C"));
 						}
 
 						SameLine();
@@ -444,7 +444,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							const std::wstring coammndW(commandS.begin(), commandS.end());
 							Console::ExecuteConsoleCommand(coammndW.c_str());
 						}
-						
+
 						NewLine();
 
 						if (Button("Test"))
@@ -561,6 +561,24 @@ F3 - Back to lobby.
 					Text(XOR("Irma (@omairma): Frontend, Internal."));
 
 					EndTabItem();
+				}
+
+				if (ProdMode)
+				{
+					if (BeginTabItem(XOR("Prod")))
+					{
+						if (Button("test"))
+						{
+							UE4::DumpGObjects();
+						}
+
+						if (Button("Hack"))
+						{
+
+						}
+
+						EndTabItem();
+					}
 				}
 			}
 			End();

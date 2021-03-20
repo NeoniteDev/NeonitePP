@@ -5,7 +5,7 @@
 #include "kismet.h"
 
 #ifndef PROD
-//#define LOGGING
+#define LOGGING
 #endif
 
 using namespace NeoRoyale;
@@ -18,440 +18,441 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 	auto nObj = pObj->GetName();
 	auto nFunc = pFunc->GetName();
 
-
-	//If the game requested matchmaking we open the game mode
-	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+	if (!ProdMode)
 	{
-		printf(XOR("\n\n[NeoRoyale] Start!"));
-
-		//TODO: clean this mess;
-		std::string url = gUrl;
-		gUrl.clear();
-		std::string query = url.erase(0, url.find(XOR("%3A")) + 1);
-		query.erase(url.find("&"), url.size());
-		query.erase(0, url.find(XOR("playlist")));
-		std::string PlaylistName = query + "." + query;
-		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
-
-		auto Playlist = UE4::FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
-		auto Map = APOLLO_TERRAIN;
-
-		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
+		if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 		{
-			Map = APOLLO_PAPAYA;
-		}
+			printf(XOR("\n\n[NeoRoyale] Start!"));
 
-		if (PlaylistNameW.find(XOR(L"yogurt")) != std::string::npos && !gPlaylist)
-		{
-			Map = APOLLO_TERRAIN_YOGURT;
-			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-		}
+			//TODO: clean this mess;
+			std::string url = gUrl;
+			gUrl.clear();
+			std::string query = url.erase(0, url.find(XOR("%3A")) + 1);
+			query.erase(url.find("&"), url.size());
+			query.erase(0, url.find(XOR("playlist")));
+			std::string PlaylistName = query + "." + query;
+			const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
-		if (Playlist && !gPlaylist)
-		{
-			gPlaylist = Playlist;
-		}
-		else if (!Playlist && !gPlaylist)
-		{
-			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-		}
+			auto Playlist = UE4::FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+			auto Map = APOLLO_TERRAIN;
+
+			if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
+			{
+				Map = APOLLO_PAPAYA;
+			}
+
+			if (PlaylistNameW.find(XOR(L"yogurt")) != std::string::npos && !gPlaylist)
+			{
+				Map = APOLLO_TERRAIN_YOGURT;
+				gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			}
+
+			if (Playlist && !gPlaylist)
+			{
+				gPlaylist = Playlist;
+			}
+			else if (!Playlist && !gPlaylist)
+			{
+				gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			}
 
 #ifndef PROD
-		if (HWID::Validate())
-		{
-			Start(Map);
-		}
-		else
-		{
-			MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
-		}
+			if (HWID::Validate())
+			{
+				Start(Map);
+			}
+			else
+			{
+				MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
+			}
 #else
-		Start(Map);
+			Start(Map);
 #endif
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
-	{
-		printf(XOR("\n[NeoRoyale] Init!\n"));
-		Init();
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
-	{
-		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
-		UFunctions::RegionCheck();
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
-	{
-		if (gVersion > 14.30)
-		{
-			//UFunctions::SetupCustomInventory();
 		}
 
-		UFunctions::PlayCustomPlayPhaseAlert();
-		LoadMoreClasses();
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
-	{
-		return nullptr;
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
-	{
-		return nullptr;
-	}
-
-	// NOTE: (irma) This is better.
-	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
-	{
-		//Console::ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-		NeoPlayer.Respawn();
-		auto currentLocation = NeoPlayer.GetLocation();
-		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
-	}
-
-	if (bIsInit)
-	{
-		if (bWantsToJump)
+		if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 		{
-			NeoPlayer.Jump();
-			bWantsToJump = false;
+			printf(XOR("\n[NeoRoyale] Init!\n"));
+			Init();
 		}
 
-		else if (bWantsToOpenGlider)
+		if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 		{
-			NeoPlayer.ForceOpenParachute();
-			bWantsToOpenGlider = false;
+			if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
+			UFunctions::RegionCheck();
 		}
 
-		else if (bWantsToSkydive)
+		if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 		{
-			NeoPlayer.Skydive();
-			bWantsToSkydive = false;
-		}
-
-		else if (bWantsToShowPickaxe)
-		{
-			NeoPlayer.ShowPickaxe();
-			bWantsToShowPickaxe = false;
-		}
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
-	{
-		auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
-
-		auto OldWeapon = params->PrevWeapon;
-
-		if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
-		{
-			UFunctions::DestoryActor(OldWeapon);
-			OldWeapon = nullptr;
-		}
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
-	{
-		if (NeoPlayer.Pawn)
-		{
-			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-			ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-			ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
-
-			auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
-
-			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
+			if (gVersion > 14.30)
 			{
-				NeoPlayer.Emote(LastEmotePlayed);
-				for (auto i = 0; i < Bots.size(); i++)
+				//UFunctions::SetupCustomInventory();
+			}
+
+			UFunctions::PlayCustomPlayPhaseAlert();
+			LoadMoreClasses();
+		}
+
+
+		// NOTE: (irma) This is better.
+		if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
+		{
+			//Console::ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+			NeoPlayer.Respawn();
+			NeoPlayer.TeleportTo(NeoPlayer.GetLocation());
+		}
+
+		if (bIsInit)
+		{
+			if (bWantsToJump)
+			{
+				NeoPlayer.Jump();
+				bWantsToJump = false;
+			}
+
+			else if (bWantsToOpenGlider)
+			{
+				NeoPlayer.ForceOpenParachute();
+				bWantsToOpenGlider = false;
+			}
+
+			else if (bWantsToSkydive)
+			{
+				NeoPlayer.Skydive();
+				bWantsToSkydive = false;
+			}
+
+			else if (bWantsToShowPickaxe)
+			{
+				NeoPlayer.ShowPickaxe();
+				bWantsToShowPickaxe = false;
+			}
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
+		{
+			auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
+
+			auto OldWeapon = params->PrevWeapon;
+
+			if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
+			{
+				UFunctions::DestoryActor(OldWeapon);
+				OldWeapon = nullptr;
+			}
+		}
+
+		if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
+		{
+			if (NeoPlayer.Pawn)
+			{
+				ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+				ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+				ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+				ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
+
+				auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
+
+				if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
 				{
-					auto Bot = Bots[i];
-					if (Bot.Pawn)
+					NeoPlayer.Emote(LastEmotePlayed);
+					for (auto i = 0; i < Bots.size(); i++)
 					{
-						Bot.Emote(LastEmotePlayed);
+						auto Bot = Bots[i];
+						if (Bot.Pawn)
+						{
+							Bot.Emote(LastEmotePlayed);
+						}
 					}
 				}
 			}
 		}
-	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"ReceiveHit")) && nObj.starts_with(XOR(L"Prj_Athena_FrenchYedoc_JWFriendly_C")))
-	{
-		Player Bot;
-		const auto Params = static_cast<AActor_ReceiveHit_Params*>(pParams);
-		auto HitLocation = Params->HitLocation;
-
-		NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
-		Bot.Pawn = ObjectFinder::FindActor(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"), Bots.size());
-
-		if (Bot.Pawn)
+		if (wcsstr(nFunc.c_str(), XOR(L"ReceiveHit")) && nObj.starts_with(XOR(L"Prj_Athena_FrenchYedoc_JWFriendly_C")))
 		{
-			HitLocation.Z = HitLocation.Z + 200;
+			Player Bot;
+			const auto Params = static_cast<AActor_ReceiveHit_Params*>(pParams);
+			auto HitLocation = Params->HitLocation;
 
-			FRotator Rotation;
-			Rotation.Yaw = 0;
-			Rotation.Roll = 0;
-			Rotation.Pitch = 0;
+			Bot.Pawn = UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/AI/Phoebe/BP_PlayerPawn_Athena_Phoebe.BP_PlayerPawn_Athena_Phoebe_C")));
 
-			Bot.TeleportTo(HitLocation, Rotation);
+			if (Bot.Pawn)
+			{
+				HitLocation.Z = HitLocation.Z + 200;
 
-			Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
-			Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
+				FRotator Rotation;
+				Rotation.Yaw = 0;
+				Rotation.Roll = 0;
+				Rotation.Pitch = 0;
 
-			Bots.push_back(Bot);
+				Bot.TeleportTo(HitLocation, Rotation);
+
+				Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
+				Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
+
+				Bots.push_back(Bot);
+			}
 		}
-	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
-	{
-		NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
-	}
-
-
-	if (wcsstr(nFunc.c_str(), XOR(L"ExecuteConsoleCommand")))
-	{
-		FString ScriptNameF = static_cast<UKismetSystemLibrary_ExecuteConsoleCommand_Params*>(pParams)->Command;
-
-		if (ScriptNameF.IsValid())
+		if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 		{
-			std::wstring ScriptNameW = ScriptNameF.ToWString();
+			NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
+		}
 
-			std::wstring arg;
 
-			if (ScriptNameW.find(L" ") != std::wstring::npos)
+		if (wcsstr(nFunc.c_str(), XOR(L"ExecuteConsoleCommand")))
+		{
+			FString ScriptNameF = static_cast<UKismetSystemLibrary_ExecuteConsoleCommand_Params*>(pParams)->Command;
+
+			if (ScriptNameF.IsValid())
 			{
-				arg = ScriptNameW.substr(ScriptNameW.find(L" ") + 1);
-			}
+				std::wstring ScriptNameW = ScriptNameF.ToWString();
 
-			auto CMD = str2enum(ScriptNameW.c_str());
+				std::wstring arg;
 
-			switch (CMD)
-			{
-			case TEST:
-			{
-				break;
-			}
+				if (ScriptNameW.find(L" ") != std::wstring::npos)
+				{
+					arg = ScriptNameW.substr(ScriptNameW.find(L" ") + 1);
+				}
 
-			case DUMP:
-			{
-				UE4::DumpGObjects();
-				break;
-			}
+				auto CMD = str2enum(ScriptNameW.c_str());
 
-			case DUMPBPS:
-			{
-				UE4::DumpBPs();
-				break;
-			}
+				switch (CMD)
+				{
+				case TEST:
+				{
+					break;
+				}
+
+				case DUMP:
+				{
+					UE4::DumpGObjects();
+					break;
+				}
+
+				case DUMPBPS:
+				{
+					UE4::DumpBPs();
+					break;
+				}
 #ifndef PROD
-			case ACTIVATE:
-			{
-				if (!arg.empty())
+				case ACTIVATE:
 				{
-					if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
+					if (!arg.empty())
 					{
-						UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
-					}
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"Please input your activation key!."));
-				}
-				break;
-			}
-#endif
-			case EVENT:
-			{
-				if (gVersion == 14.60f)
-				{
-					UFunctions::Play(GALACTUS_EVENT_PLAYER);
-				}
-				else if (gVersion == 12.41f)
-				{
-					UFunctions::Play(JERKY_EVENT_PLAYER);
-				}
-				else if (gVersion == 12.61f)
-				{
-					UFunctions::Play(DEVICE_EVENT_PLAYER);
-				}
-				else if (gVersion == 16.00f)
-				{
-					UFunctions::Play(YOUGURT_EVENT_PLAYER);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
-				}
-				break;
-			}
-
-			case DEBUG_CAMERA:
-			{
-				//bIsDebugCamera = !bIsDebugCamera;
-				break;
-			}
-
-			case FLY:
-			{
-				NeoPlayer.Fly(bIsFlying);
-				bIsFlying = !bIsFlying;
-			}
-
-			case EQUIP:
-			{
-				if (!arg.empty())
-				{
-					NeoPlayer.EquipWeapon(arg.c_str());
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-				break;
-			}
-
-			case SET_MAX_HEALTH:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetMaxHealth(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument, e.g: (cheatscript setmaxhealth 1000)"));
-				}
-				break;
-			}
-
-			case SET_MAX_SHIELD:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetMaxShield(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setmaxshield 1000)"));
-				}
-				break;
-			}
-
-			case SET_HEALTH:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetHealth(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript sethealth 1000)"));
-				}
-				break;
-			}
-
-			case SET_SHIELD:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetShield(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshiled 1000)"));
-				}
-				break;
-			}
-
-			case SET_SPEED:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetMovementSpeed(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setspeed 1000)"));
-				}
-				break;
-			}
-
-			case SET_GRAVITY:
-			{
-				if (!arg.empty())
-				{
-					auto n = std::stof(arg);
-					NeoPlayer.SetPawnGravityScale(n);
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-				break;
-			}
-
-			case SET_PLAYLIST:
-			{
-				if (!arg.empty())
-				{
-					auto Playlist = UE4::FindObject<UObject*>(ScriptNameW.c_str());
-					if (Playlist)
-					{
-						gPlaylist = Playlist;
+						if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
+						{
+							UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
+						}
 					}
 					else
 					{
-						UFunctions::ConsoleLog(XOR(L"Couldn't find the requested playlist!."));
+						UFunctions::ConsoleLog(XOR(L"Please input your activation key!."));
+					}
+					break;
+				}
+#endif
+				case EVENT:
+				{
+					if (gVersion == 14.60f)
+					{
+						UFunctions::Play(GALACTUS_EVENT_PLAYER);
+					}
+					else if (gVersion == 12.41f)
+					{
+						UFunctions::Play(JERKY_EVENT_PLAYER);
+					}
+					else if (gVersion == 12.61f)
+					{
+						UFunctions::Play(DEVICE_EVENT_PLAYER);
+					}
+					else if (gVersion == 16.00f)
+					{
+						UFunctions::Play(YOUGURT_EVENT_PLAYER);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
+					}
+					break;
+				}
+
+				case DEBUG_CAMERA:
+				{
+					//bIsDebugCamera = !bIsDebugCamera;
+					break;
+				}
+
+				case FLY:
+				{
+					NeoPlayer.Fly(bIsFlying);
+					bIsFlying = !bIsFlying;
+				}
+
+				case EQUIP:
+				{
+					if (!arg.empty())
+					{
+						NeoPlayer.EquipWeapon(arg.c_str());
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+					}
+					break;
+				}
+
+				case SET_MAX_HEALTH:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetMaxHealth(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument, e.g: (cheatscript setmaxhealth 1000)"));
+					}
+					break;
+				}
+
+				case SET_MAX_SHIELD:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetMaxShield(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setmaxshield 1000)"));
+					}
+					break;
+				}
+
+				case SET_HEALTH:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetHealth(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript sethealth 1000)"));
+					}
+					break;
+				}
+
+				case SET_SHIELD:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetShield(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshiled 1000)"));
+					}
+					break;
+				}
+
+				case SET_SPEED:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetMovementSpeed(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setspeed 1000)"));
+					}
+					break;
+				}
+
+				case SET_GRAVITY:
+				{
+					if (!arg.empty())
+					{
+						auto n = std::stof(arg);
+						NeoPlayer.SetPawnGravityScale(n);
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+					}
+					break;
+				}
+
+				case SET_PLAYLIST:
+				{
+					if (!arg.empty())
+					{
+						auto Playlist = UE4::FindObject<UObject*>(ScriptNameW.c_str());
+						if (Playlist)
+						{
+							gPlaylist = Playlist;
+						}
+						else
+						{
+							UFunctions::ConsoleLog(XOR(L"Couldn't find the requested playlist!."));
+						}
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+					}
+					break;
+				}
+
+				case SKYDIVE:
+				{
+					NeoPlayer.StartSkydiving(0);
+					NeoPlayer.StartSkydiving(0);
+					NeoPlayer.StartSkydiving(0);
+					NeoPlayer.StartSkydiving(1500.0f);
+					break;
+				}
+
+				case RESPAWN:
+				{
+					NeoPlayer.Respawn();
+				}
+
+				case LOADBPC:
+				{
+					if (!arg.empty())
+					{
+						const auto BPGClass = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+
+						UE4::StaticLoadObjectEasy(BPGClass, arg.c_str());
+					}
+					else
+					{
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 					}
 				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
+
+				default:
+					break;
 				}
-				break;
-			}
-
-			case SKYDIVE:
-			{
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(1500.0f);
-				break;
-			}
-
-			case RESPAWN:
-			{
-				NeoPlayer.Respawn();
-			}
-
-			case LOADBPC:
-			{
-				if (!arg.empty())
-				{
-					const auto BPGClass = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
-
-					UE4::StaticLoadObjectEasy(BPGClass, arg.c_str());
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
-				}
-			}
-
-			default:
-				break;
 			}
 		}
+	}
+
+	//Server functions
+	if (wcsstr(nFunc.c_str(), XOR(L"SendClientHello")) ||
+		wcsstr(nFunc.c_str(), XOR(L"SendPacketToServer")) ||
+		wcsstr(nFunc.c_str(), XOR(L"SendPacketToClient")) ||
+		//Disable change window mode or size to prevent crashes
+		wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")) ||
+		wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
+	{
+		return nullptr;
 	}
 
 #ifdef LOGGING
@@ -488,6 +489,7 @@ out:
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 
+/*
 namespace CameraHook
 {
 	inline float Speed = 0.1;
@@ -545,3 +547,4 @@ inline int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE s
 
 	return CurrentViewPoint;
 }
+*/

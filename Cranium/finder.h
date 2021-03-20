@@ -218,3 +218,26 @@ public:
 		return nullptr;
 	}
 };
+
+
+namespace UE4
+{
+	inline auto SpawnActorEasy(UClass* Class, FVector Location = FVector(), FQuat Rotation = FQuat())
+	{
+		FTransform Transform;
+		Transform.Scale3D = FVector(1, 1, 1);
+		Transform.Translation = Location;
+		Transform.Rotation = Rotation;
+
+		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
+		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
+
+		return SpawnActor(
+			WorldFinder.GetObj(),
+			Class,
+			&Transform,
+			FActorSpawnParameters()
+		);
+	}
+}

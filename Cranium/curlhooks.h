@@ -59,7 +59,7 @@ inline CURLcode CurlEasySetOptDetour(struct Curl_easy* data, CURLoption tag, ...
 
 #ifdef URL_HOST
 
-		if (!ProdMode || url.find(XOR("cloudstorage")) != std::string::npos)
+		if (!ProdMode)
 		{
 			Uri uri = Uri::Parse(url);
 

@@ -164,6 +164,11 @@ struct UKismetStringLibrary_Conv_StringToName_Params
 	FName ReturnValue;
 };
 
+struct TSoftObjectPtr
+{
+	char unknowndata[0x28];
+};
+
 struct UClass;
 
 struct UObject

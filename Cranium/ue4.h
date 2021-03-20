@@ -2,11 +2,10 @@
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
-inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
-inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline UEngine* GEngine;
+
 inline UObject* (*StaticConstructObject)(
 	UClass* Class,
 	UObject* InOuter,
@@ -29,7 +28,6 @@ inline UObject* (*StaticLoadObject)(
 	bool bAllowObjectReconciliation,
 	void* InstancingContext
 );
-
 
 inline UObject* KismetRenderingLibrary;
 inline UObject* KismetStringLibrary;
