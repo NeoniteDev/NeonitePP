@@ -141,7 +141,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 	colors[ImGuiCol_ModalWindowDarkening] = ImVec4(
 		1.00f, 0.98f, 0.95f, 0.73f);
 
-
 	if (showMenu)
 	{
 		if (Begin(XOR("Neonite++"), nullptr, ImGuiWindowFlags_NoCollapse))
@@ -363,6 +362,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						static std::wstring currentItem;
 						static std::wstring currentBlueprint;
 						static std::wstring currentMesh;
+						static char command[1024];
 
 						Text(XOR("Any item selected from the combos below will be copied to your clipboard, everything is generated at runtime."));
 
@@ -377,7 +377,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 								if (Selectable(wid.c_str(), is_selected))
 								{
 									currentItem = gWeapons[n];
-									Util::CopyToClipboard(wid);
+									std::string commandS = "equip " + wid;
+									strcpy(command, commandS.c_str());
 								}
 								if (is_selected)
 								{
@@ -396,7 +397,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 								if (Selectable(blueprint.c_str(), is_selected))
 								{
 									currentBlueprint = gBlueprints[n];
-									Util::CopyToClipboard(blueprint);
+									std::string commandS = "summon " + blueprint;
+									strcpy(command, commandS.c_str());
 								}
 								if (is_selected)
 								{
@@ -432,8 +434,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 						NewLine();
 
-
-						static char command[1024];
 						InputText(XOR("Command"), command, sizeof command);
 
 						SameLine();
@@ -441,20 +441,16 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (Button("Execute"))
 						{
 							std::string commandS(command);
-							const std::wstring coammndW(commandS.begin(), commandS.end());
+							std::wstring coammndW(commandS.begin(), commandS.end());
 							Console::ExecuteConsoleCommand(coammndW.c_str());
+							SecureZeroMemory(command, sizeof command);
 						}
 
 						NewLine();
 
-						if (Button("Test"))
-						{
-							UFunctions::Play(YOUGURT_EVENT_PLAYER);
-						}
-
 						if (Button("Bots Grenade"))
 						{
-							Util::CopyToClipboard("WID_Athena_FrenchYedoc_JWFriendly");
+							strcpy(command, "equip WID_Athena_FrenchYedoc_JWFriendly");
 						}
 
 						EndTabItem();
@@ -574,7 +570,6 @@ F3 - Back to lobby.
 
 						if (Button("Hack"))
 						{
-
 						}
 
 						EndTabItem();

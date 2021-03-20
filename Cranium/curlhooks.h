@@ -6,7 +6,7 @@
 #define URL_HOST XOR("127.0.0.1")
 #define URL_PORT XOR("5746")
 
-inline bool isReady = false;
+inline bool isReady;
 inline std::string gUrl;
 inline float gVersion;
 

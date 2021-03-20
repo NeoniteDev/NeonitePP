@@ -5,7 +5,7 @@
 #include "kismet.h"
 
 #ifndef PROD
-#define LOGGING
+//#define LOGGING
 #endif
 
 using namespace NeoRoyale;
@@ -223,6 +223,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 				{
 				case TEST:
 				{
+
 					break;
 				}
 
@@ -355,7 +356,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 					}
 					else
 					{
-						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshield 1000)"));
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshiled 1000)"));
 					}
 					break;
 				}
@@ -453,6 +454,10 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
 	{
 		return nullptr;
+	}
+
+	if (wcsstr(nFunc.c_str(), XOR(L"OnRep_ToSpawnList")))
+	{
 	}
 
 #ifdef LOGGING
