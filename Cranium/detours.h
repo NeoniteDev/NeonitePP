@@ -137,7 +137,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 
 			if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
 			{
-				UFunctions::DestoryActor(OldWeapon);
+				UFunctions::DestroyActor(OldWeapon);
 				OldWeapon = nullptr;
 			}
 		}
@@ -355,7 +355,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 					}
 					else
 					{
-						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshiled 1000)"));
+						UFunctions::ConsoleLog(XOR(L"This command requires an argument e.g: (cheatscript setshield 1000)"));
 					}
 					break;
 				}

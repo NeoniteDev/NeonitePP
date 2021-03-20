@@ -9,21 +9,21 @@ inline UObject* gNeoniteLogoTexture;
 
 inline bool ForceSettings()
 {
-	auto FortGameUserSetttings = UE4::FindObject<UObject*>(XOR(L"FortGameUserSettings /Engine/Transient.FortGameUserSettings_"));
+	auto FortGameUserSettings = UE4::FindObject<UObject*>(XOR(L"FortGameUserSettings /Engine/Transient.FortGameUserSettings_"));
 
-	if (FortGameUserSetttings)
+	if (FortGameUserSettings)
 	{
 		auto SetFullscreenMode = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings.SetFullscreenMode"));
 
 		UGameUserSettings_SetFullscreenMode_Params SetFullscreenMode_Params;
 		SetFullscreenMode_Params.InFullscreenMode = EWindowMode::WindowedFullscreen;
 
-		ProcessEvent(FortGameUserSetttings, SetFullscreenMode, &SetFullscreenMode_Params);
+		ProcessEvent(FortGameUserSettings, SetFullscreenMode, &SetFullscreenMode_Params);
 
 
 		auto SaveSettings = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameUserSettings.SaveSettings"));
 
-		ProcessEvent(FortGameUserSetttings, SaveSettings, nullptr);
+		ProcessEvent(FortGameUserSettings, SaveSettings, nullptr);
 
 		return true;
 	}
@@ -210,7 +210,7 @@ namespace UFunctions
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
 	}
 
-	inline void DestoryActor(UObject* actor)
+	inline void DestroyActor(UObject* actor)
 	{
 		const auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
 
@@ -238,7 +238,8 @@ namespace UFunctions
 
 		for (auto i = 0; i < Actors.Num(); i++)
 		{
-			ProcessEvent(Actors[i], K2_DestroyActor, nullptr);;
+			DestroyActor(Actors[i]);
+			//ProcessEvent(Actors[i], K2_DestroyActor, nullptr);
 		}
 	}
 
