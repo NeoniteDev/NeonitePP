@@ -1,6 +1,6 @@
 #pragma once
 
-#define FRONTEND XOR(L"Frontend_Lobby_Default?game=/Script/FortniteGame.FortGameModeFrontEnd")
+#define FRONTEND XOR(L"Frontend?game=/Script/FortniteGame.FortGameModeFrontEnd")
 #define APOLLO_TERRAIN XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C")
 #define APOLLO_TERRAIN_YOGURT XOR(L"Apollo_Terrain_Yogurt?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C")
 #define APOLLO_TERRAIN_VALKYIRE XOR(L"Apollo_Terrain?game=/Game/Athena/Valkyrie/Valkyrie_GameMode.Valkyrie_GameMode_C")
