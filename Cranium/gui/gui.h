@@ -202,7 +202,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.TeleportTo(FVector(X, Y, Z));
 						}
 
-						NewLine();
+						/*NewLine();
 
 						if (Button("Fill level with water"))
 						{
@@ -214,7 +214,7 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						if (Button("Remove water"))
 						{
 							Console::ExecuteConsoleCommand(XOR(L"destroyall Apollo_Waterbody_Ocean_Parent_C"));
-						}
+						}*/
 
 						EndChild();
 
@@ -264,15 +264,14 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							NeoPlayer.SetCameraMode(L"FirstPerson");
 							NeoPlayer.HideHead(true);
 						}
-
-						//Commented becuase i don't know the custom thirdperson cameara mode name ;-;
-						/*SameLine();
+						
+						SameLine();
 
 						if (Button(XOR("Third Person Camera")))
 						{
-							NeoPlayer.SetCameraMode(L"FortCameraMode_ThirdPerson");
+							NeoPlayer.SetCameraMode(L"FreeCam");
 							NeoPlayer.HideHead(false);
-						}*/
+						}
 
 						NewLine();
 
@@ -443,7 +442,6 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 							std::string commandS(command);
 							std::wstring coammndW(commandS.begin(), commandS.end());
 							Console::ExecuteConsoleCommand(coammndW.c_str());
-							SecureZeroMemory(command, sizeof command);
 						}
 
 						NewLine();
@@ -500,20 +498,20 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 						R"(
 Commands
 ---------------------------
-cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, Flatter).
-cheatscript debugcamera - Toggles a custom version of the debug camera.
-cheatscript skydive | skydiving - Puts you in a skydive with deploy at 1500m above the ground.
-cheatscript equip <WID | AGID> - Equips a weapon / pickaxe. (You can get them from the modifers tap)
-cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
-cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
-cheatscript setplaylist <Playlist> - Overrides the current playlist.
-cheatscript respawn - Respawns the player (duh)
-cheatscript sethealth <NewHealthFloat> - Changes your health value.
-cheatscript setshield <NewShieldFloat> - Changes your shield value.
-cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
-cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
-cheatscript dump - Dumps a list of all GObjects. (output at win64 folder)
-cheatscript dumpbps - Dumps a list all blueprints. (output at win64 folder)
+event - Triggers the event for your version (e.g. Junior, Jerky, Flatter).
+debugcamera - Toggles a custom version of the debug camera.
+skydive | skydiving - Puts you in a skydive with deploy at 1500m above the ground.
+equip <WID | AGID> - Equips a weapon / pickaxe. (You can get them from the modifers tap)
+setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
+setplaylist <Playlist> - Overrides the current playlist.
+respawn - Respawns the player (duh)
+sethealth <NewHealthFloat> - Changes your health value.
+setshield <NewShieldFloat> - Changes your shield value.
+setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+setmaxshield <newMaxShieldFloat> - Changes your max shield value.
+dump - Dumps a list of all GObjects. (output at win64 folder)
+dumpbps - Dumps a list all blueprints. (output at win64 folder)
 fly - Toggles flying.
 enablecheats - Enables cheatmanager.
 summon <BlueprintClass> - Summons a blueprint class. (You can get them from the helpers tap)
@@ -550,6 +548,11 @@ F3 - Back to lobby.
 					SetCursorPosY(GetCursorPosY() + 5);
 
 					Text(XOR("Nyamimi (@nyameows): Internal, General."));
+
+					SetCursorPosX(GetCursorPosX() + 50);
+					SetCursorPosY(GetCursorPosY() + 5);
+
+					Text(XOR("Irma (@omairma): Frontend, Internal."));
 
 					SetCursorPosX(GetCursorPosX() + 50);
 					SetCursorPosY(GetCursorPosY() + 5);

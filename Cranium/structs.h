@@ -442,6 +442,11 @@ struct AFortPawn_EquipWeaponDefinition_Params
 	UObject* ReturnValue;
 };
 
+struct FPointerToUberGraphFrame
+{
+	unsigned char UnknownData00[0x8];
+};
+
 struct AFortPawn_OnWeaponEquipped_Params
 {
 	UObject* NewWeapon;

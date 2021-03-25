@@ -146,10 +146,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 		{
 			if (NeoPlayer.Pawn)
 			{
-				ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-				ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-				ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+				ObjectFinder PlayerControllerFinder = ObjectFinder::EntryPoint(uintptr_t(NeoPlayer.Controller));
 
 				ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
 
@@ -176,19 +173,12 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 			const auto Params = static_cast<AActor_ReceiveHit_Params*>(pParams);
 			auto HitLocation = Params->HitLocation;
 
-			Bot.Pawn = UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/AI/Phoebe/BP_PlayerPawn_Athena_Phoebe.BP_PlayerPawn_Athena_Phoebe_C")));
+			HitLocation.Z = HitLocation.Z + 200;
+
+			Bot.Pawn = UE4::SpawnActorEasy(UE4::FindObject<UClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/AI/Phoebe/BP_PlayerPawn_Athena_Phoebe.BP_PlayerPawn_Athena_Phoebe_C")), HitLocation);
 
 			if (Bot.Pawn)
 			{
-				HitLocation.Z = HitLocation.Z + 200;
-
-				FRotator Rotation;
-				Rotation.Yaw = 0;
-				Rotation.Roll = 0;
-				Rotation.Pitch = 0;
-
-				Bot.TeleportTo(HitLocation, Rotation);
-
 				Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
 				Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
 
@@ -223,7 +213,6 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 				{
 				case TEST:
 				{
-
 					break;
 				}
 
@@ -290,6 +279,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 				{
 					NeoPlayer.Fly(bIsFlying);
 					bIsFlying = !bIsFlying;
+					break;
 				}
 
 				case EQUIP:
@@ -436,6 +426,7 @@ inline void* ProcessEventDetour(UObject* pObj, UFunction* pFunc, void* pParams)
 					{
 						UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 					}
+					break;
 				}
 
 				default:

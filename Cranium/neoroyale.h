@@ -181,7 +181,7 @@ namespace NeoRoyale
 
 			NeoPlayer.SetMovementSpeed(1.1);
 
-			auto PlaylistName = gPlaylist->GetName();
+			const auto PlaylistName = gPlaylist->GetName();
 
 			if (!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_Papaya")) &&
 				!wcsstr(PlaylistName.c_str(), XOR(L"Playlist_BattleLab")))

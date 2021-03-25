@@ -10,7 +10,7 @@ inline bool isReady;
 inline std::string gUrl;
 inline float gVersion;
 
-static bool ProdMode = false;
+static bool ProdMode;
 static bool bIsProdMode;
 static bool bIsVersionFound;
 

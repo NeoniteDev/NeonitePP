@@ -375,9 +375,9 @@ R"(
                             "activeUntil": "2021-10-18T17:06:33.568Z",
                             "activeSince": "2020-11-18T17:06:33.568Z"
                         }, {
-                            "eventType": "DZP",
-                            "activeUntil": "2021-10-18T17:06:33.568Z",
-                            "activeSince": "2020-11-18T17:06:33.568Z"
+                            "eventType": "RPFS1",
+                            "activeUntil": "2021-03-24T06:30:00Z",
+                            "activeSince": "2021-02-14T21:10:00Z"
                         }
                ],
                "state":{
@@ -417,10 +417,14 @@ R"(
       }
    },
    "cacheIntervalMins":15.0,
-   "currentTime":"2020-12-16T00:52:01.638Z"
+   "currentTime":""
 })"_json;
 
 inline json calendar()
 {
+    boost::posix_time::ptime t = boost::posix_time::microsec_clock::universal_time();
+    auto date = to_iso_extended_string(t);
+    date = date.substr(0, date.size() - 3) + "Z";
+    rCalendar["currentTime"] = date;
 	return rCalendar;
 }
