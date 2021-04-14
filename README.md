@@ -18,8 +18,6 @@
   </p>
 </p>
 
----
-
 <!-- ABOUT NEONITE++ -->
 ## - About Neonite++
 
@@ -30,8 +28,6 @@ Neonite++ is a rewrite of our popular project, [NeoniteV2](https://github.com/Ne
 #### • This project is semi-discontinued, DO NOT ask for support.
 
 _This project was made for fun and it doesn't aim to harm the original game by any means, If you are an Epic Games employee and have any problems with this project, please do not hesitate to [contact us](#contact) through your official business email._
-
----
 
 <!-- BUILDING -->
 ## - Building
