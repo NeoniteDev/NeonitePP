@@ -12,9 +12,9 @@
   </p>
 
   <p align="center">
-  <object data="https://img.shields.io/github/languages/top/NeoniteDev/NeonitePP"></object>
-  <object data="https://img.shields.io/github/stars/NeoniteDev/NeonitePP"></object>
-  <object data="https://img.shields.io/badge/supported%20fortnite%20clients-ch2%5E-purple"></object>
+  <img src="https://img.shields.io/github/languages/top/NeoniteDev/NeonitePP"></img>
+  <img src="https://img.shields.io/github/stars/NeoniteDev/NeonitePP"></img>
+  <img src="https://img.shields.io/badge/supported%20fortnite%20clients-ch2%5E-purple"></img>
   </p>
 </p>
 
