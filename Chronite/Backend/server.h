@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2020-2021 Kareem Olim (Kemo)
+ * All Rights Reserved. Licensed under the Neo License
+ * https://neonite.dev/LICENSE.html
+ */
 #pragma once
 
 //#define LOGGING

@@ -1,4 +1,10 @@
-﻿#include "pch.h"
+﻿/**
+ * Copyright (c) 2020-2021 Kareem Olim (Kemo)
+ * All Rights Reserved. Licensed under the Neo License
+ * https://neonite.dev/LICENSE.html
+ */
+
+#include "pch.h"
 #include "curlhooks.h"
 #include "hooks.h"
 #include "gui/gui.h"

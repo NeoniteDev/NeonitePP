@@ -7,8 +7,6 @@
 #include "ue4.h"
 #include "veh.h"
 
-
-
 namespace Hooks
 {
 #ifdef SSL_BYPASS
