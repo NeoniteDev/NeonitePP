@@ -79,4 +79,4 @@ This project was made by the modding community **for** the modding community, yo
 
 - All required Boost libs are under [Boost License](https://www.boost.org/users/license.html).
 
-• This project is under [Neo License](https://neonite.dev/LICENSE.html), it was open-sourced to be learned from, not be copy pasted into your shitty polaris paste, if any violation of the license or any attempt to impersonate our brand was found we will fill a DMCA Takedown request immediately.
+• This project is under [Neo License](https://neonite.dev/LICENSE.html), it was open-sourced to be learned from, not be copy pasted into your application, if any violation of the license or any attempt to impersonate our brand was found we will fill a DMCA Takedown request immediately.
