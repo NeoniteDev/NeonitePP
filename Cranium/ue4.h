@@ -50,6 +50,8 @@ namespace UE4
 	inline void Free(void* buffer)
 	{
 		//FreeInternal(buffer);
+		//https://en.cppreference.com/w/cpp/memory/c/free
+		std::free(buffer); //assuming cstdlib is included 
 	}
 
 	//The same as above but for FFields.
