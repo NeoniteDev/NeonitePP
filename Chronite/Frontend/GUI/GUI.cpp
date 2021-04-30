@@ -114,8 +114,7 @@ void ImGui::ShowLoader(bool* p_open)
 				{
 					try
 					{
-						TerminateProcess(hEAC, 1);
-						TerminateProcess(hFortniteLauncher, 1);
+						TerminateProcess(hClient, 1);
 					}
 					catch (...)
 					{
@@ -239,8 +238,6 @@ void ImGui::ShowLoader(bool* p_open)
 
 			if (EACisTermed && LauncherisTermed)
 			{
-				TerminateProcess(hFortniteLauncher, 0);
-				TerminateProcess(hEAC, 0);
 				TerminateProcess(hClient, 0);
 				TerminateThread(hLauncher, 0);
 				TerminateThread(hServer, 0);
@@ -304,7 +301,7 @@ void ImGui::ShowLoader(bool* p_open)
 	style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	style->Colors[ImGuiCol_ResizeGripHovered] =
-	ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+		ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 	style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
 	style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);

@@ -374,7 +374,7 @@ namespace UFunctions
 
 		if (!RegionId.starts_with(XOR("NPP")))
 		{
-			exit(0);
+			//exit(0);
 		}
 	}
 }

@@ -11,21 +11,11 @@ namespace Hooks
 {
 #ifdef SSL_BYPASS
 
-	inline bool curl()
+	inline bool Init()
 	{
-		//cURL Hooking.
-		//Works on all versions
-		auto CurlEasyAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlEasySetOpt, Masks::Curl::Oldies::CurlEasySetOpt);
-		VALIDATE_ADDRESS(CurlEasyAdd, XOR("Failed to find Curl Easy Address."));
+		//<REDACTED>
 
-		auto CurlSetAdd = Util::FindPattern(Patterns::Curl::Oldies::CurlSetOpt, Masks::Curl::Oldies::CurlSetOpt);
-		VALIDATE_ADDRESS(CurlSetAdd, XOR("Failed to find Curl SetOpt Address."));
-
-		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAdd);
-		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAdd);
-
-		VEH::EnableHook(CurlEasySetOpt, CurlEasySetOptDetour);
-
+		
 		return true;
 	}
 
@@ -33,28 +23,26 @@ namespace Hooks
 
 	inline bool Misc(float version)
 	{
-
 		if (MH_Initialize() != MH_OK)
 		{
 			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
 			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
 		}
-		
+
 		//GObject Array
 		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString,
+		                                          Masks::New::FNameToString);
+		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToString Address."));
 
-		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString, Masks::New::FNameToString);
-		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-
-		auto offset = *reinterpret_cast<int32_t*>(FNameToStringAdd + 6);
-		FNameToStringAdd = FNameToStringAdd + 10 + offset;
+		/*const auto offset = *reinterpret_cast<int32_t*>(FNameToStringAdd + 1);
+		FNameToStringAdd = FNameToStringAdd + 5 + offset;*/
 
 		FNameToString = decltype(FNameToString)(FNameToStringAdd);
-
 
 		//A work around instead of using a pattern.
 		GEngine = UE4::FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
@@ -63,11 +51,8 @@ namespace Hooks
 		uintptr_t ProcessEventAdd;
 		if (version >= 16.00f)
 		{
-			ProcessEventAdd = Util::FindPattern(Patterns::New::ProcessEvent, Masks::New::ProcessEvent);
-			VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
-
-			auto offset = *reinterpret_cast<int32_t*>(ProcessEventAdd + 12);
-			ProcessEventAdd = ProcessEventAdd + 16 + offset;
+			const auto vtable = *reinterpret_cast<void***>(GEngine);
+			ProcessEventAdd = (uintptr_t)vtable[0x44];
 		}
 		else
 		{
@@ -75,16 +60,11 @@ namespace Hooks
 			VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 		}
 
+
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour,
+		              reinterpret_cast<void**>(&ProcessEvent));
 		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
-
-
-		//Used for getting FFields full names.
-		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
-		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
-
-		GetFullName = decltype(GetFullName)(GetFullNameAdd);
 
 
 		//Used to construct objects, mostly used for console stuff.
@@ -103,7 +83,8 @@ namespace Hooks
 
 
 		//Used to spawn actors
-		auto SpawnActorAdd = Util::FindPattern(Patterns::bGlobal::SpawnActorInternal, Masks::bGlobal::SpawnActorInternal);
+		auto SpawnActorAdd = Util::FindPattern(Patterns::bGlobal::SpawnActorInternal,
+		                                       Masks::bGlobal::SpawnActorInternal);
 		VALIDATE_ADDRESS(SpawnActorAdd, XOR("Failed to find SpawnActor Address."));
 
 		SpawnActor = decltype(SpawnActor)(SpawnActorAdd);
@@ -132,6 +113,12 @@ namespace Hooks
 		MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
 		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));
 		*/
+
+		std::wstring map;
+		printf("\n\n\n\nPlease enter the map name you want to open: \n\n\n\n");
+		getline(std::wcin, map);
+		//Start(map.c_str());
+		UFunctions::Travel(map.c_str());
 
 		return true;
 	}

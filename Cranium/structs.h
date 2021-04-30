@@ -154,11 +154,13 @@ struct FName
 		FString temp;
 		FNameToString(this, temp);
 
-		return temp.ToWString();
+		std::wstring ret(temp.ToWString());
+		
+		return ret;
 	}
 };
 
-struct FText
+struct FText	
 {
 	char UnknownData[0x18];
 };
@@ -228,12 +230,35 @@ struct UObject
 struct FField
 {
 	void* vtable;
-	void* padding_01;
-	void* ClassPrivate;
+	void* Class;
 	void* Owner;
+	void* padding;
 	FField* Next;
 	FName NamePrivate;
 	EObjectFlags FlagsPrivate;
+
+	std::wstring GetName()
+	{
+		return NamePrivate.ToString();
+	}
+
+	std::wstring GetTypeName()
+	{
+		return (*static_cast<FName*>(Class)).ToString();
+	}
+
+	std::wstring GetFullName()
+	{
+		std::wstring temp;
+
+		for (auto outer = Next; outer; outer = outer->Next)
+		{
+			temp = outer->GetName() + L"." + temp;
+		}
+
+		temp = static_cast<UObject*>(Class)->GetName() + L" " + temp + this->GetName();
+		return temp;
+	}
 };
 
 struct FProperty : FField

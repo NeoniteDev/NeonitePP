@@ -65,7 +65,7 @@ class ObjectFinder
 		GameObject* next = inObject->GetNext();
 		if (next == nullptr) return nullptr;
 
-		auto firstPropertyName = UE4::GetFirstName(reinterpret_cast<FField*>(inObject));
+		auto firstPropertyName = reinterpret_cast<FField*>(inObject)->GetName();
 
 		//printf("\n firstPropertyName: %ls \n", firstPropertyName.c_str());
 
@@ -76,7 +76,7 @@ class ObjectFinder
 
 		while (next)
 		{
-			std::wstring nextName = UE4::GetFirstName(reinterpret_cast<FField*>(next));
+			std::wstring nextName = reinterpret_cast<FField*>(next)->GetName();
 
 			//printf("\n nextName: %ls \n", nextName.c_str());
 
@@ -102,11 +102,13 @@ class ObjectFinder
 
 	GameObject*& resolveArrayValuePointer(GameObject* bastePtr, GameObject* prop) const
 	{
-		return *reinterpret_cast<GameObject**>(*reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) + prop->GetOffsetInternal()));
+		return *reinterpret_cast<GameObject**>(*reinterpret_cast<GameObject**>(reinterpret_cast<uintptr_t>(m_object) +
+			prop->GetOffsetInternal()));
 	}
 
 public:
-	ObjectFinder(const std::wstring& currentObject, const std::wstring objectType, GameObject* object, GameObject*& objectRef) :
+	ObjectFinder(const std::wstring& currentObject, const std::wstring objectType, GameObject* object,
+	             GameObject*& objectRef) :
 		m_currentObject(currentObject), m_objectType(objectType), m_object(object), m_objectRef(objectRef)
 	{
 	};
@@ -118,7 +120,10 @@ public:
 
 	static ObjectFinder EntryPoint(uintptr_t EntryPointAddress)
 	{
-		return ObjectFinder{L"EntryPoint", L"None", reinterpret_cast<GameObject*>(EntryPointAddress), reinterpret_cast<GameObject*&>(EntryPointAddress)};
+		return ObjectFinder{
+			L"EntryPoint", L"None", reinterpret_cast<GameObject*>(EntryPointAddress),
+			reinterpret_cast<GameObject*&>(EntryPointAddress)
+		};
 	}
 
 	ObjectFinder Find(const std::wstring& objectToFind) const
@@ -132,7 +137,8 @@ public:
 
 		if (Class)
 		{
-			GameObject* property = InternalFindChildInObject(reinterpret_cast<GameObject*>(Class->ChildProperties), objectToFind);
+			GameObject* property = InternalFindChildInObject(reinterpret_cast<GameObject*>(Class->ChildProperties),
+			                                                 objectToFind);
 			if (property)
 			{
 				//printf("[ObjectFinder] Found %ls at 0x%x", objectToFind.c_str(), property->GetOffsetInternal());
@@ -169,9 +175,12 @@ public:
 
 		GameObject* valuePtr = resolveValuePointer(m_object, propertyFound);
 
-		const std::wstring type = UE4::GetFieldClassName(reinterpret_cast<FField*>(propertyFound));
+		const std::wstring type = reinterpret_cast<FField*>(propertyFound)->GetTypeName();
+
+		//printf("\ntype: %ls\n", type.c_str());
 
 		if (type == XOR(L"ArrayProperty"))
+			//if (type == XOR(L"LocalPlayers"))
 		{
 			//this will return the first element in the array
 			//TODO: recode this part

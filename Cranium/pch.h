@@ -2,7 +2,7 @@
 #define PCH_H
 
 #define CONSOLE
-#define SSL_BYPASS
+//#define SSL_BYPASS
 #define HOOKS
 //#define INJECT_ASAP
 

@@ -12,8 +12,6 @@
 
 
 inline HANDLE hLauncher = INVALID_HANDLE_VALUE;
-inline HANDLE hFortniteLauncher = INVALID_HANDLE_VALUE;
-inline HANDLE hEAC = INVALID_HANDLE_VALUE;
 inline HANDLE hClient = INVALID_HANDLE_VALUE;
 
 namespace launcher
@@ -58,7 +56,7 @@ namespace launcher
 				console.AddLog("[x] Couldn't find Fortnite directory.");
 				return;
 			}
-			
+
 			strncpy(path, fnPath.c_str(), fnPath.size() + 1);
 			settings::config(true);
 		}
@@ -68,39 +66,26 @@ namespace launcher
 		}
 
 		std::string szClientFile =
-		fnPath +
-		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
-		std::string szEACFile =
-		fnPath +
-		"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_EAC.exe";
-
-		std::string szLauncherFile =
 			fnPath +
-			"\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe";
+			"\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
 
 		std::ostringstream oss;
 		if (exchange.empty())
 		{
 			oss <<
-			" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -fromfl=be -fltoken=7ce411021b27b4343a44fdg8 -AUTH_LOGIN="
-			<< name
-			<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
+				" -epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -noeac -nobe -fromfl=non -AUTH_LOGIN="
+				<< name
+				<< "@unused.com -AUTH_PASSWORD=unused -AUTH_TYPE=epic";
 		}
 		else
 		{
 			oss <<
-			" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod -noeac -fromfl=be -fltoken=7ce411021b27b4343a44fdg8 -epicportal -epiclocale=en-us -AUTH_PASSWORD="
-			<< exchange;
+				" -AUTH_LOGIN=unused AUTH_TYPE=exchangecode -epicapp=Fortnite -epicenv=Prod -noeac -nobe -fromfl=non -epicportal -epiclocale=en-us -AUTH_PASSWORD="
+				<< exchange;
 		}
 		std::string s = oss.str();
 		char* args = new char[s.length() + 1];
 		std::copy(s.c_str(), s.c_str() + s.length() + 1, args);
-
-		hEAC = util::startup(szEACFile.c_str(), args);
-		util::suspend(hEAC);
-
-	    hFortniteLauncher = util::startup(szLauncherFile.c_str(), args);
-		util::suspend(hFortniteLauncher);
 
 		hClient = util::startup(szClientFile.c_str(), args);
 
@@ -116,26 +101,20 @@ namespace launcher
 
 			std::string dllPath = util::GetEXEPath() + "\\Cranium.dll";
 
-			if (!ManualMap(hClient, dllPath.c_str()))
+			/*if (!ManualMap(hClient, dllPath.c_str()))
 			{
 				CloseHandle(hClient);
 				console.AddLog("[x] Injection failed!.");
 				system("PAUSE");
 				return;
-			}
+			}*/
 
 			while (true)
 			{
 				if (WaitForSingleObject(hClient, 10) != WAIT_TIMEOUT) break;
 			}
-			util::resume(hEAC);
-			util::resume(hFortniteLauncher);
-			TerminateProcess(hEAC, 1);
-			TerminateProcess(hFortniteLauncher, 1);
 			TerminateProcess(hLauncher, 1);
-			hEAC = INVALID_HANDLE_VALUE;
 			hLauncher = INVALID_HANDLE_VALUE;
-			hFortniteLauncher = INVALID_HANDLE_VALUE;
 			hClient = INVALID_HANDLE_VALUE;
 		}
 	}

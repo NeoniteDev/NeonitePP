@@ -22,29 +22,29 @@ bool WINAPI ImguiThread()
 	return true;
 }
 
-void dllMain()
+void WINAPI dllMain()
 {
 #ifdef CONSOLE
-#ifndef PROD
+//#ifndef PROD
 	FILE* fDummy;
 	AllocConsole();
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	//freopen_s(&fDummy, "ProcessEvent.log", "w", stdout);
-#endif
-	printf(XOR("[=]Hang tight, it's not broken the game is just loading lol.\nMade by kemo (@xkem0x on twitter, credit me owo)"));
+//#endif
+	printf(XOR("[=]Scuffed build for latest, Made by kemo (@xkem0x on twitter)"));
 #endif
 
 #ifdef SSL_BYPASS
-	Hooks::curl();
+	Hooks::Init();
 #endif
 
 
 #ifdef HOOKS
 	while (true)
 	{
-		if (isReady || GetAsyncKeyState(VK_F3))
+		if (isReady)
 		{
 			 //Deprecated
 			if (Hooks::Misc(gVersion)) //&& Console::Unlock()) //&& ForceSettings())
@@ -53,13 +53,22 @@ void dllMain()
 				break;
 			}
 		}
+		else if (GetAsyncKeyState(VK_F3))
+		{
+			if (Hooks::Misc(99.99f))
+			{
+				//ImguiThread();
+				break;
+			}
+		}
 		Sleep(1000 / 30); //30 fps  
 	}
-}
 #endif
+}
 
 
-BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
+
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
 	switch (dwReason)
 	{
