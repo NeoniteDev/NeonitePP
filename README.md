@@ -31,7 +31,7 @@ _This project was made for fun and it doesn't aim to harm the original game by a
 
 <!-- BUILDING -->
 ## - Building
-• We do **NOT** provide any buidling or fixing support and it does **NOT** work on latest, However going back 6~7 commits should be enough to have a version that works on old ch2 clients (s12 ~ s15), Or download a pre-compiled one [here](https://neonite.dev/cdn/NPP.zip) keep in mind the pre-compiled one does not work on the current version. 
+• We do **NOT** provide any buidling or fixing support and it does **NOT** work on latest, However going back 6~7 commits should be enough to have a version that works on old ch2 clients (s12 ~ s15), Or download a pre-compiled one [here](https://neonite.dev/cdn/NPP.zip) please keep in mind the pre-compiled one does not work on the **current version** of Fortnite. 
 
 
 <!-- FEATURES -->
