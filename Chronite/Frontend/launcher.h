@@ -31,7 +31,7 @@ namespace launcher
 			SHGetFolderPath(nullptr, CSIDL_COMMON_APPDATA,
 			                nullptr, 0, programData);
 
-			//TODO: change this
+			//TODO: change this (quick reminder that you still have to change this ~~ sizzy)
 			char* launcherInstalledPath = new char[
 				std::strlen(programData) + std::strlen(datPath) + 1];
 
