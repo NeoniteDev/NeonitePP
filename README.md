@@ -58,7 +58,7 @@ _This project was made for fun and it doesn't aim to harm the original game by a
 
 - Discord Server: [Neonite](https://dsc.gg/neonite)
 
-- Discord Messages: `kemo#1337`, `Ayal#0001 ` or `Sammy.#6969`
+- Discord Messages: `kemo#1337`, `Ayal#0001 `
 
 
 <!-- CREDITS -->
