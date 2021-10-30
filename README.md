@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/NeoniteDev/NeonitePP-readme">
+  <a href="https://github.com/NeoniteDev/NeonitePP">
     <img src="https://neonitepp.herokuapp.com/images/neonite.png" alt="Logo" width="216" height="127">
   </a>
 
