@@ -31,12 +31,12 @@ _This project was made for fun and it doesn't aim to harm the original game by a
 
 <!-- BUILDING -->
 ## - Building
-• We do **NOT** provide any building or fixing support and it does **NOT** work on latest, However going back 6~7 commits should be enough to have a version that works on old Chapter 2 clients (s12 ~ s15), Or download a pre-compiled one [here](https://neonite.dev/cdn/NPP.zip). 
+• We do **NOT** provide any building or fixing support and it does **NOT** work on latest, However going back 6~7 commits should be enough to have a version that works on old Chapter 2 clients (s12 ~ s15).
 
 
 <!-- FEATURES -->
 ## - Features
-• Neonite++ features are showcased in this twitter [thread](https://twitter.com/Neonitedev/status/1368926282189316096), also video tutorials can be found [here](https://neonite.dev/tutorials.html).
+• Neonite++ features are showcased in this twitter [thread](https://twitter.com/Neonitedev/status/1368926282189316096), also video tutorials can be found [here](https://neonitedev.github.io/tutorials.html).
 
 <!-- DONATING -->
 ## - Donate
@@ -79,4 +79,4 @@ This project was made by the modding community **for** the modding community, yo
 
 - All required Boost libs are under [Boost License](https://www.boost.org/users/license.html).
 
-• This project is under [Neo License](https://neonite.dev/LICENSE.html), it was open-sourced to be learned from, not be copy pasted into your application, if any violation of the license or any attempt to impersonate our brand was found we will fill a DMCA Takedown request immediately.
+• This project is under [Neo License](https://github.com/NeoniteDev/NeoniteV2/blob/main/LICENSE), it was open-sourced to be learned from, not be copy pasted into your application, if any violation of the license or any attempt to impersonate our brand was found we will fill a DMCA Takedown request immediately.
