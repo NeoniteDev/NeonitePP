@@ -8,7 +8,7 @@
   <p align="center">
     Fortnite launcher, server and internal mod aimed towards advancing modding within Fortnite.
 	<br />
-	<a href="https://neonite.dev/">ᗒ Official Website ᗕ</a>
+	<a href="https://neonitedev.github.io/?source=NeonitePP">ᗒ Official Website ᗕ</a>
   </p>
 
   <p align="center">
