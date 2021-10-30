@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/NeoniteDev/NeonitePP">
-    <img src="https://neonite.dev/images/neonite.png" alt="Logo" width="216" height="127">
+    <img src="https://neonitepp.herokuapp.com/images/neonite.png" alt="Logo" width="216" height="127">
   </a>
 
   <p align="center">
