@@ -25,7 +25,7 @@ Neonite++ is a rewrite of our popular project, [NeoniteV2](https://github.com/Ne
 
 <br>
 
-#### • This project is semi-discontinued.
+#### • This project is discontinued.
 
 _This project was made for fun and it doesn't aim to harm the original game by any means and it's not Affiliated, Associated, Authorized, Endorsed by, or in any way officially connected with EpicGames. If you are an Epic Games employee and you have any problems with this project, please do not hesitate to [contact us](#contact) through your official business email: NeoniteDev@protonmail.com_
 
