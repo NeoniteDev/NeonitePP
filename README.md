@@ -2,13 +2,13 @@
 <br />
 <p align="center">
   <a href="https://github.com/NeoniteDev/NeonitePP">
-    <img src="https://www.neonitedev.live/images/neonite.png" alt="Logo" width="216" height="127">
+    <img src="https://www.neonite.net/images/neonite.png" alt="Logo" width="216" height="127">
   </a>
 
   <p align="center">
     Fortnite launcher, server and internal mod aimed towards advancing modding within Fortnite.
 	<br />
-	<a href="https://neonitedev.github.io/?source=NeonitePP-readme">ᗒ Official Website ᗕ</a>
+	<a href="https://www.neonite.net/">ᗒ Official Website ᗕ</a>
   </p>
 
   <p align="center">
